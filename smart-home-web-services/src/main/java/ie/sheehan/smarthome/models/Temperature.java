@@ -1,6 +1,5 @@
 package ie.sheehan.smarthome.models;
 
-import java.sql.Timestamp;
 import java.util.Comparator;
 
 import org.springframework.data.annotation.Id;
@@ -26,8 +25,19 @@ public class Temperature {
 	private long timestamp;
 	
 	
-	public Timestamp getTime(){
-		return new Timestamp(timestamp);
+	@Override
+	public String toString() {
+		return id + " | " + timestamp + "\nTemperature: " + temperature + "\tHumidity: " + humidity;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (! (obj instanceof Temperature)){
+			return false;
+		}
+		
+		Temperature other = (Temperature) obj;
+		return this.id.equals(other.id);
 	}
 	
 	public long getTimestamp() {

@@ -1,5 +1,6 @@
 package ie.sheehan.smarthome.repositories;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,12 @@ public class TemperatureRepository {
 		}
 	}
 	
-	
+	/**
+	 * Retrieves a single temperature log by ID.
+	 * 
+	 * @param id of the temperature log to be retrieved
+	 * @return a temperature log with the given ID
+	 */
 	public Temperature get(String id){
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));
@@ -34,10 +40,15 @@ public class TemperatureRepository {
 		return database.findOne(query, Temperature.class, TEMPERATURE_COLLECTION);
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @return
+	 */
 	public Temperature getLatest(){
 		List<Temperature> temperatures = database.findAll(Temperature.class, TEMPERATURE_COLLECTION);
 		temperatures.sort(new Temperature.TemperatureTimeComparator());
-		return temperatures.get(0);
+		return temperatures.get(temperatures.size() - 1);
 	}
 	
 	public List<Temperature> getAll(){
@@ -45,10 +56,20 @@ public class TemperatureRepository {
 	}
 	
 	public List<Temperature> getRange(long from, long to){
-		Query query = new Query();
+		List<Temperature> fromValues = database.find(new Query(Criteria.where("timestamp").gte(from)), Temperature.class);
+		List<Temperature> toValues = database.find(new Query(Criteria.where("timestamp").lte(to)), Temperature.class);
+
+		List<Temperature> intersection = new ArrayList<Temperature>();
 		
+		for (Temperature tempFrom : fromValues){
+			for (Temperature tempTo : toValues){
+				if (tempFrom.equals(tempTo)){
+					intersection.add(tempFrom);
+				}
+			}
+		}
 		
-		return database.find(query, Temperature.class, TEMPERATURE_COLLECTION);
+		return intersection;
 	}
 	
 	
