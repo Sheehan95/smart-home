@@ -1,7 +1,8 @@
 import json
 import paho.mqtt.client as mqtt
 
-import httplib, urllib
+import httplib
+import urllib
 
 
 TEMPERATURE_TOPIC = '/ie/sheehan/smart-home/temperature/log'
@@ -13,13 +14,15 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, message):
     payload = json.loads(message.payload)
+    headers = {'Content-type': 'application/x-www-form-urlencoded', 'Accept': 'text/plain'}
 
     if message.topic == TEMPERATURE_TOPIC:
         conn = httplib.HTTPConnection('192.167.1.31:8080')
         params = urllib.urlencode(payload)
-        conn.request('POST', '/temperature/add', params)
+        conn.request('POST', '/temperature/add', params, headers)
         response = conn.getresponse()
-        print response.status, response.reason
+        conn.close()
+        print 'HTTP Status Code:', response.status, response.reason
 
     print 'Client: ', client
     print 'Topic: ', message.topic

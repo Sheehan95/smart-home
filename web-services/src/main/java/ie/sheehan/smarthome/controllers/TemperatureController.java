@@ -41,7 +41,7 @@ public class TemperatureController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = "/get/all", method = RequestMethod.GET)
 	public List<Temperature> getAll(){
 		return repository.getAll();
 	}
