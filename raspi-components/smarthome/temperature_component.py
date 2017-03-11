@@ -28,7 +28,7 @@ def main():
         humidity = random.uniform(70, 95)
         payload = json.dumps({'temperature': temperature, 'humidity': humidity})
         client.publish(TOPIC, payload)
-        time.sleep(1)
+        time.sleep(5)
 
 
 if __name__ == '__main__':
