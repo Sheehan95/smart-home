@@ -9,4 +9,5 @@ public class SmartHomeWebServicesApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SmartHomeWebServicesApplication.class, args);
 	}
+	
 }

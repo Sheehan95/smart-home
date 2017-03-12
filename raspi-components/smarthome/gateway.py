@@ -6,6 +6,7 @@ import urllib
 
 
 TEMPERATURE_TOPIC = '/ie/sheehan/smart-home/temperature/log'
+FORWARD_TEMPERATURE = '/ie/sheehan/smart-home/temperature/forward'
 
 
 def on_connect(client, userdata, flags, rc):
@@ -13,10 +14,10 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, message):
-    payload = json.loads(message.payload)
-    headers = {'Content-type': 'application/x-www-form-urlencoded', 'Accept': 'text/plain'}
 
     if message.topic == TEMPERATURE_TOPIC:
+        payload = json.loads(message.payload)
+        headers = {'Content-type': 'application/x-www-form-urlencoded', 'Accept': 'text/plain'}
         conn = httplib.HTTPConnection('192.167.1.31:8080')
         params = urllib.urlencode(payload)
         conn.request('POST', '/temperature/add', params, headers)
@@ -26,12 +27,7 @@ def on_message(client, userdata, message):
 
     print 'Client: ', client
     print 'Topic: ', message.topic
-    print 'Payload:'
-
-    for key in payload:
-        print '\t', key, ':\t', payload[key]
-
-    print '\n'
+    print 'Payload:', message.payload
 
 
 def main():
