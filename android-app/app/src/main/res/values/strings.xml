@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Smart Home</string>
+
+    <string name="button_launch_activity">Start The Activity</string>
+
+    <string name="label_temperature_fragment">TEMPERATURE FRAGMENT</string>
+    <string name="label_security_fragment">SECURITY FRAGMENT</string>
+    <string name="label_stock_fragment">STOCK FRAGMENT</string>
+    <string name="label_settings_fragment">SETTINGS FRAGMENT</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
