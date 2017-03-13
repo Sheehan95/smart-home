@@ -1,29 +1,34 @@
 import json
-import paho.mqtt.client as mqtt
 import random
-import time
+
+import paho.mqtt.client as mqtt
+
 
 TOPIC = '/ie/sheehan/smart-home/temperature/log'
-REQUEST_TEMPERATURE = '/ie/sheehan/smart-home/temperature/request'
+TOPIC_TEMPERATURE_REQUESTS = '/ie/sheehan/smart-home/temperature/request'
+TOPIC_TEMPERATURE_RESPONSE = '/ie/sheehan/smart-home/temperature/response'
 
 
 client = mqtt.Client()
 
 
-def on_connect(c, userdata, flags, rc):
+def on_connect(connected, userdata, flags, rc):
     print 'Client connected with status code ', rc
 
 
-def on_message(c, userdata, message):
-    print 'Client: ', c
+def on_message(connected, userdata, message):
+    print 'Client: ', connected
     print 'Topic: ', message.topic
     print 'Payload: ', message.payload
-    log_temperature(666, 666)
+
+    temperature = random.uniform(3.5, 18.5)
+    humidity = random.uniform(70, 95)
+    log_temperature(temperature, humidity)
 
 
 def log_temperature(temperature, humidity):
     payload = json.dumps({'temperature': temperature, 'humidity': humidity})
-    client.publish("/ie/sheehan/smart-home/temperature/getit", payload)
+    client.publish(TOPIC_TEMPERATURE_RESPONSE, payload)
 
 
 def main():
@@ -32,7 +37,7 @@ def main():
 
     client.connect('192.167.1.23', 1883, 60)
 
-    client.subscribe(REQUEST_TEMPERATURE)
+    client.subscribe(TOPIC_TEMPERATURE_REQUESTS)
     client.loop_forever()
 
 #    while True:

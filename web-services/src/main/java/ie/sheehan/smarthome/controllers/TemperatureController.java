@@ -24,19 +24,29 @@ import ie.sheehan.smarthome.repositories.TemperatureRepository;
 @RequestMapping(value = "/temperature")
 public class TemperatureController {
 	
+	private static final String BROKER = "192.167.1.23";
+	
+	private static final String TOPIC_TEMPERATURE_REQUESTS = "/ie/sheehan/smart-home/temperature/request";
+	private static final String TOPIC_TEMPERATURE_RESPONSE = "/ie/sheehan/smart-home/temperature/response";
+	
 	@Autowired
 	TemperatureRepository repository;
 	
 	
+	@RequestMapping(value = "/get", method = RequestMethod.GET)
+	public Temperature get(){
+		return queryForTemperature();
+	}
+	
 	@ResponseBody
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-	public Temperature get(@PathParam("id") String id){
+	public Temperature getById(@PathParam("id") String id){
 		return repository.get(id);
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/get", method = RequestMethod.GET)
-	public List<Temperature> get(@RequestParam("from") long from, @RequestParam("to") long to){
+	@RequestMapping(value = "/get/range", method = RequestMethod.GET)
+	public List<Temperature> getRange(@RequestParam("from") long from, @RequestParam("to") long to){
 		return repository.getRange(from, to);
 	}
 	
@@ -52,6 +62,7 @@ public class TemperatureController {
 		return repository.getAll();
 	}
 	
+	
 	@ResponseBody
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public void add(@RequestParam("temperature") double temperature, @RequestParam("humidity") double humidity){
@@ -62,36 +73,29 @@ public class TemperatureController {
 		
 		repository.add(temp);
 	}
-	
-	@RequestMapping(value = "/get", method = RequestMethod.GET)
-	public Temperature testThatNewFeatureBrah(){
-		return queryForTemperature();
-	}
+
 	
 	
-	/**
-	 * Requests a live temperature reading via MQTT.
-	 * 
-	 * @return 
-	 */
+	
 	private Temperature queryForTemperature(){
 		Temperature temperature = new Temperature();
 		JSONObject json;
 		
 		try {
 			MQTT client = new MQTT();
-			client.setHost("192.167.1.23", 1883);
+			client.setHost(BROKER, 1883);
 			
 			BlockingConnection connection = client.blockingConnection();
 			connection.connect();
-			connection.subscribe(new Topic[]{ new Topic("/ie/sheehan/smart-home/temperature/getit", QoS.AT_LEAST_ONCE) });
-			connection.publish("/ie/sheehan/smart-home/temperature/request", "Hello".getBytes(), QoS.AT_LEAST_ONCE, false);
+			connection.subscribe(new Topic[]{ new Topic(TOPIC_TEMPERATURE_RESPONSE, QoS.AT_LEAST_ONCE) });
+			connection.publish(TOPIC_TEMPERATURE_REQUESTS, "Request".getBytes(), QoS.AT_LEAST_ONCE, false);
 			
 			Message message = connection.receive();
 			json = new JSONObject(new String(message.getPayload()));
 			
 			temperature.temperature = json.getDouble("temperature");
 			temperature.humidity = json.getDouble("humidity");
+			temperature.setTimestamp(System.currentTimeMillis());
 			
 			message.ack();
 			connection.disconnect();
@@ -99,7 +103,6 @@ public class TemperatureController {
 			e.printStackTrace();
 		}
 		
-		temperature.setTimestamp(System.currentTimeMillis());
 		return temperature;
 	}
 	
