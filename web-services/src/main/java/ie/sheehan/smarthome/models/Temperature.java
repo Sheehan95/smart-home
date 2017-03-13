@@ -50,12 +50,10 @@ public class Temperature {
 	
 	
 	public static class TemperatureTimeComparator implements Comparator<Temperature> {
-
 		@Override
 		public int compare(Temperature o1, Temperature o2) {
 			return 0;
 		}
-		
 	}
 	
 }

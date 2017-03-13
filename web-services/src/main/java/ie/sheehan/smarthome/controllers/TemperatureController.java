@@ -9,6 +9,7 @@ import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.Message;
 import org.fusesource.mqtt.client.QoS;
 import org.fusesource.mqtt.client.Topic;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -62,32 +63,44 @@ public class TemperatureController {
 		repository.add(temp);
 	}
 	
-	@RequestMapping(value = "/testing", method = RequestMethod.GET)
-	public String testThatNewFeatureBrah(){
-		test();
-		return "Testing that shit now boiiii.";
+	@RequestMapping(value = "/get", method = RequestMethod.GET)
+	public Temperature testThatNewFeatureBrah(){
+		return queryForTemperature();
 	}
 	
-	public void test(){
+	
+	/**
+	 * Requests a live temperature reading via MQTT.
+	 * 
+	 * @return 
+	 */
+	private Temperature queryForTemperature(){
+		Temperature temperature = new Temperature();
+		JSONObject json;
+		
 		try {
-			MQTT mq = new MQTT();
-			mq.setHost("192.167.1.23", 1883);
+			MQTT client = new MQTT();
+			client.setHost("192.167.1.23", 1883);
 			
-			BlockingConnection connection = mq.blockingConnection();
+			BlockingConnection connection = client.blockingConnection();
 			connection.connect();
-			Topic[] topics = new Topic[1];
-			topics[0] = new Topic("/ie/sheehan/smart-home/temperature/getit", QoS.AT_LEAST_ONCE);
-			connection.subscribe(topics);
+			connection.subscribe(new Topic[]{ new Topic("/ie/sheehan/smart-home/temperature/getit", QoS.AT_LEAST_ONCE) });
 			connection.publish("/ie/sheehan/smart-home/temperature/request", "Hello".getBytes(), QoS.AT_LEAST_ONCE, false);
 			
-			Message msg = connection.receive();
-			System.out.println(msg.getTopic());
-			msg.ack();
+			Message message = connection.receive();
+			json = new JSONObject(new String(message.getPayload()));
 			
+			temperature.temperature = json.getDouble("temperature");
+			temperature.humidity = json.getDouble("humidity");
+			
+			message.ack();
 			connection.disconnect();
 		} catch (Exception e){
 			e.printStackTrace();
 		}
+		
+		temperature.setTimestamp(System.currentTimeMillis());
+		return temperature;
 	}
 	
 }
