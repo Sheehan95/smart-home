@@ -3,27 +3,20 @@ package ie.sheehan.smarthome.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.json.JSONObject;
-
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import ie.sheehan.smarthome.R;
-import ie.sheehan.smarthome.model.Temperature;
+import ie.sheehan.smarthome.model.EnvironmentReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
 /**
@@ -85,7 +78,7 @@ public class TemperatureFragment extends Fragment {
         }
     }
 
-    private class GetTemperature extends AsyncTask<Void, Void, Temperature> {
+    private class GetTemperature extends AsyncTask<Void, Void, EnvironmentReading> {
 
         @Override
         protected void onPreExecute() {
@@ -93,16 +86,16 @@ public class TemperatureFragment extends Fragment {
         }
 
         @Override
-        protected Temperature doInBackground(Void... params) {
+        protected EnvironmentReading doInBackground(Void... params) {
             return HttpRequestHandler.getInstance().getTemperature();
         }
 
         @Override
-        protected void onPostExecute(Temperature temperature) {
+        protected void onPostExecute(EnvironmentReading envReading) {
             NumberFormat formatter = new DecimalFormat("#0.00");
 
-            temperatureView.setText(formatter.format(temperature.getTemperature()) + "°C");
-            humidityView.setText(formatter.format(temperature.getHumidity()));
+            temperatureView.setText(formatter.format(envReading.getTemperature()) + "°C");
+            humidityView.setText(formatter.format(envReading.getHumidity()));
         }
 
     }

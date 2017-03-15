@@ -8,14 +8,22 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import com.mongodb.CommandResult;
+
 import ie.sheehan.smarthome.models.EnvironmentReading;
 
+/**
+ * DAO for {@link EnvironmentReading} objects saved in a MongoDB database.
+ * 
+ * @author Alan Sheehan
+ */
 @Repository
 public class EnvironmentReadingRepository {
 	
+	public static final String ENVIRONMENT_READING_COLLECTION = "environmentreadings";
+	
 	private MongoTemplate database;
 	
-	public static final String ENVIRONMENT_READING_COLLECTION = "environmentreadings";
 	
 	@Autowired
 	public EnvironmentReadingRepository(MongoTemplate database){
@@ -49,6 +57,11 @@ public class EnvironmentReadingRepository {
 		query.addCriteria(Criteria.where("timestamp").gte(from).andOperator(Criteria.where("timestamp").lte(to)));
 		
 		return database.find(query, EnvironmentReading.class, ENVIRONMENT_READING_COLLECTION);
+	}
+	
+	public int getCount(){
+		CommandResult result = database.getCollection(ENVIRONMENT_READING_COLLECTION).getStats();
+		return result.getInt("count");
 	}
 	
 	public void add(EnvironmentReading envReading){

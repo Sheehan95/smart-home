@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Temperature");
+        toolbar.setTitle("EnvironmentReading");
         setSupportActionBar(toolbar);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (tab.getPosition()) {
                     case TabPagerAdapter.TAB_TEMPERATURE:
-                        toolbar.setTitle("Temperature");
+                        toolbar.setTitle("EnvironmentReading");
                         break;
                     case TabPagerAdapter.TAB_SECURITY:
                         toolbar.setTitle("Security");

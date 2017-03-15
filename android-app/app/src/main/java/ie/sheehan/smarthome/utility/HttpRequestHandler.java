@@ -12,7 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import ie.sheehan.smarthome.model.Temperature;
+import ie.sheehan.smarthome.model.EnvironmentReading;
 
 
 public class HttpRequestHandler {
@@ -31,11 +31,11 @@ public class HttpRequestHandler {
     public static HttpRequestHandler getInstance() { return instance; }
 
 
-    public Temperature getTemperature() {
+    public EnvironmentReading getTemperature() {
         JSONObject json;
         HttpURLConnection connection;
         StringBuilder response = new StringBuilder();
-        Temperature temperature = null;
+        EnvironmentReading envReading = null;
 
         String target = String.format("http://%s:8080%s%s", DOMAIN, ENVPOINT_ENVIRONMENT, "/get");
 
@@ -51,7 +51,7 @@ public class HttpRequestHandler {
             }
 
             json = new JSONObject(response.toString());
-            temperature = new Temperature(json);
+            envReading = new EnvironmentReading(json);
         } catch (MalformedURLException e) {
             Log.e("ERROR", "MALFORMED URL ERROR");
         } catch (IOException e) {
@@ -62,7 +62,7 @@ public class HttpRequestHandler {
             Log.e("ERROR", "UNKNOWN ERROR");
         }
 
-        return temperature;
+        return envReading;
     }
 
 }

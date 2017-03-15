@@ -6,16 +6,16 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Temperature {
+public class EnvironmentReading {
 
     private String _id;
     private double temperature;
     private double humidity;
     private long timestamp;
 
-    public Temperature (){}
+    public EnvironmentReading(){}
 
-    public Temperature(JSONObject jsonObject) {
+    public EnvironmentReading(JSONObject jsonObject) {
         try {
             setTemperature(jsonObject.getDouble("temperature"));
             setHumidity(jsonObject.getDouble("humidity"));
