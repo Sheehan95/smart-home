@@ -17,7 +17,7 @@ public class EnvironmentReading {
 	
 	public double humidity;
 	
-	private long timestamp;
+	public long timestamp;
 	
 	
 	@Override
@@ -34,15 +34,6 @@ public class EnvironmentReading {
 		EnvironmentReading other = (EnvironmentReading) obj;
 		return this.id.equals(other.id);
 	}
-	
-	public long getTimestamp() {
-		return timestamp;
-	}
-
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-	}
-	
 	
 	public static class EnvironmentReadingTimeComparator implements Comparator<EnvironmentReading> {
 		@Override

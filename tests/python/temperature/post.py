@@ -1,6 +1,7 @@
 import httplib
 import urllib
 import random
+import time
 
 
 def main():
@@ -12,8 +13,9 @@ def main():
         parameters = urllib.urlencode({'temperature': temperature, 'humidity': humidity})
 
         connection = httplib.HTTPConnection('127.0.0.1:8080')
-        connection.request('POST', '/temperature/add', parameters, headers)
+        connection.request('POST', '/environment/add', parameters, headers)
         connection.close()
+        time.sleep(1)
 
 
 if __name__ == '__main__':

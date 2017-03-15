@@ -2,7 +2,7 @@ import json
 import random
 
 import paho.mqtt.client as mqtt
-
+import time
 
 TOPIC = '/ie/sheehan/smart-home/envreading/log'
 TOPIC_ENVIRONMENT_READING_REQUESTS = '/ie/sheehan/smart-home/envreading/request'
@@ -27,7 +27,9 @@ def on_message(connected, userdata, message):
 
 
 def log_temperature(temperature, humidity):
-    payload = json.dumps({'temperature': temperature, 'humidity': humidity})
+    timestamp = int(time.time() * 1000)
+
+    payload = json.dumps({'temperature': temperature, 'humidity': humidity, 'timestamp': timestamp})
     client.publish(TOPIC_ENVIRONMENT_READING_RESPONSE, payload)
 
 

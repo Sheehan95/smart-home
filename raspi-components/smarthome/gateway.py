@@ -1,8 +1,6 @@
 import json
 import paho.mqtt.client as mqtt
-
-import httplib
-import urllib
+import requests
 
 
 ENVIRONMENT_TOPIC = '/ie/sheehan/smart-home/envreading/log'
@@ -17,13 +15,8 @@ def on_message(client, userdata, message):
 
     if message.topic == ENVIRONMENT_TOPIC:
         payload = json.loads(message.payload)
-        headers = {'Content-type': 'application/x-www-form-urlencoded', 'Accept': 'text/plain'}
-        conn = httplib.HTTPConnection('192.167.1.31:8080')
-        params = urllib.urlencode(payload)
-        conn.request('POST', '/environment/add', params, headers)
-        response = conn.getresponse()
-        conn.close()
-        print 'HTTP Status Code:', response.status, response.reason
+        request = requests.post('http://192.167.1.31:8080/environment/add', json=payload)
+        print request.status_code
 
     print 'Client: ', client
     print 'Topic: ', message.topic

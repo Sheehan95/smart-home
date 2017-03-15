@@ -11,6 +11,7 @@ import org.fusesource.mqtt.client.QoS;
 import org.fusesource.mqtt.client.Topic;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,17 +64,10 @@ public class EnvironmentController {
 	}
 	
 	
-	@ResponseBody
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public void add(@RequestParam("temperature") double temperature, @RequestParam("humidity") double humidity){
-		EnvironmentReading envReading = new EnvironmentReading();
-		envReading.temperature = temperature;
-		envReading.humidity = humidity;
-		envReading.setTimestamp(System.currentTimeMillis());
-		
+	public void add(@RequestBody EnvironmentReading envReading){
 		repository.add(envReading);
 	}
-
 	
 	
 	
@@ -95,7 +89,7 @@ public class EnvironmentController {
 			
 			envReading.temperature = json.getDouble("temperature");
 			envReading.humidity = json.getDouble("humidity");
-			envReading.setTimestamp(System.currentTimeMillis());
+			envReading.timestamp = json.getLong("timestamp");
 			
 			message.ack();
 			connection.disconnect();
