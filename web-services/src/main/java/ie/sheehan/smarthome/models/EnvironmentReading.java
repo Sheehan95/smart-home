@@ -5,15 +5,10 @@ import java.util.Comparator;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import ie.sheehan.smarthome.repositories.TemperatureRepository;
+import ie.sheehan.smarthome.repositories.EnvironmentReadingRepository;
 
-/**
- * Represents a temperature and humidity reading at a given time.
- * 
- * @author Alan Sheehan
- */
-@Document(collection = TemperatureRepository.TEMPERATURE_COLLECTION)
-public class Temperature {
+@Document(collection = EnvironmentReadingRepository.ENVIRONMENT_READING_COLLECTION)
+public class EnvironmentReading {
 	
 	@Id
 	public String id;
@@ -32,11 +27,11 @@ public class Temperature {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (! (obj instanceof Temperature)){
+		if (! (obj instanceof EnvironmentReading)){
 			return false;
 		}
 		
-		Temperature other = (Temperature) obj;
+		EnvironmentReading other = (EnvironmentReading) obj;
 		return this.id.equals(other.id);
 	}
 	
@@ -49,9 +44,9 @@ public class Temperature {
 	}
 	
 	
-	public static class TemperatureTimeComparator implements Comparator<Temperature> {
+	public static class EnvironmentReadingTimeComparator implements Comparator<EnvironmentReading> {
 		@Override
-		public int compare(Temperature o1, Temperature o2) {
+		public int compare(EnvironmentReading o1, EnvironmentReading o2) {
 			return 0;
 		}
 	}

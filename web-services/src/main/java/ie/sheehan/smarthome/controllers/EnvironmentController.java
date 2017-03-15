@@ -17,48 +17,48 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import ie.sheehan.smarthome.models.Temperature;
-import ie.sheehan.smarthome.repositories.TemperatureRepository;
+import ie.sheehan.smarthome.models.EnvironmentReading;
+import ie.sheehan.smarthome.repositories.EnvironmentReadingRepository;
 
 @RestController
-@RequestMapping(value = "/temperature")
-public class TemperatureController {
+@RequestMapping(value = "/envreading")
+public class EnvironmentController {
 	
 	private static final String BROKER = "192.167.1.23";
 	
-	private static final String TOPIC_TEMPERATURE_REQUESTS = "/ie/sheehan/smart-home/temperature/request";
-	private static final String TOPIC_TEMPERATURE_RESPONSE = "/ie/sheehan/smart-home/temperature/response";
+	private static final String TOPIC_ENVIRONMENT_READING_REQUEST = "/ie/sheehan/smart-home/envreading/request";
+	private static final String TOPIC_ENVIRONMENT_READING_RESPONSE = "/ie/sheehan/smart-home/envreading/response";
 	
 	@Autowired
-	TemperatureRepository repository;
+	EnvironmentReadingRepository repository;
 	
 	
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
-	public Temperature get(){
-		return queryForTemperature();
+	public EnvironmentReading get(){
+		return queryForEnvironmentReading();
 	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-	public Temperature getById(@PathParam("id") String id){
+	public EnvironmentReading getById(@PathParam("id") String id){
 		return repository.get(id);
 	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/get/range", method = RequestMethod.GET)
-	public List<Temperature> getRange(@RequestParam("from") long from, @RequestParam("to") long to){
+	public List<EnvironmentReading> getRange(@RequestParam("from") long from, @RequestParam("to") long to){
 		return repository.getRange(from, to);
 	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/get/latest", method = RequestMethod.GET)
-	public Temperature getLatest(){
+	public EnvironmentReading getLatest(){
 		return repository.getLatest();
 	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/get/all", method = RequestMethod.GET)
-	public List<Temperature> getAll(){
+	public List<EnvironmentReading> getAll(){
 		return repository.getAll();
 	}
 	
@@ -66,19 +66,19 @@ public class TemperatureController {
 	@ResponseBody
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public void add(@RequestParam("temperature") double temperature, @RequestParam("humidity") double humidity){
-		Temperature temp = new Temperature();
-		temp.temperature = temperature;
-		temp.humidity = humidity;
-		temp.setTimestamp(System.currentTimeMillis());
+		EnvironmentReading envReading = new EnvironmentReading();
+		envReading.temperature = temperature;
+		envReading.humidity = humidity;
+		envReading.setTimestamp(System.currentTimeMillis());
 		
-		repository.add(temp);
+		repository.add(envReading);
 	}
 
 	
 	
 	
-	private Temperature queryForTemperature(){
-		Temperature temperature = new Temperature();
+	private EnvironmentReading queryForEnvironmentReading(){
+		EnvironmentReading envReading = new EnvironmentReading();
 		JSONObject json;
 		
 		try {
@@ -87,15 +87,15 @@ public class TemperatureController {
 			
 			BlockingConnection connection = client.blockingConnection();
 			connection.connect();
-			connection.subscribe(new Topic[]{ new Topic(TOPIC_TEMPERATURE_RESPONSE, QoS.AT_LEAST_ONCE) });
-			connection.publish(TOPIC_TEMPERATURE_REQUESTS, "Request".getBytes(), QoS.AT_LEAST_ONCE, false);
+			connection.subscribe(new Topic[]{ new Topic(TOPIC_ENVIRONMENT_READING_RESPONSE, QoS.AT_LEAST_ONCE) });
+			connection.publish(TOPIC_ENVIRONMENT_READING_REQUEST, "Request".getBytes(), QoS.AT_LEAST_ONCE, false);
 			
 			Message message = connection.receive();
 			json = new JSONObject(new String(message.getPayload()));
 			
-			temperature.temperature = json.getDouble("temperature");
-			temperature.humidity = json.getDouble("humidity");
-			temperature.setTimestamp(System.currentTimeMillis());
+			envReading.temperature = json.getDouble("temperature");
+			envReading.humidity = json.getDouble("humidity");
+			envReading.setTimestamp(System.currentTimeMillis());
 			
 			message.ack();
 			connection.disconnect();
@@ -103,7 +103,7 @@ public class TemperatureController {
 			e.printStackTrace();
 		}
 		
-		return temperature;
+		return envReading;
 	}
 	
 }
