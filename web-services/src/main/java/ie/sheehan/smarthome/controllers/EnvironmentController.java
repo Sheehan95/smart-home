@@ -21,7 +21,7 @@ import ie.sheehan.smarthome.models.EnvironmentReading;
 import ie.sheehan.smarthome.repositories.EnvironmentReadingRepository;
 
 @RestController
-@RequestMapping(value = "/envreading")
+@RequestMapping(value = "/environment")
 public class EnvironmentController {
 	
 	private static final String BROKER = "192.167.1.23";

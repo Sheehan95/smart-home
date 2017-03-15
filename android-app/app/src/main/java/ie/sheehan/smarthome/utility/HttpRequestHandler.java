@@ -19,7 +19,7 @@ public class HttpRequestHandler {
 
     private static final String DOMAIN = "192.167.1.31";
 
-    private static final String ENDPOINT_TEMPERATURE = "/temperature";
+    private static final String ENVPOINT_ENVIRONMENT = "/environment";
     private static final String ENDPOINT_SECURITY = "/security";
     private static final String ENDPOINT_STOCK = "/stock";
 
@@ -37,7 +37,7 @@ public class HttpRequestHandler {
         StringBuilder response = new StringBuilder();
         Temperature temperature = null;
 
-        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_TEMPERATURE, "/get");
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENVPOINT_ENVIRONMENT, "/get");
 
         try {
             connection = (HttpURLConnection) new URL(target).openConnection();
