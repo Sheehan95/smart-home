@@ -41,3 +41,135 @@ A number of Postman queries have been saved to test the REST API. They can be ac
 * Install Postman as either a [Chrome plugin](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?hl=en) or a [stand-alone application](https://www.getpostman.com/)
 * Select the import option and browse for the file smart-home/tests/Postman API Tests.json
 * The imported collection should be added to the "Collections" tab on the left of the screen. Open the imported "Smart-Home REST API Tests" collection to view and run the tests
+
+## RESTful API Documentation
+
+### Log Environment Reading
+Used to log a new environment reading, a pairing of temperature and humidity values, to the database.
+
+#### Endpoint
+/temperature/log
+
+#### Method
+GET
+
+#### URL Parameters
+None
+
+#### Data Parameters
+A JSON environment reading object which looks like the following:
+```javascript
+{
+  temperature: 16.15953354,
+  humidity: 59.9562189
+}
+```
+
+| Field       | Data Type | Description                               |
+|:----------- |:--------- |:----------------------------------------- |
+| temperature | Double    | Temperature in celsius                    |
+| humidity    | Double    | Humidity value                            |
+
+#### Successful Response
+*HTTP Code:* 200 OK
+
+*Content:* JSON return in the format
+```javascript
+{
+  _id: "507f191e810c19729de860ea"
+}
+```
+
+#### Failed Response
+*HTTP Code:* 404 NOT FOUND
+
+*Content:* JSON return in the format
+```javascript
+{
+  error: "Unable to reach sensor for reading."
+}
+```
+
+#### Sample Request
+```javascript
+$.ajax({
+  url: "/temperature/log",
+  type: "PUT"
+  dataType: "json",
+  data: {
+    temperature: 15.8954656,
+    humidity: 59.698495895
+  }
+});
+```
+
+---
+
+### Get Environment Readings Between Two Dates
+Returns all the logged temperature readings between two dates.
+
+#### Endpoint
+/temperature/get/range
+
+#### Method
+GET
+
+#### URL Parameters
+```
+from=[integer]
+```
+example: 1489572649
+```
+to=[integer]
+```
+example: 1489572674
+
+#### Data Parameters
+None
+
+#### Successful Response
+*HTTP Code:* 200 OK
+
+*Content:* JSON return in the format
+```javascript
+[
+  {
+    _id: "507f191e810c19729de860ea",
+    temperature: 18.6549896851,
+    humidity: 64.198958198,
+    timestamp: 1489572674
+  },
+  {
+    _id: "507f191e810c19729de860eb",
+    temperature: 19.126565246,
+    humidity: 64.986516521789,
+    timestamp: 1489572956
+  },
+  ...
+]
+```
+
+#### Failed Response
+*HTTP Code:* 404 NOT FOUND
+
+*Content:* JSON return in the format
+```javascript
+{
+  error: "No temperature values found within that time-frame."
+}
+```
+
+#### Sample Request
+```javascript
+$.ajax({
+  url: "/temperature/get/range",
+  type: "GET"
+  dataType: "json",
+  data: {
+    from: 1489572649,
+    to: 1489572956
+  }
+});
+```
+
+---
