@@ -1,12 +1,14 @@
 package ie.sheehan.smarthome;
 
+import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
 
@@ -15,41 +17,24 @@ public class ChartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_chart);
 
-        LineChart lineChart = (LineChart) findViewById(R.id.chart);
+        BarChart barChart = (BarChart) findViewById(R.id.chart);
 
-        ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(4f, 0));
-        entries.add(new Entry(8f, 1));
-        entries.add(new Entry(6f, 2));
-        entries.add(new Entry(2f, 3));
-        entries.add(new Entry(18f, 4));
-        entries.add(new Entry(9f, 5));
-        entries.add(new Entry(4f, 6));
-        entries.add(new Entry(8f, 7));
-        entries.add(new Entry(6f, 8));
-        entries.add(new Entry(2f, 9));
-        entries.add(new Entry(18f, 10));
-        entries.add(new Entry(9f, 11));
-
-        LineDataSet dataSet = new LineDataSet(entries, "EnvironmentReading");
-
-        ArrayList<Entry> e1 = new ArrayList<>();
-        entries.add(new Entry(9f, 0));
-        entries.add(new Entry(11f, 1));
-        entries.add(new Entry(3f, 2));
-        entries.add(new Entry(6f, 3));
-        entries.add(new Entry(10f, 4));
-        entries.add(new Entry(5f, 5));
-        entries.add(new Entry(9f, 6));
-        entries.add(new Entry(3f, 7));
-        entries.add(new Entry(5f, 8));
-        entries.add(new Entry(6f, 9));
-        entries.add(new Entry(8f, 10));
-        entries.add(new Entry(7f, 11));
-
-        LineDataSet d1 = new LineDataSet(e1, "EnvironmentReading");
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        entries.add(new BarEntry(4f, 0));
+        entries.add(new BarEntry(8f, 1));
+        entries.add(new BarEntry(6f, 2));
+        entries.add(new BarEntry(2f, 3));
+        entries.add(new BarEntry(18f, 4));
+        entries.add(new BarEntry(9f, 5));
+        entries.add(new BarEntry(4f, 6));
+        entries.add(new BarEntry(8f, 7));
+        entries.add(new BarEntry(6f, 8));
+        entries.add(new BarEntry(2f, 9));
+        entries.add(new BarEntry(18f, 10));
+        entries.add(new BarEntry(9f, 11));
 
         ArrayList<String> labels = new ArrayList<>();
         labels.add("Jan");
@@ -65,10 +50,12 @@ public class ChartActivity extends AppCompatActivity {
         labels.add("Nov");
         labels.add("Dec");
 
-        LineData data = new LineData(labels, dataSet);
-        data.addDataSet(d1);
-        lineChart.setData(data);
-        lineChart.setDescription("EnvironmentReading values for the year");
+        BarDataSet dataSet = new BarDataSet(entries, "Average Temperature");
+
+        BarData data = new BarData(labels, dataSet);
+        barChart.setData(data);
+        barChart.setDescription("");
+        barChart.animateY(1000);
     }
 
 }
