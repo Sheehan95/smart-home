@@ -1,10 +1,12 @@
 package ie.sheehan.smarthome.model;
 
-
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
+import java.util.Locale;
 
 public class EnvironmentReading {
 
@@ -27,7 +29,9 @@ public class EnvironmentReading {
 
     @Override
     public String toString() {
-        return "Temperature: " + temperature + "\tHumidity: " + humidity;
+        Date date = new Date(timestamp * 1000L);
+        return String.format(Locale.ENGLISH, "Temp: %f\tHum: %f\tTime: %d\nDate: %s",
+                temperature, humidity, timestamp, date.toString());
     }
 
     public String getId() {

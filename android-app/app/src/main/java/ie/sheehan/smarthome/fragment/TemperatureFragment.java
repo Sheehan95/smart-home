@@ -1,16 +1,28 @@
 package ie.sheehan.smarthome.fragment;
 
 
+import android.app.DatePickerDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -19,20 +31,31 @@ import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.model.EnvironmentReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+
 public class TemperatureFragment extends Fragment {
 
+    SimpleDateFormat dateFormat;
     ScheduledExecutorService executorService;
+
+    Date fromDate;
+    Date toDate;
+
 
     TextView temperatureView;
     TextView humidityView;
+
+    TextView fromDateView;
+    TextView toDateView;
+
 
 
     public TemperatureFragment() {}
 
 
+    // ============================================================================================
+    // FRAGMENT LIFECYCLE METHODS
+    // ============================================================================================
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,8 +66,14 @@ public class TemperatureFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy", Locale.getDefault());
+
         temperatureView = (TextView) getActivity().findViewById(R.id.text_temperature);
         humidityView = (TextView) getActivity().findViewById(R.id.text_humidity);
+
+        fromDateView = (TextView) getActivity().findViewById(R.id.text_from_date);
+        toDateView = (TextView) getActivity().findViewById(R.id.text_to_date);
+
 
         executorService = Executors.newScheduledThreadPool(10);
 
@@ -78,6 +107,56 @@ public class TemperatureFragment extends Fragment {
         }
     }
 
+
+    // ============================================================================================
+    // BUTTON LISTENER METHODS
+    // ============================================================================================
+    public void openChart(){
+        Date from = new Date(1451610000);
+        Date to = new Date(1451610000);
+
+        new GetTemperatureInRange().execute(from, to);
+    }
+
+
+    public void openSetFromDateDialog(){
+        DatePickerFragment fragment = new DatePickerFragment();
+
+        fragment.addOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, month, dayOfMonth, 0, 0, 0);
+                fromDate = calendar.getTime();
+
+                fromDateView.setText(dateFormat.format(fromDate));
+            }
+        });
+
+        fragment.show(getActivity().getSupportFragmentManager(), "fromDatePicker");
+    }
+
+    public void openSetToDateDialog(){
+        DatePickerFragment fragment = new DatePickerFragment();
+
+        fragment.addOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, month, dayOfMonth, 0, 0, 0);
+                toDate = calendar.getTime();
+
+                toDateView.setText(dateFormat.format(toDate));
+            }
+        });
+
+        fragment.show(getActivity().getSupportFragmentManager(), "toDatePicker");
+    }
+
+
+    // ============================================================================================
+    // INNER CLASS DECLARATION
+    // ============================================================================================
     private class GetTemperature extends AsyncTask<Void, Void, EnvironmentReading> {
 
         @Override
@@ -87,7 +166,7 @@ public class TemperatureFragment extends Fragment {
 
         @Override
         protected EnvironmentReading doInBackground(Void... params) {
-            return HttpRequestHandler.getInstance().getTemperature();
+            return HttpRequestHandler.getInstance().getEnvironmentReading();
         }
 
         @Override
@@ -96,6 +175,33 @@ public class TemperatureFragment extends Fragment {
 
             temperatureView.setText(formatter.format(envReading.getTemperature()) + "°C");
             humidityView.setText(formatter.format(envReading.getHumidity()));
+        }
+
+    }
+
+
+    private class GetTemperatureInRange extends AsyncTask<Date, Void, List<EnvironmentReading>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected List<EnvironmentReading> doInBackground(Date... range) {
+            Date from = range[0];
+            Date to = range[1];
+
+            return HttpRequestHandler.getInstance().getEnvironmentReadingsInRange(from, to);
+        }
+
+        @Override
+        protected void onPostExecute(List<EnvironmentReading> environmentReadings) {
+            super.onPostExecute(environmentReadings);
+
+            for (EnvironmentReading reading : environmentReadings){
+                Log.e("ARRAY", reading.toString());
+            }
         }
 
     }

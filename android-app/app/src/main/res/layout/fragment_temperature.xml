@@ -33,4 +33,43 @@
         android:id="@+id/button_view_graph"
         android:onClick="openGraphActivity" />
 
+    <Button
+        android:id="@+id/button_set_from_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button_view_graph"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="35dp"
+        android:text="From Date"
+        android:layout_toStartOf="@+id/text_humidity"
+        android:onClick="showFromDatePickerDialog"/>
+
+    <Button
+        android:id="@+id/button_set_to_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/button_set_from_date"
+        android:text="To Date"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/text_humidity"
+        android:onClick="showToDatePickerDialog"/>
+
+    <TextView
+        android:id="@+id/text_from_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button_set_from_date"
+        android:layout_alignParentStart="true"
+        android:text="FROM"
+        android:layout_toStartOf="@+id/button_set_to_date" />
+
+    <TextView
+        android:id="@+id/text_to_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button_set_from_date"
+        android:text="TO"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/text_humidity" />
+
 </RelativeLayout>

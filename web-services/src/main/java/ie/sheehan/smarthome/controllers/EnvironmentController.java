@@ -92,6 +92,7 @@ public class EnvironmentController {
 		try {
 			MQTT client = new MQTT();
 			client.setHost(MQTT_BROKER, 1883);
+			client.setConnectAttemptsMax(1);
 			
 			BlockingConnection connection = client.blockingConnection();
 			connection.connect();

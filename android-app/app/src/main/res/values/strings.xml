@@ -8,6 +8,11 @@
     <string name="label_stock_fragment">STOCK FRAGMENT</string>
     <string name="label_settings_fragment">SETTINGS FRAGMENT</string>
 
+    <string name="title_environment_fragment">Environment Readings</string>
+    <string name="title_security_fragment">Security</string>
+    <string name="title_stock_fragment">Stock</string>
+    <string name="title_settings_fragment">Settings</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

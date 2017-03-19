@@ -19,6 +19,11 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     public static final int TAB_STOCK = 2;
     public static final int TAB_SETTINGS = 3;
 
+    public TemperatureFragment temperatureFragment = new TemperatureFragment();
+    public SecurityFragment securityFragment = new SecurityFragment();
+    public StockFragment stockFragment = new StockFragment();
+    public SettingsFragment settingsFragment = new SettingsFragment();
+
 
     public TabPagerAdapter(FragmentManager manager, int tabCount) {
         super(manager);
@@ -30,13 +35,13 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case TAB_TEMPERATURE:
-                return new TemperatureFragment();
+                return temperatureFragment;
             case TAB_SECURITY:
-                return new SecurityFragment();
+                return securityFragment;
             case TAB_STOCK:
-                return new StockFragment();
+                return stockFragment;
             case TAB_SETTINGS:
-                return new SettingsFragment();
+                return settingsFragment;
             default:
                 return null;
         }

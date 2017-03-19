@@ -1,16 +1,22 @@
 package ie.sheehan.smarthome;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import ie.sheehan.smarthome.adapter.TabPagerAdapter;
+import ie.sheehan.smarthome.fragment.DatePickerFragment;
+import ie.sheehan.smarthome.fragment.TemperatureFragment;
+
+import static android.R.attr.fragment;
 
 public class MainActivity extends AppCompatActivity {
+
+    private TabPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final TabPagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        adapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
 
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -41,16 +47,16 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (tab.getPosition()) {
                     case TabPagerAdapter.TAB_TEMPERATURE:
-                        toolbar.setTitle("EnvironmentReading");
+                        toolbar.setTitle(R.string.title_environment_fragment);
                         break;
                     case TabPagerAdapter.TAB_SECURITY:
-                        toolbar.setTitle("Security");
+                        toolbar.setTitle(R.string.title_security_fragment);
                         break;
                     case TabPagerAdapter.TAB_STOCK:
-                        toolbar.setTitle("Stock");
+                        toolbar.setTitle(R.string.title_stock_fragment);
                         break;
                     case TabPagerAdapter.TAB_SETTINGS:
-                        toolbar.setTitle("Settings");
+                        toolbar.setTitle(R.string.title_settings_fragment);
                         break;
                     default:
                         toolbar.setTitle(R.string.app_name);
@@ -66,8 +72,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     public void openGraphActivity(View view) {
-        startActivity(new Intent(this, ChartActivity.class));
+        adapter.temperatureFragment.openChart();
+    }
+
+    public void showFromDatePickerDialog(View view) {
+        adapter.temperatureFragment.openSetFromDateDialog();
+    }
+
+    public void showToDatePickerDialog(View view) {
+        adapter.temperatureFragment.openSetToDateDialog();
     }
 
 }
