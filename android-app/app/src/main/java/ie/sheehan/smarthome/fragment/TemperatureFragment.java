@@ -2,6 +2,7 @@ package ie.sheehan.smarthome.fragment;
 
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -12,13 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.io.CharArrayReader;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +31,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import ie.sheehan.smarthome.ChartActivity;
 import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.model.EnvironmentReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
@@ -112,10 +117,12 @@ public class TemperatureFragment extends Fragment {
     // BUTTON LISTENER METHODS
     // ============================================================================================
     public void openChart(){
-        Date from = new Date(1451610000);
-        Date to = new Date(1451610000);
+        if (fromDate == null || toDate == null){
+            Toast.makeText(getActivity(), "You must set a date range.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        new GetTemperatureInRange().execute(from, to);
+        new GetTemperatureInRange().execute(fromDate, toDate);
     }
 
 
@@ -143,7 +150,7 @@ public class TemperatureFragment extends Fragment {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, dayOfMonth, 0, 0, 0);
+                calendar.set(year, month, dayOfMonth, 23, 59, 59);
                 toDate = calendar.getTime();
 
                 toDateView.setText(dateFormat.format(toDate));
@@ -199,9 +206,11 @@ public class TemperatureFragment extends Fragment {
         protected void onPostExecute(List<EnvironmentReading> environmentReadings) {
             super.onPostExecute(environmentReadings);
 
-            for (EnvironmentReading reading : environmentReadings){
-                Log.e("ARRAY", reading.toString());
-            }
+            Bundle arguments = new Bundle();
+            arguments.putSerializable("envReadings", (ArrayList) environmentReadings);
+            Intent intent = new Intent(getActivity(), ChartActivity.class);
+            intent.putExtras(arguments);
+            getActivity().startActivity(intent);
         }
 
     }

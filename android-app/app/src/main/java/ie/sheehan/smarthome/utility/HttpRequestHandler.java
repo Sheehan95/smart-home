@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import ie.sheehan.smarthome.model.EnvironmentReading;
 
@@ -77,7 +78,7 @@ public class HttpRequestHandler {
         List<EnvironmentReading> envReadings = new ArrayList<>();
 
         String target = String.format("http://%s:8080%s%s", DOMAIN, ENVPOINT_ENVIRONMENT, "/get/range");
-        target += String.format("?from=%d&to=%d", from.getTime(), to.getTime());
+        target += String.format(Locale.getDefault(), "?from=%d&to=%d", (from.getTime() / 1000L), (to.getTime() / 1000L));
 
         try {
             connection = (HttpURLConnection) new URL(target).openConnection();

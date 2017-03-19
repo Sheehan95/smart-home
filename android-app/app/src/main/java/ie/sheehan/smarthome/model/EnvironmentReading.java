@@ -1,14 +1,16 @@
 package ie.sheehan.smarthome.model;
 
+import android.os.Parcelable;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
 
-public class EnvironmentReading {
+public class EnvironmentReading implements Serializable {
 
     private String _id;
     private double temperature;
