@@ -1,23 +1,31 @@
-package ie.sheehan.smarthome.fragment;
+package ie.sheehan.smarthome.dialog;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import java.util.Calendar;
 
 /**
- * A fragment that presents a date picker dialog to the user.
+ * An implementation of a {@link DialogFragment} that displays a date-picker dialog.
  */
 public class DatePickerFragment extends DialogFragment {
 
-    DatePickerDialog.OnDateSetListener listener;
+    private DatePickerDialog.OnDateSetListener listener;
 
+    /**
+     * Adds an instance of {@link android.app.DatePickerDialog.OnDateSetListener} so that the
+     * selected date value can be retrieved.
+     *
+     * @param listener to be assigned to the dialog
+     */
     public void addOnDateSetListener(DatePickerDialog.OnDateSetListener listener) {
         this.listener = listener;
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Calendar calendar = Calendar.getInstance();

@@ -2,22 +2,25 @@ package ie.sheehan.smarthome;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import ie.sheehan.smarthome.adapter.TabPagerAdapter;
-import ie.sheehan.smarthome.fragment.DatePickerFragment;
-import ie.sheehan.smarthome.fragment.TemperatureFragment;
 
-import static android.R.attr.fragment;
-
+/**
+ * Main Activity.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private TabPagerAdapter adapter;
 
+
+
+    // ============================================================================================
+    // ACTIVITY LIFECYCLE METHODS
+    // ============================================================================================
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+    // ============================================================================================
+    // DECLARING LISTENER METHODS
+    // ============================================================================================
     public void openGraphActivity(View view) {
         adapter.temperatureFragment.openChart();
     }

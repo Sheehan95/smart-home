@@ -93,6 +93,7 @@ public class EnvironmentController {
 			MQTT client = new MQTT();
 			client.setHost(MQTT_BROKER, 1883);
 			client.setConnectAttemptsMax(1);
+			client.setReconnectAttemptsMax(1);
 			
 			BlockingConnection connection = client.blockingConnection();
 			connection.connect();
@@ -110,10 +111,13 @@ public class EnvironmentController {
 			connection.disconnect();
 		} catch (URISyntaxException e) {
 			System.out.println("Broker incorrectly configured.");
+			return new EnvironmentReading();
 		} catch (JSONException e) {
 			System.out.println("Unable to parse value from JSON.");
+			return new EnvironmentReading();
 		} catch (Exception e) {
 			System.out.println("MQTT error.");
+			return new EnvironmentReading();
 		}
 		
 		return envReading;

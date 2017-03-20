@@ -5,9 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +13,6 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.io.CharArrayReader;
-import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -33,19 +27,23 @@ import java.util.concurrent.TimeUnit;
 
 import ie.sheehan.smarthome.ChartActivity;
 import ie.sheehan.smarthome.R;
+import ie.sheehan.smarthome.dialog.DatePickerFragment;
 import ie.sheehan.smarthome.model.EnvironmentReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-
 public class TemperatureFragment extends Fragment {
 
+    static final int PERIOD = 2;
+    static final int INITIAL_DELAY = 0;
+
+    // ============================================================================================
+    // DECLARING CLASS VARIABLES
+    // ============================================================================================
     SimpleDateFormat dateFormat;
     ScheduledExecutorService executorService;
 
     Date fromDate;
     Date toDate;
-
 
     TextView temperatureView;
     TextView humidityView;
@@ -54,7 +52,9 @@ public class TemperatureFragment extends Fragment {
     TextView toDateView;
 
 
-
+    /**
+     * Default constructor.
+     */
     public TemperatureFragment() {}
 
 
@@ -87,7 +87,7 @@ public class TemperatureFragment extends Fragment {
             public void run() {
                 new GetTemperature().execute();
             }
-        }, 0, 2, TimeUnit.SECONDS);
+        }, INITIAL_DELAY, PERIOD, TimeUnit.SECONDS);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class TemperatureFragment extends Fragment {
                 public void run() {
                     new GetTemperature().execute();
                 }
-            }, 0, 2, TimeUnit.SECONDS);
+            }, INITIAL_DELAY, PERIOD, TimeUnit.SECONDS);
         }
     }
 
@@ -116,6 +116,10 @@ public class TemperatureFragment extends Fragment {
     // ============================================================================================
     // BUTTON LISTENER METHODS
     // ============================================================================================
+    /**
+     * Launches a {@link ChartActivity} to display a bar chart of {@link EnvironmentReading} values
+     * between two specified dates.
+     */
     public void openChart(){
         if (fromDate == null || toDate == null){
             Toast.makeText(getActivity(), "You must set a date range.", Toast.LENGTH_SHORT).show();
@@ -125,7 +129,10 @@ public class TemperatureFragment extends Fragment {
         new GetTemperatureInRange().execute(fromDate, toDate);
     }
 
-
+    /**
+     * Opens a new {@link DatePickerFragment} dialog to select a date and set the value of
+     * {@link TemperatureFragment#fromDate} to the result.
+     */
     public void openSetFromDateDialog(){
         DatePickerFragment fragment = new DatePickerFragment();
 
@@ -143,6 +150,10 @@ public class TemperatureFragment extends Fragment {
         fragment.show(getActivity().getSupportFragmentManager(), "fromDatePicker");
     }
 
+    /**
+     * Opens a new {@link DatePickerFragment} dialog to select a date and set the value of
+     * {@link TemperatureFragment#toDate} to the result.
+     */
     public void openSetToDateDialog(){
         DatePickerFragment fragment = new DatePickerFragment();
 
@@ -164,6 +175,9 @@ public class TemperatureFragment extends Fragment {
     // ============================================================================================
     // INNER CLASS DECLARATION
     // ============================================================================================
+    /**
+     * An {@link AsyncTask} that executes a HTTP request for the latest {@link EnvironmentReading}.
+     */
     private class GetTemperature extends AsyncTask<Void, Void, EnvironmentReading> {
 
         @Override
@@ -186,7 +200,10 @@ public class TemperatureFragment extends Fragment {
 
     }
 
-
+    /**
+     * An {@link AsyncTask} that executes a HTTP request for a list of {@link EnvironmentReading}
+     * values that were logged within a range of dates.
+     */
     private class GetTemperatureInRange extends AsyncTask<Date, Void, List<EnvironmentReading>> {
 
         @Override

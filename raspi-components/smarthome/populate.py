@@ -22,7 +22,7 @@ def main():
             'timestamp': timestamp
         }
 
-        request = requests.post('http://192.167.1.31:8080/environment/add', json=payload)
+        request = requests.post('http://127.0.0.1:8080/environment/add', json=payload)
         print request.status_code
 
 

@@ -1,6 +1,5 @@
 package ie.sheehan.smarthome.model;
 
-import android.os.Parcelable;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -10,15 +9,36 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * A POJO representing an environment reading of temperature and humidity.
+ *
+ * @author Alan Sheehan
+ */
 public class EnvironmentReading implements Serializable {
 
+    // ============================================================================================
+    // DECLARING CLASS VARIABLES
+    // ============================================================================================
     private String _id;
     private double temperature;
     private double humidity;
     private long timestamp;
 
+
+
+    // ============================================================================================
+    // DECLARING CONSTRUCTORS
+    // ============================================================================================
+    /**
+     * Default constructor.
+     */
     public EnvironmentReading(){}
 
+    /**
+     * Creates a new object by parsing the values of a {@link JSONObject}.
+     *
+     * @param jsonObject representing an {@link EnvironmentReading}.
+     */
     public EnvironmentReading(JSONObject jsonObject) {
         try {
             setTemperature(jsonObject.getDouble("temperature"));
@@ -29,6 +49,11 @@ public class EnvironmentReading implements Serializable {
         }
     }
 
+
+
+    // ============================================================================================
+    // DECLARING METHODS
+    // ============================================================================================
     @Override
     public String toString() {
         Date date = new Date(timestamp * 1000L);
@@ -36,6 +61,11 @@ public class EnvironmentReading implements Serializable {
                 temperature, humidity, timestamp, date.toString());
     }
 
+
+
+    // ============================================================================================
+    // DECLARING GETTERS AND SETTERS
+    // ============================================================================================
     public String getId() {
         return _id;
     }

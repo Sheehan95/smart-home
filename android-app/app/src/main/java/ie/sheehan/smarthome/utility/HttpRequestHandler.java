@@ -19,23 +19,49 @@ import java.util.Locale;
 
 import ie.sheehan.smarthome.model.EnvironmentReading;
 
-
+/**
+ * A Singleton class for managing connections and HTTP requests to the web services.
+ */
 public class HttpRequestHandler {
 
+    // ============================================================================================
+    // DECLARING STATIC VARIABLES
+    // ============================================================================================
     private static final String DOMAIN = "192.167.1.31";
 
     private static final String ENVPOINT_ENVIRONMENT = "/environment";
     private static final String ENDPOINT_SECURITY = "/security";
     private static final String ENDPOINT_STOCK = "/stock";
 
-
     private static final HttpRequestHandler instance = new HttpRequestHandler();
 
+
+
+    // ============================================================================================
+    // DECLARING CONSTRUCTORS
+    // ============================================================================================
+    /**
+     * Default constructor. Set to private to enforce the Singleton pattern.
+     */
     private HttpRequestHandler() {}
 
+    /**
+     * Retrieves the single instance of {@link HttpRequestHandler}.
+     *
+     * @return the single instance of {@link HttpRequestHandler}
+     */
     public static HttpRequestHandler getInstance() { return instance; }
 
 
+
+    // ============================================================================================
+    // DEFINING METHODS
+    // ============================================================================================
+    /**
+     * Makes a HTTP request to /environment/get to retrieve the latest {@link EnvironmentReading}.
+     *
+     * @return the latest {@link EnvironmentReading}
+     */
     public EnvironmentReading getEnvironmentReading() {
         JSONObject json;
         HttpURLConnection connection;
@@ -70,7 +96,14 @@ public class HttpRequestHandler {
         return envReading;
     }
 
-
+    /**
+     * Makes a HTTP request to /environment/get/range to retrieve a list of
+     * {@link EnvironmentReading} values in a range between the two {@link Date} values.
+     *
+     * @param from the lower bound {@link Date} value for the range
+     * @param to the upper bound {@link Date} value for the range
+     * @return a list of {@link EnvironmentReading}s within the range of dates
+     */
     public List<EnvironmentReading> getEnvironmentReadingsInRange(Date from, Date to) {
         JSONArray json;
         HttpURLConnection connection;

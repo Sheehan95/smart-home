@@ -9,7 +9,10 @@ import ie.sheehan.smarthome.fragment.SettingsFragment;
 import ie.sheehan.smarthome.fragment.StockFragment;
 import ie.sheehan.smarthome.fragment.TemperatureFragment;
 
-
+/**
+ * An implementation of {@link FragmentStatePagerAdapter} for displaying {@link Fragment}s as tabs
+ * in a single {@link android.app.Activity}.
+ */
 public class TabPagerAdapter extends FragmentStatePagerAdapter {
 
     private int tabCount;
@@ -25,6 +28,12 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     public SettingsFragment settingsFragment = new SettingsFragment();
 
 
+    /**
+     * Default constructor.
+     *
+     * @param manager for creating and launching the fragment
+     * @param tabCount the number of tabs the adapter will manage
+     */
     public TabPagerAdapter(FragmentManager manager, int tabCount) {
         super(manager);
         this.tabCount = tabCount;

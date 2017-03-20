@@ -1,6 +1,7 @@
 package ie.sheehan.smarthome.models;
 
 import java.util.Comparator;
+import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -22,7 +23,8 @@ public class EnvironmentReading {
 	
 	@Override
 	public String toString() {
-		return id + " | " + timestamp + "\nTemperature: " + temperature + "\tHumidity: " + humidity;
+		return String.format("ID: %s\n%s\nTemperature: %f\tHumidity: %f", 
+				id, new Date(timestamp * 1000L).toString(), temperature, humidity);
 	}
 	
 	@Override
