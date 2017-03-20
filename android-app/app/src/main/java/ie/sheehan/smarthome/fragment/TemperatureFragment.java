@@ -31,6 +31,8 @@ import ie.sheehan.smarthome.dialog.DatePickerFragment;
 import ie.sheehan.smarthome.model.EnvironmentReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
+import static ie.sheehan.smarthome.utility.DateUtility.getDateFormat;
+
 public class TemperatureFragment extends Fragment {
 
     static final int PERIOD = 2;
@@ -39,7 +41,6 @@ public class TemperatureFragment extends Fragment {
     // ============================================================================================
     // DECLARING CLASS VARIABLES
     // ============================================================================================
-    SimpleDateFormat dateFormat;
     ScheduledExecutorService executorService;
 
     Date fromDate;
@@ -71,7 +72,7 @@ public class TemperatureFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy", Locale.getDefault());
+
 
         temperatureView = (TextView) getActivity().findViewById(R.id.text_temperature);
         humidityView = (TextView) getActivity().findViewById(R.id.text_humidity);
@@ -143,7 +144,7 @@ public class TemperatureFragment extends Fragment {
                 calendar.set(year, month, dayOfMonth, 0, 0, 0);
                 fromDate = calendar.getTime();
 
-                fromDateView.setText(dateFormat.format(fromDate));
+                fromDateView.setText(getDateFormat().format(fromDate));
             }
         });
 
@@ -164,7 +165,7 @@ public class TemperatureFragment extends Fragment {
                 calendar.set(year, month, dayOfMonth, 23, 59, 59);
                 toDate = calendar.getTime();
 
-                toDateView.setText(dateFormat.format(toDate));
+                toDateView.setText(getDateFormat().format(toDate));
             }
         });
 

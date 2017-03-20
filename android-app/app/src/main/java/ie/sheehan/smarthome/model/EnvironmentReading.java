@@ -61,6 +61,10 @@ public class EnvironmentReading implements Serializable {
                 temperature, humidity, timestamp, date.toString());
     }
 
+    public Date getDate() {
+        return new Date(timestamp * 1000L);
+    }
+
 
 
     // ============================================================================================
