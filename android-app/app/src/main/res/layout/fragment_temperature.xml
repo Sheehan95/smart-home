@@ -25,7 +25,7 @@
         android:textSize="24sp" />
 
     <Button
-        android:text="View Graph"
+        android:text="@string/button_view_graph"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -40,7 +40,7 @@
         android:layout_above="@+id/button_view_graph"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="35dp"
-        android:text="From Date"
+        android:text="@string/button_from_date"
         android:layout_toStartOf="@+id/text_humidity"
         android:onClick="showFromDatePickerDialog"/>
 
@@ -49,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/button_set_from_date"
-        android:text="To Date"
+        android:text="@string/button_to_date"
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@+id/text_humidity"
         android:onClick="showToDatePickerDialog"/>
@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/button_set_from_date"
         android:layout_alignParentStart="true"
-        android:text="FROM"
+        android:text="@string/text_from_date"
         android:layout_toStartOf="@+id/button_set_to_date" />
 
     <TextView
@@ -68,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/button_set_from_date"
-        android:text="TO"
+        android:text="@string/text_to_date"
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@+id/text_humidity" />
 

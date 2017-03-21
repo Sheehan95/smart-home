@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -54,6 +55,15 @@ public class EnvironmentReading implements Serializable {
     // ============================================================================================
     // DECLARING METHODS
     // ============================================================================================
+    /**
+     * Gets a {@link Date} object representing the time the {@link EnvironmentReading} was read.
+     *
+     * @return the date of the reading
+     */
+    public Date getDate() {
+        return new Date(timestamp * 1000L);
+    }
+
     @Override
     public String toString() {
         Date date = new Date(timestamp * 1000L);
@@ -61,8 +71,21 @@ public class EnvironmentReading implements Serializable {
                 temperature, humidity, timestamp, date.toString());
     }
 
-    public Date getDate() {
-        return new Date(timestamp * 1000L);
+
+
+    // ============================================================================================
+    // STATIC METHOD DECLARATION
+    // ============================================================================================
+    public static double getAverageTemperatureInRange(List<EnvironmentReading> readings) {
+        double average = 0;
+
+        for (EnvironmentReading reading : readings) {
+            average += reading.getTemperature();
+        }
+
+        average /= readings.size();
+
+        return average;
     }
 
 
@@ -101,4 +124,5 @@ public class EnvironmentReading implements Serializable {
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
+
 }

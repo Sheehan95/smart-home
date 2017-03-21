@@ -3,6 +3,7 @@ package ie.sheehan.smarthome.fragment;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -41,6 +42,8 @@ public class TemperatureFragment extends Fragment {
     // ============================================================================================
     // DECLARING CLASS VARIABLES
     // ============================================================================================
+    Resources res;
+
     ScheduledExecutorService executorService;
 
     Date fromDate;
@@ -72,7 +75,7 @@ public class TemperatureFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-
+        res = getResources();
 
         temperatureView = (TextView) getActivity().findViewById(R.id.text_temperature);
         humidityView = (TextView) getActivity().findViewById(R.id.text_humidity);
@@ -80,6 +83,8 @@ public class TemperatureFragment extends Fragment {
         fromDateView = (TextView) getActivity().findViewById(R.id.text_from_date);
         toDateView = (TextView) getActivity().findViewById(R.id.text_to_date);
 
+        fromDateView.setText(res.getString(R.string.text_from_date, getDateFormat().format(new Date())));
+        toDateView.setText(res.getString(R.string.text_to_date, getDateFormat().format(new Date())));
 
         executorService = Executors.newScheduledThreadPool(10);
 
@@ -144,7 +149,7 @@ public class TemperatureFragment extends Fragment {
                 calendar.set(year, month, dayOfMonth, 0, 0, 0);
                 fromDate = calendar.getTime();
 
-                fromDateView.setText(getDateFormat().format(fromDate));
+                fromDateView.setText(res.getString(R.string.text_from_date, getDateFormat().format(fromDate)));
             }
         });
 
@@ -165,7 +170,7 @@ public class TemperatureFragment extends Fragment {
                 calendar.set(year, month, dayOfMonth, 23, 59, 59);
                 toDate = calendar.getTime();
 
-                toDateView.setText(getDateFormat().format(toDate));
+                toDateView.setText(res.getString(R.string.text_to_date, getDateFormat().format(toDate)));
             }
         });
 
@@ -193,10 +198,8 @@ public class TemperatureFragment extends Fragment {
 
         @Override
         protected void onPostExecute(EnvironmentReading envReading) {
-            NumberFormat formatter = new DecimalFormat("#0.00");
-
-            temperatureView.setText(formatter.format(envReading.getTemperature()) + "°C");
-            humidityView.setText(formatter.format(envReading.getHumidity()));
+            temperatureView.setText(res.getString(R.string.text_temperature_display, envReading.getTemperature()));
+            humidityView.setText(res.getString(R.string.text_humidity_display, envReading.getHumidity()));
         }
 
     }

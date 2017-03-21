@@ -1,18 +1,27 @@
 <resources>
     <string name="app_name">Smart Home</string>
 
-    <string name="button_launch_activity">Start The Activity</string>
-
-    <string name="label_temperature_fragment">TEMPERATURE FRAGMENT</string>
-    <string name="label_security_fragment">SECURITY FRAGMENT</string>
-    <string name="label_stock_fragment">STOCK FRAGMENT</string>
-    <string name="label_settings_fragment">SETTINGS FRAGMENT</string>
-
+    <!-- TAB TITLES -->
     <string name="title_environment_fragment">Environment Readings</string>
     <string name="title_security_fragment">Security</string>
     <string name="title_stock_fragment">Stock</string>
     <string name="title_settings_fragment">Settings</string>
 
+    <!-- BUTTONS -->
+    <string name="button_view_graph">Open Chart</string>
+    <string name="button_from_date">From Date</string>
+    <string name="button_to_date">To Date</string>
+
+    <!-- TEXT VIEWS -->
+    <string name="text_temperature_display">%1$.2f °C</string>
+    <string name="text_humidity_display">Humidity: %1$.2f</string>
+
+    <string name="text_from_date">From: %1$s</string>
+    <string name="text_to_date">To: %1$s</string>
+
+    <!-- PLACEHOLDERS -->
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
