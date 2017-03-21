@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <CheckBoxPreference
-        android:key="pref_sync"
-        android:title="Title"
-        android:summary="Summary"
-        android:defaultValue="true" />
+    <PreferenceCategory
+        android:title="@string/pref_category_metrics"
+        android:key="pref_key_metric_settings">
+        <ListPreference
+            android:key="pref_metric_temperature"
+            android:title="@string/pref_title_metrics_temperature"
+            android:summary="@string/pref_desc_metrics_temperature"
+            android:entries="@array/pref_metrics_temperature_options"
+            android:entryValues="@array/pref_metrics_temperature_values"
+            android:defaultValue="0" />
+
+        <ListPreference
+            android:key="pref_metric_weight"
+            android:title="@string/pref_title_metrics_weight"
+            android:summary="@string/pref_desc_metrics_weight"
+            android:entries="@array/pref_metrics_weight_options"
+            android:entryValues="@array/pref_metrics_weight_values"
+            android:defaultValue="0" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

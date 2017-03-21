@@ -3,10 +3,13 @@ package ie.sheehan.smarthome.fragment;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +42,7 @@ public class TemperatureFragment extends Fragment {
     // DECLARING CLASS VARIABLES
     // ============================================================================================
     Resources res;
+    SharedPreferences preferences;
 
     ScheduledExecutorService executorService;
 
@@ -72,6 +76,7 @@ public class TemperatureFragment extends Fragment {
         super.onStart();
 
         res = getResources();
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         temperatureView = (TextView) getActivity().findViewById(R.id.text_temperature);
         humidityView = (TextView) getActivity().findViewById(R.id.text_humidity);
@@ -127,7 +132,7 @@ public class TemperatureFragment extends Fragment {
             Toast.makeText(getActivity(), "You must set a date range.", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        Log.e("BUTTON", "TEMPERATURE FRAGMENT");
         new GetTemperatureInRange().execute(fromDate, toDate);
     }
 
@@ -194,7 +199,7 @@ public class TemperatureFragment extends Fragment {
 
         @Override
         protected void onPostExecute(EnvironmentReading envReading) {
-            temperatureView.setText(res.getString(R.string.text_temperature_display, envReading.getTemperature()));
+            temperatureView.setText(res.getString(R.string.text_temperature_display_celsius, envReading.getTemperature()));
             humidityView.setText(res.getString(R.string.text_humidity_display, envReading.getHumidity()));
         }
 

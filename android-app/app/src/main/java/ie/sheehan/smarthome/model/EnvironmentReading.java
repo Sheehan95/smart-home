@@ -61,7 +61,7 @@ public class EnvironmentReading implements Serializable {
      * @return the date of the reading
      */
     public Date getDate() {
-        return new Date(timestamp * 1000L);
+        return new Date(timestamp);
     }
 
     @Override
