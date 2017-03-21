@@ -5,7 +5,7 @@
 
     <PreferenceCategory
         android:title="@string/pref_category_metrics"
-        android:key="pref_key_metric_settings">
+        android:key="pref_metric_settings">
         <ListPreference
             android:key="pref_metric_temperature"
             android:title="@string/pref_title_metrics_temperature"
@@ -13,7 +13,6 @@
             android:entries="@array/pref_metrics_temperature_options"
             android:entryValues="@array/pref_metrics_temperature_values"
             android:defaultValue="0" />
-
         <ListPreference
             android:key="pref_metric_weight"
             android:title="@string/pref_title_metrics_weight"
@@ -21,6 +20,22 @@
             android:entries="@array/pref_metrics_weight_options"
             android:entryValues="@array/pref_metrics_weight_values"
             android:defaultValue="0" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Connection"
+        android:key="pref_connection_settings">
+        <ListPreference
+            android:key="pref_connection_frequency"
+            android:title="@string/pref_title_connection_frequency"
+            android:summary="@string/pref_desc_connection_frequency"
+            android:entries="@array/pref_connection_frequency_options"
+            android:entryValues="@array/pref_connection_frequency_values"
+            android:defaultValue="0" />
+        <SwitchPreferenceCompat
+            android:key="pref_madeup_yoke"
+            android:title="Track Logs"
+            android:defaultValue="true" />
     </PreferenceCategory>
 
 </PreferenceScreen>
