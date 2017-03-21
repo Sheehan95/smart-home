@@ -8,9 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by Alan on 20/03/2017.
- */
 
 public class DateUtility {
 
