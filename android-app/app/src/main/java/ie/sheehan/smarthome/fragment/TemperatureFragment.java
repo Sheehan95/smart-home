@@ -35,8 +35,14 @@ import static ie.sheehan.smarthome.utility.DateUtility.getDateFormat;
 
 public class TemperatureFragment extends Fragment {
 
-    static final int PERIOD = 2;
-    static final int INITIAL_DELAY = 0;
+    static final long PERIOD_HALF_SECOND = 500;
+    static final long PERIOD_ONE_SECOND = 1000;
+    static final long PERIOD_TWO_SECONDS = 2000;
+    static final long PERIOD_FIVE_SECONDS = 5000;
+
+    static final long INITIAL_DELAY = 0;
+
+    long period = 1000;
 
     // ============================================================================================
     // DECLARING CLASS VARIABLES
@@ -78,6 +84,26 @@ public class TemperatureFragment extends Fragment {
         res = getResources();
         preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
+        int preferencePeriod = Integer.parseInt(preferences.getString(SettingsFragment.KEY_PREF_CONNECTION_FREQUENCY, "0"));
+
+        switch (preferencePeriod) {
+            case SettingsFragment.VALUE_CONNECTION_FREQUENCY_SHORTEST:
+                period = PERIOD_HALF_SECOND;
+                break;
+            case SettingsFragment.VALUE_CONNECTION_FREQUENCY_SHORT:
+                period = PERIOD_ONE_SECOND;
+                break;
+            case SettingsFragment.VALUE_CONNECTION_FREQUENCY_LONG:
+                period = PERIOD_TWO_SECONDS;
+                break;
+            case SettingsFragment.VALUE_CONNECTION_FREQUENCY_LONGEST:
+                period = PERIOD_FIVE_SECONDS;
+                break;
+            default:
+                period = PERIOD_ONE_SECOND;
+                break;
+        }
+
         temperatureView = (TextView) getActivity().findViewById(R.id.text_temperature);
         humidityView = (TextView) getActivity().findViewById(R.id.text_humidity);
 
@@ -94,7 +120,8 @@ public class TemperatureFragment extends Fragment {
             public void run() {
                 new GetTemperature().execute();
             }
-        }, INITIAL_DELAY, PERIOD, TimeUnit.SECONDS);
+        }, INITIAL_DELAY, period, TimeUnit.MILLISECONDS);
+
     }
 
     @Override
@@ -115,7 +142,7 @@ public class TemperatureFragment extends Fragment {
                 public void run() {
                     new GetTemperature().execute();
                 }
-            }, INITIAL_DELAY, PERIOD, TimeUnit.SECONDS);
+            }, INITIAL_DELAY, period, TimeUnit.MILLISECONDS);
         }
     }
 

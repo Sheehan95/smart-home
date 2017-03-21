@@ -32,9 +32,15 @@
             android:entries="@array/pref_connection_frequency_options"
             android:entryValues="@array/pref_connection_frequency_values"
             android:defaultValue="0" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_notification"
+        android:key="pref_notification_settings">
         <SwitchPreferenceCompat
-            android:key="pref_madeup_yoke"
-            android:title="Track Logs"
+            android:key="pref_notifications_send"
+            android:title="@string/pref_title_notification_push"
+            android:summary="@string/pref_desc_notification_push"
             android:defaultValue="true" />
     </PreferenceCategory>
 

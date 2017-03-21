@@ -3,6 +3,7 @@ package ie.sheehan.smarthome;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.YAxis;
@@ -62,6 +63,8 @@ public class ChartActivity extends AppCompatActivity {
         barChart.getXAxis().setLabelRotationAngle(280);
         barChart.setDrawValueAboveBar(false);
         YAxis yAxis = barChart.getAxisLeft();
+        YAxis axis = barChart.getAxisRight();
+        axis.setLabelCount(0, true);
         yAxis.setAxisMinValue(0);
         yAxis.setAxisMaxValue((long) (getLargestTemperatureValueInRange(chartData) + 2));
     }
@@ -84,6 +87,10 @@ public class ChartActivity extends AppCompatActivity {
         List<Date> uniqueDates = getUniqueDateRange(startDate, endDate);
 
         for (Date date : uniqueDates) {
+            Log.e("UNIQUE", date.toString());
+        }
+
+        for (Date date : uniqueDates) {
             List<EnvironmentReading> readingsForDay = new ArrayList<>();
 
             for (EnvironmentReading reading : environmentReadings) {
@@ -94,7 +101,7 @@ public class ChartActivity extends AppCompatActivity {
 
             EnvironmentReading averageReading = new EnvironmentReading();
             averageReading.setTemperature(getAverageTemperatureInRange(readingsForDay));
-            averageReading.setTimestamp(date.getTime());
+            averageReading.setTimestamp(date.getTime() / 1000L);
             graphData.add(averageReading);
         }
 
