@@ -88,6 +88,18 @@ public class EnvironmentReading implements Serializable {
         return average;
     }
 
+    public static double getLargestTemperatureValueInRange(List<EnvironmentReading> readings) {
+        double largest = 0;
+
+        for (EnvironmentReading reading : readings) {
+            if (reading.getTemperature() > largest) {
+                largest = reading.getTemperature();
+            }
+        }
+
+        return largest;
+    }
+
 
 
     // ============================================================================================

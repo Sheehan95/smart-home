@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -16,6 +17,7 @@ import java.util.List;
 import ie.sheehan.smarthome.model.EnvironmentReading;
 
 import static ie.sheehan.smarthome.model.EnvironmentReading.getAverageTemperatureInRange;
+import static ie.sheehan.smarthome.model.EnvironmentReading.getLargestTemperatureValueInRange;
 import static ie.sheehan.smarthome.utility.DateUtility.compareDateIgnoreTime;
 import static ie.sheehan.smarthome.utility.DateUtility.getShortDateFormat;
 import static ie.sheehan.smarthome.utility.DateUtility.getUniqueDateRange;
@@ -57,6 +59,11 @@ public class ChartActivity extends AppCompatActivity {
         barChart.setData(data);
         barChart.setDescription("");
         barChart.animateY(1000);
+        barChart.getXAxis().setLabelRotationAngle(280);
+        barChart.setDrawValueAboveBar(false);
+        YAxis yAxis = barChart.getAxisLeft();
+        yAxis.setAxisMinValue(0);
+        yAxis.setAxisMaxValue((long) (getLargestTemperatureValueInRange(chartData) + 2));
     }
 
 

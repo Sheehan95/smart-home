@@ -1,75 +1,88 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     tools:context="ie.sheehan.smarthome.fragment.TemperatureFragment">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/text_temperature"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:paddingTop="40dp"
+        android:gravity="center"
         android:textSize="36sp"
         android:textStyle="normal|bold"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/text_temperature"
-        android:layout_centerHorizontal="true"
         android:id="@+id/text_humidity"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:layout_below="@+id/text_temperature"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:text="@string/button_view_graph"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/button_view_graph"
         android:onClick="openGraphActivity" />
 
-    <Button
-        android:id="@+id/button_set_from_date"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linear_layout_button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button_view_graph"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="35dp"
-        android:text="@string/button_from_date"
-        android:layout_toStartOf="@+id/text_humidity"
-        android:onClick="showFromDatePickerDialog"/>
+        android:orientation="horizontal"
+        android:layout_above="@id/button_view_graph">
 
-    <Button
-        android:id="@+id/button_set_to_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/button_set_from_date"
-        android:text="@string/button_to_date"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/text_humidity"
-        android:onClick="showToDatePickerDialog"/>
+        <Button
+            android:id="@+id/button_set_from_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/button_from_date"
+            android:onClick="showFromDatePickerDialog"/>
 
-    <TextView
-        android:id="@+id/text_from_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button_set_from_date"
-        android:layout_alignParentStart="true"
-        android:text="@string/text_from_date"
-        android:layout_toStartOf="@+id/button_set_to_date" />
+        <Button
+            android:id="@+id/button_set_to_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/button_to_date"
+            android:onClick="showToDatePickerDialog"/>
 
-    <TextView
-        android:id="@+id/text_to_date"
-        android:layout_width="wrap_content"
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_text"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button_set_from_date"
-        android:text="@string/text_to_date"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/text_humidity" />
+        android:orientation="horizontal"
+        android:layout_above="@id/linear_layout_button">
+
+        <TextView
+            android:id="@+id/text_from_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/text_from_date"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/text_to_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/text_to_date"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+
 
 </RelativeLayout>
