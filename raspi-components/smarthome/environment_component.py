@@ -3,7 +3,8 @@ import time
 
 import paho.mqtt.client as mqtt
 
-from sensors import TemperatureSensor
+# from sensors import TemperatureSensor
+from sensors import FakeTemperatureSensor
 
 MQTT_BROKER = '192.167.1.23'
 
@@ -12,7 +13,8 @@ TOPIC_ENVIRONMENT_READING_RESPONSE = '/ie/sheehan/smart-home/envreading/response
 
 
 mqtt_client = mqtt.Client()
-sensor = TemperatureSensor()
+# sensor = TemperatureSensor()
+sensor = FakeTemperatureSensor()
 
 
 def on_connect(client, userdata, flags, rc):
@@ -36,15 +38,13 @@ def on_message(client, userdata, message):
     if userdata is not None:
         print 'User Data: ', userdata
 
-    if message.topic is TOPIC_ENVIRONMENT_READING_REQUESTS:
-        log_environment_reading(sensor.get_temp(), sensor.get_humidity())
+    if message.topic == TOPIC_ENVIRONMENT_READING_REQUESTS:
+        temperature = sensor.get_temp()
+        humidity = sensor.get_humidity()
+        timestamp = int(time.time())
 
-
-def log_environment_reading(temperature, humidity):
-    timestamp = int(time.time())
-
-    payload = json.dumps({'temperature': temperature, 'humidity': humidity, 'timestamp': timestamp})
-    mqtt_client.publish(TOPIC_ENVIRONMENT_READING_RESPONSE, payload)
+        payload = json.dumps({'temperature': temperature, 'humidity': humidity, 'timestamp': timestamp})
+        mqtt_client.publish(TOPIC_ENVIRONMENT_READING_RESPONSE, payload)
 
 
 def main():

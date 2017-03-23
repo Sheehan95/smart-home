@@ -42,8 +42,9 @@ def main():
     mqtt_client.on_connect = on_connect
     mqtt_client.on_message = on_message
 
-    mqtt_client.connect('127.0.0.1', 1883, 60)
+    mqtt_client.connect(MQTT_BROKER, 1883, 60)
     mqtt_client.subscribe('#')
+
     mqtt_client.loop_forever()
 
 

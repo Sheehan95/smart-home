@@ -56,6 +56,9 @@ hs_err_pid*
 ## File-based project format:
 *.iws
 
+# Build:
+*.pyc
+
 ## Plugin-specific files:
 
 # IntelliJ
