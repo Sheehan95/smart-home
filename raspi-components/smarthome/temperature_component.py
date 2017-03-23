@@ -4,12 +4,15 @@ import random
 import paho.mqtt.client as mqtt
 import time
 
-TOPIC = '/ie/sheehan/smart-home/envreading/log'
+from Sensors import TemperatureSensor
+
+
 TOPIC_ENVIRONMENT_READING_REQUESTS = '/ie/sheehan/smart-home/envreading/request'
 TOPIC_ENVIRONMENT_READING_RESPONSE = '/ie/sheehan/smart-home/envreading/response'
 
 
 client = mqtt.Client()
+sensor = TemperatureSensor()
 
 
 def on_connect(connected, userdata, flags, rc):
@@ -21,9 +24,8 @@ def on_message(connected, userdata, message):
     print 'Topic: ', message.topic
     print 'Payload: ', message.payload
 
-    temperature = random.uniform(3.5, 18.5)
-    humidity = random.uniform(70, 95)
-    log_temperature(temperature, humidity)
+    if message.topic is TOPIC_ENVIRONMENT_READING_REQUESTS:
+        log_temperature(sensor.get_temp(), random.uniform(70, 95))
 
 
 def log_temperature(temperature, humidity):
@@ -41,13 +43,6 @@ def main():
 
     client.subscribe(TOPIC_ENVIRONMENT_READING_REQUESTS)
     client.loop_forever()
-
-#    while True:
-#        temperature = random.uniform(3.5, 18.5)
-#        humidity = random.uniform(70, 95)
-#        payload = json.dumps({'temperature': temperature, 'humidity': humidity})
-#        client.publish(TOPIC, payload)
-#        time.sleep(5)
 
 
 if __name__ == '__main__':
