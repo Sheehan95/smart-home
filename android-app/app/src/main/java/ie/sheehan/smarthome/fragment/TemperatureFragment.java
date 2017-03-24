@@ -166,9 +166,9 @@ public class TemperatureFragment extends Fragment {
         fromDateCal.set(Calendar.SECOND, 0);
 
         Calendar toDateCal = Calendar.getInstance();
-        toDateCal.set(Calendar.HOUR, 0);
-        toDateCal.set(Calendar.MINUTE, 0);
-        toDateCal.set(Calendar.SECOND, 0);
+        toDateCal.set(Calendar.HOUR, 23);
+        toDateCal.set(Calendar.MINUTE, 59);
+        toDateCal.set(Calendar.SECOND, 59);
 
         fromDate = fromDateCal.getTime();
         toDate = toDateCal.getTime();
