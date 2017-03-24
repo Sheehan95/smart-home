@@ -3,12 +3,16 @@ import paho.mqtt.client as mqtt
 import requests
 
 
+# ==== DEFINING CONSTANTS =====================================================
 MQTT_BROKER = '192.167.1.23'
 
 TOPIC_ENVIRONMENT_READING_LOG = '/ie/sheehan/smart-home/envreading/log'
+# =============================================================================
 
 
+# ==== DEFINING VARIABLES =====================================================
 mqtt_client = mqtt.Client()
+# =============================================================================
 
 
 # ==== DECLARING MQTT CALLBACK METHODS ========================================
@@ -40,6 +44,7 @@ def on_message(client, userdata, message):
 # =============================================================================
 
 
+# ==== ENTRY POINT ============================================================
 def main():
     mqtt_client.on_connect = on_connect
     mqtt_client.on_message = on_message
@@ -52,3 +57,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+# =============================================================================
