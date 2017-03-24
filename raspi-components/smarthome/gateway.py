@@ -11,6 +11,7 @@ TOPIC_ENVIRONMENT_READING_LOG = '/ie/sheehan/smart-home/envreading/log'
 mqtt_client = mqtt.Client()
 
 
+# ==== DECLARING MQTT CALLBACK METHODS ========================================
 def on_connect(client, userdata, flags, rc):
     print 'Client connected with status code ', rc
 
@@ -36,6 +37,7 @@ def on_message(client, userdata, message):
         payload = json.loads(message.payload)
         request = requests.post('http://192.167.1.31:8080/environment/add', json=payload)
         print request.status_code
+# =============================================================================
 
 
 def main():

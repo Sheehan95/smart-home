@@ -17,6 +17,7 @@ mqtt_client = mqtt.Client()
 sensor = FakeTemperatureSensor()
 
 
+# ==== DECLARING MQTT CALLBACK METHODS ========================================
 def on_connect(client, userdata, flags, rc):
     print 'Client connected with status code ', rc
 
@@ -39,12 +40,14 @@ def on_message(client, userdata, message):
         print 'User Data: ', userdata
 
     if message.topic == TOPIC_ENVIRONMENT_READING_REQUESTS:
-        temperature = sensor.get_temp()
-        humidity = sensor.get_humidity()
-        timestamp = int(time.time())
+        log_environment_reading(sensor.get_temp(), sensor.get_humidity())
+# =============================================================================
 
-        payload = json.dumps({'temperature': temperature, 'humidity': humidity, 'timestamp': timestamp})
-        mqtt_client.publish(TOPIC_ENVIRONMENT_READING_RESPONSE, payload)
+
+def log_environment_reading(temperature, humidity):
+    timestamp = int(time.time())
+    payload = json.dumps({'temperature': temperature, 'humidity': humidity, 'timestamp': timestamp})
+    mqtt_client.publish(TOPIC_ENVIRONMENT_READING_RESPONSE, payload)
 
 
 def main():

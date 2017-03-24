@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,6 @@ import ie.sheehan.smarthome.dialog.DatePickerFragment;
 import ie.sheehan.smarthome.model.EnvironmentReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
-import static ie.sheehan.smarthome.utility.DateUtility.compareDateIgnoreTime;
 import static ie.sheehan.smarthome.utility.DateUtility.getDateFormat;
 
 public class TemperatureFragment extends Fragment {
@@ -200,6 +198,10 @@ public class TemperatureFragment extends Fragment {
     public void openSetFromDateDialog(){
         DatePickerFragment fragment = new DatePickerFragment();
 
+        Bundle arguments = new Bundle();
+        arguments.putSerializable("date", fromDate);
+        fragment.setArguments(arguments);
+
         fragment.addOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -220,6 +222,10 @@ public class TemperatureFragment extends Fragment {
      */
     public void openSetToDateDialog(){
         DatePickerFragment fragment = new DatePickerFragment();
+
+        Bundle arguments = new Bundle();
+        arguments.putSerializable("date", toDate);
+        fragment.setArguments(arguments);
 
         fragment.addOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
             @Override

@@ -1,12 +1,12 @@
 package ie.sheehan.smarthome;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import ie.sheehan.smarthome.adapter.TabPagerAdapter;
@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -90,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void showFromDatePickerDialog(View view) {
         adapter.temperatureFragment.openSetFromDateDialog();
-        Log.e("BUTTON", "MAIN ACTIVITY LISTENER");
     }
 
     public void showToDatePickerDialog(View view) {
