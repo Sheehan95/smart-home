@@ -15,7 +15,7 @@
     <!-- TEXT VIEWS -->
     <string name="text_temperature_display_celsius">%1$.2f °C</string>
     <string name="text_temperature_display_fahrenheit">%1$.2f °F</string>
-    <string name="text_humidity_display">Humidity: %1$.2f</string>
+    <string name="text_humidity_display">Humidity: %1$.2f%%</string>
 
     <string name="text_from_date">From: %1$s</string>
     <string name="text_to_date">To: %1$s</string>
@@ -75,6 +75,11 @@
 
     <string name="pref_title_notification_push">Push Notifications</string>
     <string name="pref_desc_notification_push">Allow this app to send push notifications.</string>
+
+
+    <!-- TOAST -->
+    <string name="toast_no_readings_found">No data found for those dates</string>
+    <string name="toast_invalid_date_range">Invalid date range</string>
 
     <!-- PLACEHOLDERS -->
 

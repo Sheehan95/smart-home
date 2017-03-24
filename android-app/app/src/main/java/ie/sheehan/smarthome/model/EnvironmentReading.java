@@ -64,6 +64,10 @@ public class EnvironmentReading implements Serializable {
         return new Date(timestamp * 1000L);
     }
 
+    public double getTemperatureInFahrenheit() {
+        return 32 + (getTemperature() * 9 / 5);
+    }
+
     @Override
     public String toString() {
         Date date = new Date(timestamp * 1000L);

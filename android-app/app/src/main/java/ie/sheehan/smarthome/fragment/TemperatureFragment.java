@@ -31,6 +31,7 @@ import ie.sheehan.smarthome.dialog.DatePickerFragment;
 import ie.sheehan.smarthome.model.EnvironmentReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
+import static ie.sheehan.smarthome.utility.DateUtility.compareDateIgnoreTime;
 import static ie.sheehan.smarthome.utility.DateUtility.getDateFormat;
 
 public class TemperatureFragment extends Fragment {
@@ -40,9 +41,10 @@ public class TemperatureFragment extends Fragment {
     static final long PERIOD_TWO_SECONDS = 2000;
     static final long PERIOD_FIVE_SECONDS = 5000;
 
-    static final long INITIAL_DELAY = 0;
+    static final long INITIAL_DELAY = 500;
 
     long period = 1000;
+
 
     // ============================================================================================
     // DECLARING CLASS VARIABLES
@@ -84,25 +86,9 @@ public class TemperatureFragment extends Fragment {
         res = getResources();
         preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        int preferencePeriod = Integer.parseInt(preferences.getString(SettingsFragment.KEY_PREF_CONNECTION_FREQUENCY, "0"));
+        period = getPreferredPeriod();
 
-        switch (preferencePeriod) {
-            case SettingsFragment.VALUE_CONNECTION_FREQUENCY_SHORTEST:
-                period = PERIOD_HALF_SECOND;
-                break;
-            case SettingsFragment.VALUE_CONNECTION_FREQUENCY_SHORT:
-                period = PERIOD_ONE_SECOND;
-                break;
-            case SettingsFragment.VALUE_CONNECTION_FREQUENCY_LONG:
-                period = PERIOD_TWO_SECONDS;
-                break;
-            case SettingsFragment.VALUE_CONNECTION_FREQUENCY_LONGEST:
-                period = PERIOD_FIVE_SECONDS;
-                break;
-            default:
-                period = PERIOD_ONE_SECOND;
-                break;
-        }
+        setInitialDateValues();
 
         temperatureView = (TextView) getActivity().findViewById(R.id.text_temperature);
         humidityView = (TextView) getActivity().findViewById(R.id.text_humidity);
@@ -110,8 +96,8 @@ public class TemperatureFragment extends Fragment {
         fromDateView = (TextView) getActivity().findViewById(R.id.text_from_date);
         toDateView = (TextView) getActivity().findViewById(R.id.text_to_date);
 
-        fromDateView.setText(res.getString(R.string.text_from_date, getDateFormat().format(new Date())));
-        toDateView.setText(res.getString(R.string.text_to_date, getDateFormat().format(new Date())));
+        fromDateView.setText(res.getString(R.string.text_from_date, getDateFormat().format(fromDate)));
+        toDateView.setText(res.getString(R.string.text_to_date, getDateFormat().format(toDate)));
 
         executorService = Executors.newScheduledThreadPool(10);
 
@@ -148,6 +134,50 @@ public class TemperatureFragment extends Fragment {
 
 
     // ============================================================================================
+    // PRIVATE METHODS
+    // ============================================================================================
+    public long getPreferredPeriod() {
+        int preferencePeriod = Integer.parseInt(preferences.getString(SettingsFragment.KEY_PREF_CONNECTION_FREQUENCY, "0"));
+
+        switch (preferencePeriod) {
+            case SettingsFragment.VALUE_CONNECTION_FREQUENCY_SHORTEST:
+                return PERIOD_HALF_SECOND;
+            case SettingsFragment.VALUE_CONNECTION_FREQUENCY_SHORT:
+                return PERIOD_ONE_SECOND;
+            case SettingsFragment.VALUE_CONNECTION_FREQUENCY_LONG:
+                return PERIOD_TWO_SECONDS;
+            case SettingsFragment.VALUE_CONNECTION_FREQUENCY_LONGEST:
+                return PERIOD_FIVE_SECONDS;
+            default:
+                return PERIOD_ONE_SECOND;
+        }
+    }
+
+    public int getPreferredTemperatureMetric() {
+        return Integer.parseInt(preferences.getString(SettingsFragment.KEY_PREF_METRIC_TEMPERATURE, "0"));
+    }
+
+    public int getPreferredWeightMetric() {
+        return Integer.parseInt(preferences.getString(SettingsFragment.KEY_PREF_METRIC_WEIGHT, "0"));
+    }
+
+    public void setInitialDateValues() {
+        Calendar fromDateCal = Calendar.getInstance();
+        fromDateCal.set(Calendar.HOUR, 0);
+        fromDateCal.set(Calendar.MINUTE, 0);
+        fromDateCal.set(Calendar.SECOND, 0);
+
+        Calendar toDateCal = Calendar.getInstance();
+        toDateCal.set(Calendar.HOUR, 0);
+        toDateCal.set(Calendar.MINUTE, 0);
+        toDateCal.set(Calendar.SECOND, 0);
+
+        fromDate = fromDateCal.getTime();
+        toDate = toDateCal.getTime();
+    }
+
+
+    // ============================================================================================
     // BUTTON LISTENER METHODS
     // ============================================================================================
     /**
@@ -155,11 +185,11 @@ public class TemperatureFragment extends Fragment {
      * between two specified dates.
      */
     public void openChart(){
-        if (fromDate == null || toDate == null){
-            Toast.makeText(getActivity(), "You must set a date range.", Toast.LENGTH_SHORT).show();
+        if (fromDate == null || toDate == null || fromDate.after(toDate)){
+            Toast.makeText(getActivity(), R.string.toast_invalid_date_range, Toast.LENGTH_SHORT).show();
             return;
         }
-        Log.e("BUTTON", "TEMPERATURE FRAGMENT");
+
         new GetTemperatureInRange().execute(fromDate, toDate);
     }
 
@@ -226,7 +256,13 @@ public class TemperatureFragment extends Fragment {
 
         @Override
         protected void onPostExecute(EnvironmentReading envReading) {
-            temperatureView.setText(res.getString(R.string.text_temperature_display_celsius, envReading.getTemperature()));
+            if (getPreferredTemperatureMetric() == SettingsFragment.VALUE_METRIC_TEMPERATURE_CELSIUS) {
+                temperatureView.setText(res.getString(R.string.text_temperature_display_celsius, envReading.getTemperature()));
+            }
+            else {
+                temperatureView.setText(res.getString(R.string.text_temperature_display_fahrenheit, envReading.getTemperatureInFahrenheit()));
+            }
+
             humidityView.setText(res.getString(R.string.text_humidity_display, envReading.getHumidity()));
         }
 
@@ -254,6 +290,11 @@ public class TemperatureFragment extends Fragment {
         @Override
         protected void onPostExecute(List<EnvironmentReading> environmentReadings) {
             super.onPostExecute(environmentReadings);
+
+            if (environmentReadings.isEmpty()) {
+                Toast.makeText(getContext(), R.string.toast_no_readings_found, Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             Bundle arguments = new Bundle();
             arguments.putSerializable("envReadings", (ArrayList) environmentReadings);
