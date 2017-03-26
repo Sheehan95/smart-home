@@ -134,7 +134,7 @@ public class TemperatureFragment extends Fragment {
     // ============================================================================================
     // PRIVATE METHODS
     // ============================================================================================
-    public long getPreferredPeriod() {
+    private long getPreferredPeriod() {
         int preferencePeriod = Integer.parseInt(preferences.getString(SettingsFragment.KEY_PREF_CONNECTION_FREQUENCY, "0"));
 
         switch (preferencePeriod) {
@@ -151,15 +151,11 @@ public class TemperatureFragment extends Fragment {
         }
     }
 
-    public int getPreferredTemperatureMetric() {
+    private int getPreferredTemperatureMetric() {
         return Integer.parseInt(preferences.getString(SettingsFragment.KEY_PREF_METRIC_TEMPERATURE, "0"));
     }
 
-    public int getPreferredWeightMetric() {
-        return Integer.parseInt(preferences.getString(SettingsFragment.KEY_PREF_METRIC_WEIGHT, "0"));
-    }
-
-    public void setInitialDateValues() {
+    private void setInitialDateValues() {
         Calendar fromDateCal = Calendar.getInstance();
         fromDateCal.set(Calendar.HOUR, 0);
         fromDateCal.set(Calendar.MINUTE, 0);

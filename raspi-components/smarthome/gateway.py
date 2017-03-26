@@ -39,8 +39,12 @@ def on_message(client, userdata, message):
 
     if message.topic == TOPIC_ENVIRONMENT_READING_LOG:
         payload = json.loads(message.payload)
-        request = requests.post('http://192.167.1.31:8080/environment/add', json=payload)
-        print request.status_code
+
+        try:
+            request = requests.post('http://192.167.1.31:8080/environment/add', json=payload)
+            print request.status_code
+        except requests.ConnectionError:
+            print 'Failed to connect to web service'
 # =============================================================================
 
 
