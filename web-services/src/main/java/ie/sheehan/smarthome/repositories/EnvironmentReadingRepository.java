@@ -20,7 +20,7 @@ import ie.sheehan.smarthome.models.EnvironmentReading;
 @Repository
 public class EnvironmentReadingRepository {
 	
-	public static final String ENVIRONMENT_READING_COLLECTION = "environmentreadings";
+	public static final String COLLECTION_ENVIRONMENT_READING = "environmentreadings";
 	
 	private MongoTemplate database;
 	
@@ -29,7 +29,7 @@ public class EnvironmentReadingRepository {
 	public EnvironmentReadingRepository(MongoTemplate database){
 		this.database = database;
 		
-		if (!this.database.collectionExists(ENVIRONMENT_READING_COLLECTION)){
+		if (!this.database.collectionExists(COLLECTION_ENVIRONMENT_READING)){
 			this.database.createCollection(EnvironmentReading.class);
 		}
 	}
@@ -39,37 +39,37 @@ public class EnvironmentReadingRepository {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));
 		
-		return database.findOne(query, EnvironmentReading.class, ENVIRONMENT_READING_COLLECTION);
+		return database.findOne(query, EnvironmentReading.class, COLLECTION_ENVIRONMENT_READING);
 	}
 	
 	public EnvironmentReading getLatest(){
-		List<EnvironmentReading> envReadings = database.findAll(EnvironmentReading.class, ENVIRONMENT_READING_COLLECTION);
+		List<EnvironmentReading> envReadings = database.findAll(EnvironmentReading.class, COLLECTION_ENVIRONMENT_READING);
 		envReadings.sort(new EnvironmentReading.EnvironmentReadingTimeComparator());
 		return envReadings.get(envReadings.size() - 1);
 	}
 	
 	public List<EnvironmentReading> getAll(){
-		return database.findAll(EnvironmentReading.class, ENVIRONMENT_READING_COLLECTION);
+		return database.findAll(EnvironmentReading.class, COLLECTION_ENVIRONMENT_READING);
 	}
 	
 	public List<EnvironmentReading> getRange(long from, long to){
 		Query query = new Query();
 		query.addCriteria(Criteria.where("timestamp").gte(from).andOperator(Criteria.where("timestamp").lte(to)));
 		
-		return database.find(query, EnvironmentReading.class, ENVIRONMENT_READING_COLLECTION);
+		return database.find(query, EnvironmentReading.class, COLLECTION_ENVIRONMENT_READING);
 	}
 	
 	public int getCount(){
-		CommandResult result = database.getCollection(ENVIRONMENT_READING_COLLECTION).getStats();
+		CommandResult result = database.getCollection(COLLECTION_ENVIRONMENT_READING).getStats();
 		return result.getInt("count");
 	}
 	
 	public void add(EnvironmentReading envReading){
-		database.insert(envReading, ENVIRONMENT_READING_COLLECTION);
+		database.insert(envReading, COLLECTION_ENVIRONMENT_READING);
 	}
 	
 	public void update(EnvironmentReading envReading){
-		database.save(envReading, ENVIRONMENT_READING_COLLECTION);
+		database.save(envReading, COLLECTION_ENVIRONMENT_READING);
 	}
 	
 }
