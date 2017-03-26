@@ -1,7 +1,7 @@
-# from ctypes import *
+from ctypes import *
 
-# sensor = CDLL("./sensor.so")
-sensor = None
+sensor = CDLL("./sensor.so")
+# sensor = None
 
 
 class MPL:

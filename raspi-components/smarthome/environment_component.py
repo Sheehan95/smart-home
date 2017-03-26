@@ -5,8 +5,8 @@ import threading
 import paho.mqtt.client as mqtt
 
 from datetime import datetime
-# from sensors import TemperatureSensor
-from sensors import FakeTemperatureSensor
+from sensors import TemperatureSensor
+# from sensors import FakeTemperatureSensor
 
 
 # ==== DEFINING CONSTANTS =====================================================
@@ -20,8 +20,8 @@ TOPIC_ENVIRONMENT_READING_RESPONSE = '/ie/sheehan/smart-home/envreading/response
 
 # ==== DEFINING VARIABLES =====================================================
 mqtt_client = mqtt.Client()
-# sensor = TemperatureSensor()
-sensor = FakeTemperatureSensor()
+sensor = TemperatureSensor()
+# sensor = FakeTemperatureSensor()
 # =============================================================================
 
 
