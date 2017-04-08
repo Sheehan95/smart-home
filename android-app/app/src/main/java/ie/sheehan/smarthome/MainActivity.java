@@ -2,7 +2,6 @@ package ie.sheehan.smarthome;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -99,11 +98,8 @@ public class MainActivity extends AppCompatActivity {
         adapter.temperatureFragment.openSetToDateDialog();
     }
 
-    public void openSecurityCameraActivity(View view) {
-        String url = "http://192.167.1.27:8081/";
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(url));
-        startActivity(intent);
+    public void openCameraActivity(View view) {
+        startActivity(new Intent(this, CameraFeedActivity.class));
     }
 
 }

@@ -7,7 +7,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="OPEN SECURITY FEED"
-        android:onClick="openSecurityCameraActivity"/>
+        android:text="@string/button_open_camera_feed"
+        android:onClick="openCameraActivity"/>
 
 </FrameLayout>

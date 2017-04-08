@@ -12,6 +12,8 @@
     <string name="button_from_date">From Date</string>
     <string name="button_to_date">To Date</string>
 
+    <string name="button_open_camera_feed">Open Camera Feed</string>
+
     <!-- TEXT VIEWS -->
     <string name="text_temperature_display_celsius">%1$.2f °C</string>
     <string name="text_temperature_display_fahrenheit">%1$.2f °F</string>
@@ -19,6 +21,8 @@
 
     <string name="text_from_date">From: %1$s</string>
     <string name="text_to_date">To: %1$s</string>
+
+    <string name="text_camera_feed_header">Security Feed</string>
 
     <!-- ========== PREFERENCES ========== -->
     <!-- METRICS -->
@@ -80,6 +84,7 @@
     <!-- TOAST -->
     <string name="toast_no_readings_found">No data found for those dates</string>
     <string name="toast_invalid_date_range">Invalid date range</string>
+    <string name="toast_unable_to_open_camera">Unable to open camera feed</string>
 
     <!-- PLACEHOLDERS -->
 
