@@ -3,4 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#99B2E5</color>
+
+    <color name="colorCameraBackground">#000000</color>
+    <color name="colorCameraText">#969698</color>
 </resources>

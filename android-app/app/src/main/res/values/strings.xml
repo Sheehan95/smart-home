@@ -13,6 +13,7 @@
     <string name="button_to_date">To Date</string>
 
     <string name="button_open_camera_feed">Open Camera Feed</string>
+    <string name="button_return_from_camera">Return</string>
 
     <!-- TEXT VIEWS -->
     <string name="text_temperature_display_celsius">%1$.2f °C</string>
