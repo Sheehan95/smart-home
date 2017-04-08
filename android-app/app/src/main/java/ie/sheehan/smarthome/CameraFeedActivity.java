@@ -29,8 +29,7 @@ public class CameraFeedActivity extends AppCompatActivity {
     // ============================================================================================
     // DEFINING CLASS VARIABLES
     // ============================================================================================
-    private WebView webView = (WebView) findViewById(R.id.cam_feed);
-    private ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress);
+    private ProgressBar progressBar;
 
 
 
@@ -42,6 +41,9 @@ public class CameraFeedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_feed);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        WebView webView = (WebView) findViewById(R.id.cam_feed);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
 
         webView.setWebChromeClient(new WebChromeClient());
         webView.setWebViewClient(new WebViewClientProgressBar());
