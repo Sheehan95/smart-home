@@ -1,58 +1,94 @@
-import json
 import paho.mqtt.client as mqtt
+import signal
+import sys
 import subprocess
-import requests
+import threading
+import time
+
+from motioncam import PiMotionCamera
 
 
 # ==== DEFINING CONSTANTS =====================================================
-MQTT_BROKER = '192.167.1.23'
-MQTT_PORT = 1883
+TOPIC_CAMERA_FEED_ON = 'ie/sheehan/smarthome/security/camera/on'
+TOPIC_CAMERA_FEED_OFF = 'ie/sheehan/smarthome/security/camera/off'
+# =============================================================================
 
-MOTION_SERVICE = 'motion'
-
-TOPIC_SECURITY_FEED_TRIGGER = '/ie/sheehan/smart-home/security/feed'
-TOPIC_SECURITY_FEED_STATUS = '/ie/sheehan/smart-home/security/status'
+# ==== DEFINING GLOBAL VARIABLES ==============================================
+camera = PiMotionCamera()
+client = mqtt.Client()
 # =============================================================================
 
 
-# ==== DEFINING VARIABLES =====================================================
-mqtt_client = mqtt.Client()
+# ==== MQTT CALLBACKS =========================================================
+def on_connect(c, udata, flags, rc):
+    print 'Connected with status code ', rc
+
+
+def on_message(c, udata, message):
+    global camera
+
+    # stop the motion tracking service, start the streaming service
+    if message.topic == TOPIC_CAMERA_FEED_ON:
+        if camera.running:
+            camera.stop()
+            time.sleep(.5)
+
+        if not is_stream_running():
+            start_stream()
+
+    # stop the streaming service, start the motion tracking service
+    elif message.topic == TOPIC_CAMERA_FEED_OFF:
+        if is_stream_running():
+            stop_stream()
+            time.sleep(.5)
+
+        if not camera.running:
+            threading.Thread(target=start_camera).start()
 # =============================================================================
 
 
-# ==== DECLARING MQTT CALLBACK METHODS ========================================
-def on_connect(client, userdata, flags, rc):
-    print 'Client connected with status code ', rc
+# ==== DECLARING METHODS ======================================================
+def signal_handler(signal, frame):
+    global camera
+    global client
+
+    camera.stop()
+    client.loop_stop()
+    sys.exit(0)
 
 
-def on_message(client, userdata, message):
-    print 'Client: ', client
-    print 'Topic: ', message.topic
-    print 'Payload:', message.payload
-
-    if userdata is not None:
-        print 'User Data: ', userdata
-
-    if message.topic == TOPIC_SECURITY_FEED_TRIGGER:
-        payload = json.loads(message.payload)
-
-        if payload['camera'] is True:
-            print 'Turning camera stream on'
-        else:
-            print 'Turning camera stream off'
-
-    if message.topic == TOPIC_SECURITY_FEED_STATUS:
-        if get_motion_service_status():
-            print 'Motion status is running'
-# =============================================================================
+def start_camera():
+    global camera
+    camera.start()
 
 
-# ==== DEFINING METHODS =======================================================
-def get_motion_service_status():
+def start_stream():
+    print '[CAMERA]: starting network stream'
+    command = 'sudo service motion start'
+    result = subprocess.call(command.split())
+
+    if result == 0:
+        print '[CAMERA]: success!'
+    else:
+        print '[CAMERA]: failed to start network stream...'
+
+
+def stop_stream():
+    print '[CAMERA]: stopping network stream'
+    command = 'sudo service motion stop'
+    result = subprocess.call(command.split())
+
+    if result == 0:
+        print '[CAMERA]: success!'
+    else:
+        print '[CAMERA]: failed to stop network stream...'
+
+
+def is_stream_running():
     command = 'ps -A'
-    output = subprocess.check_output(command.split(' '))
+    output = subprocess.check_output(command.split())
 
-    if MOTION_SERVICE in output:
+    if 'motion' in output:
         return True
     else:
         return False
@@ -61,13 +97,24 @@ def get_motion_service_status():
 
 # ==== ENTRY POINT ============================================================
 def main():
-    mqtt_client.on_connect = on_connect
-    mqtt_client.on_message = on_message
+    global camera
+    global client
 
-    mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
-    mqtt_client.subscribe(TOPIC_SECURITY_FEED_STATUS, TOPIC_SECURITY_FEED_TRIGGER)
+    signal.signal(signal.SIGINT, signal_handler)
 
-    mqtt_client.loop_forever()
+    if is_stream_running():
+        stop_stream()
+        time.sleep(.5)
+
+    threading.Thread(target=start_camera).start()
+
+    client.on_connect = on_connect
+    client.on_message = on_message
+
+    client.connect('192.167.1.23', 1883, 60)
+    client.subscribe('#')
+
+    client.loop_forever()
 
 
 if __name__ == '__main__':

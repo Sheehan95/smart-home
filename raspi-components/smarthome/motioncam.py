@@ -1,9 +1,7 @@
 import cv2
 import datetime
 import imutils
-import json
 import time
-import warnings
 
 from picamera import PiCamera
 from picamera.array import PiRGBArray
@@ -45,6 +43,7 @@ class PiMotionCamera:
         for f in self.camera.capture_continuous(self.raw_capture, format="bgr", use_video_port=True):
             if not self.running:
                 self.camera.close()
+                self.raw_capture.truncate(0)
                 break
             
             frame = f.array
