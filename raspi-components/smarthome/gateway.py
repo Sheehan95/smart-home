@@ -4,7 +4,8 @@ import requests
 
 
 # ==== DEFINING CONSTANTS =====================================================
-MQTT_BROKER = '192.167.1.23'
+MQTT_BROKER = '127.0.0.1'
+MQTT_PORT = 1883
 
 TOPIC_ENVIRONMENT_READING_LOG = '/ie/sheehan/smart-home/envreading/log'
 # =============================================================================
@@ -53,7 +54,7 @@ def main():
     mqtt_client.on_connect = on_connect
     mqtt_client.on_message = on_message
 
-    mqtt_client.connect(MQTT_BROKER, 1883, 60)
+    mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
     mqtt_client.subscribe('#')
 
     mqtt_client.loop_forever()

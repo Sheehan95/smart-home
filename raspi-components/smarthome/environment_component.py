@@ -10,7 +10,8 @@ from sensors import TemperatureSensor
 
 
 # ==== DEFINING CONSTANTS =====================================================
-MQTT_BROKER = '192.167.1.23'
+MQTT_BROKER = '192.167.1.16'
+MQTT_PORT = 1883
 
 TOPIC_ENVIRONMENT_READING_LOG = '/ie/sheehan/smart-home/envreading/log'
 TOPIC_ENVIRONMENT_READING_REQUESTS = '/ie/sheehan/smart-home/envreading/request'
@@ -83,7 +84,7 @@ def main():
     mqtt_client.on_connect = on_connect
     mqtt_client.on_message = on_message
 
-    mqtt_client.connect(MQTT_BROKER, 1883, 60)
+    mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
     mqtt_client.subscribe(TOPIC_ENVIRONMENT_READING_REQUESTS)
 
     mqtt_client.loop_forever()

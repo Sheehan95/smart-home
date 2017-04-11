@@ -1,5 +1,6 @@
 import paho.mqtt.client as mqtt
 import signal
+import socket
 import sys
 import subprocess
 import threading
@@ -9,8 +10,15 @@ from motioncam import PiMotionCamera
 
 
 # ==== DEFINING CONSTANTS =====================================================
+SCRIPT_LABEL = '[SEC]'
+
+MQTT_BROKER = '192.167.1.16'
+MQTT_PORT = 1883
+
 TOPIC_CAMERA_FEED_ON = 'ie/sheehan/smarthome/security/camera/on'
 TOPIC_CAMERA_FEED_OFF = 'ie/sheehan/smarthome/security/camera/off'
+
+TOPIC_CAMERA_MOTION = 'ie/sheehan/smarthome/security/camera/motion'
 # =============================================================================
 
 # ==== DEFINING GLOBAL VARIABLES ==============================================
@@ -19,9 +27,9 @@ client = mqtt.Client()
 # =============================================================================
 
 
-# ==== MQTT CALLBACKS =========================================================
+# ==== DEFINING CALLBACKS =====================================================
 def on_connect(c, udata, flags, rc):
-    print 'Connected with status code ', rc
+    print '{}: MQTT connected with status code {}'.format(SCRIPT_LABEL, rc)
 
 
 def on_message(c, udata, message):
@@ -44,6 +52,11 @@ def on_message(c, udata, message):
 
         if not camera.running:
             threading.Thread(target=start_camera).start()
+
+
+def on_motion():
+    global client
+    client.publish(TOPIC_CAMERA_MOTION)
 # =============================================================================
 
 
@@ -63,25 +76,25 @@ def start_camera():
 
 
 def start_stream():
-    print '[CAMERA]: starting network stream'
+    print '{}: starting network stream'.format(SCRIPT_LABEL)
     command = 'sudo service motion start'
     result = subprocess.call(command.split())
 
     if result == 0:
-        print '[CAMERA]: success!'
+        print '{}: success!'.format(SCRIPT_LABEL)
     else:
-        print '[CAMERA]: failed to start network stream...'
+        print '{}: failed to start network stream...'.format(SCRIPT_LABEL)
 
 
 def stop_stream():
-    print '[CAMERA]: stopping network stream'
+    print '{}: stopping network stream'.format(SCRIPT_LABEL)
     command = 'sudo service motion stop'
     result = subprocess.call(command.split())
 
     if result == 0:
-        print '[CAMERA]: success!'
+        print '{}: success!'.format(SCRIPT_LABEL)
     else:
-        print '[CAMERA]: failed to stop network stream...'
+        print '{}: failed to stop network stream...'.format(SCRIPT_LABEL)
 
 
 def is_stream_running():
@@ -106,14 +119,20 @@ def main():
         stop_stream()
         time.sleep(.5)
 
+    camera.on_motion = on_motion
+
     threading.Thread(target=start_camera).start()
 
     client.on_connect = on_connect
     client.on_message = on_message
 
-    client.connect('192.167.1.23', 1883, 60)
-    client.subscribe('#')
+    try:
+        client.connect(MQTT_BROKER, MQTT_PORT, 60)
+    except socket.error:
+        print '{}: MQTT failed to connect - is the broker online?'.format(SCRIPT_LABEL)
+        sys.exit(0)
 
+    client.subscribe('#')
     client.loop_forever()
 
 

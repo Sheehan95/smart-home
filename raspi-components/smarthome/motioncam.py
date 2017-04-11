@@ -5,6 +5,8 @@ import time
 
 from picamera import PiCamera
 from picamera.array import PiRGBArray
+from security_component import SCRIPT_LABEL
+
 
 CAMERA_FPS = 16
 CAMERA_RESOLUTION = [640, 480]
@@ -23,6 +25,7 @@ class PiMotionCamera:
         self.average_frame = None
         self.motion_counter = 0
         self.running = True
+        self.on_motion = None
 
     @staticmethod
     def configure_camera():
@@ -36,8 +39,8 @@ class PiMotionCamera:
         self.raw_capture = PiRGBArray(self.camera, size=tuple(CAMERA_RESOLUTION))
 
         time.sleep(CAMERA_PREP_TIME)
+        print '{}: Starting motion detection'.format(SCRIPT_LABEL)
 
-        print 'Starting camera...'
         self.running = True
 
         for f in self.camera.capture_continuous(self.raw_capture, format="bgr", use_video_port=True):
@@ -76,7 +79,10 @@ class PiMotionCamera:
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)  # get rectangle for motion
                 text = 'Occupied'
 
-                print 'MOTION DETECTED'
+                print '{}: Motion detected'.format(SCRIPT_LABEL)
+
+                if self.on_motion is not None:
+                    self.on_motion()
             
             # drawing the time and room status to the screen
             ts = timestamp.strftime('%A %d %B %Y %I:%M:%S%p')
