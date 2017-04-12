@@ -27,7 +27,7 @@ import ie.sheehan.smarthome.repositories.EnvironmentReadingRepository;
 @RequestMapping(value = "/environment")
 public class EnvironmentController {
 	
-	private static final String MQTT_BROKER = "192.167.1.23";
+	private static final String MQTT_BROKER = "192.167.1.101";
 	
 	private static final String TOPIC_ENVIRONMENT_READING_REQUEST = "/ie/sheehan/smart-home/envreading/request";
 	private static final String TOPIC_ENVIRONMENT_READING_RESPONSE = "/ie/sheehan/smart-home/envreading/response";

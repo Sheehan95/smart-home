@@ -124,7 +124,7 @@ public class TemperatureFragment extends Fragment {
             executorService.scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {
-                    // new GetTemperature().execute();
+                    new GetTemperature().execute();
                 }
             }, INITIAL_DELAY, period, TimeUnit.MILLISECONDS);
         }

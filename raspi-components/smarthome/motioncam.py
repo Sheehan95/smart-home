@@ -5,8 +5,9 @@ import time
 
 from picamera import PiCamera
 from picamera.array import PiRGBArray
-from security_component import SCRIPT_LABEL
 
+
+SCRIPT_LABEL = '[SEC]'
 
 CAMERA_FPS = 16
 CAMERA_RESOLUTION = [640, 480]
@@ -24,7 +25,7 @@ class PiMotionCamera:
         self.raw_capture = None
         self.average_frame = None
         self.motion_counter = 0
-        self.running = True
+        self.running = False
         self.on_motion = None
 
     @staticmethod

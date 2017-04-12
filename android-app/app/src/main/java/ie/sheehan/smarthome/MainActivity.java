@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openCameraActivity(View view) {
-        startActivity(new Intent(this, CameraFeedActivity.class));
+        adapter.securityFragment.openCamera();
     }
 
 }

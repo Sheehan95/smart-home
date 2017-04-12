@@ -2,9 +2,11 @@ package ie.sheehan.smarthome;
 
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -15,12 +17,14 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import ie.sheehan.smarthome.utility.HttpRequestHandler;
+
 public class CameraFeedActivity extends AppCompatActivity {
 
     // ============================================================================================
     // DEFINING STATIC VARIABLES
     // ============================================================================================
-    private final static String ENDPOINT = "http://192.167.1.27:8081/";
+    private final static String ENDPOINT = "http://192.167.1.103:8081/";
     private final static String ENCODING = "UTF-8";
     private final static String ACCEPT = "text/html";
 
@@ -59,7 +63,11 @@ public class CameraFeedActivity extends AppCompatActivity {
         webView.loadData(getHTML(ENDPOINT), ACCEPT, ENCODING);
     }
 
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        new CloseCameraFeed().execute();
+    }
 
     // ============================================================================================
     // DECLARING PRIVATE METHODS
@@ -101,6 +109,12 @@ public class CameraFeedActivity extends AppCompatActivity {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             progressBar.setVisibility(View.VISIBLE);
+
+            try {
+                Thread.sleep(5000);
+            } catch (Exception e) {
+                Log.e("Error", e.toString());
+            }
         }
 
         @Override
@@ -114,6 +128,23 @@ public class CameraFeedActivity extends AppCompatActivity {
             super.onReceivedError(view, request, error);
             Toast.makeText(CameraFeedActivity.this, R.string.toast_unable_to_open_camera, Toast.LENGTH_SHORT).show();
             progressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private class CloseCameraFeed extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            return HttpRequestHandler.getInstance().toggleCameraFeed(false);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean stream) {
+            super.onPostExecute(stream);
         }
     }
 

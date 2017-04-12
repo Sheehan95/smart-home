@@ -1,3 +1,4 @@
+import json
 import paho.mqtt.client as mqtt
 import signal
 import socket
@@ -12,12 +13,10 @@ from motioncam import PiMotionCamera
 # ==== DEFINING CONSTANTS =====================================================
 SCRIPT_LABEL = '[SEC]'
 
-MQTT_BROKER = '192.167.1.16'
+MQTT_BROKER = '192.167.1.101'
 MQTT_PORT = 1883
 
-TOPIC_CAMERA_FEED_ON = 'ie/sheehan/smarthome/security/camera/on'
-TOPIC_CAMERA_FEED_OFF = 'ie/sheehan/smarthome/security/camera/off'
-
+TOPIC_CAMERA_FEED = 'ie/sheehan/smarthome/security/camera/feed'
 TOPIC_CAMERA_MOTION = 'ie/sheehan/smarthome/security/camera/motion'
 # =============================================================================
 
@@ -36,22 +35,19 @@ def on_message(c, udata, message):
     global camera
 
     # stop the motion tracking service, start the streaming service
-    if message.topic == TOPIC_CAMERA_FEED_ON:
-        if camera.running:
-            camera.stop()
+    if message.topic == TOPIC_CAMERA_FEED:
+        payload = json.loads(message.payload)
+
+        if payload['stream']:
+            print '{}: JSON stream property on'.format(SCRIPT_LABEL)
+            close_camera()
             time.sleep(.5)
-
-        if not is_stream_running():
-            start_stream()
-
-    # stop the streaming service, start the motion tracking service
-    elif message.topic == TOPIC_CAMERA_FEED_OFF:
-        if is_stream_running():
-            stop_stream()
+            open_stream()
+        elif not payload['stream']:
+            print '{}: JSON stream property off'.format(SCRIPT_LABEL)
+            close_stream()
             time.sleep(.5)
-
-        if not camera.running:
-            threading.Thread(target=start_camera).start()
+            open_camera()
 
 
 def on_motion():
@@ -75,26 +71,42 @@ def start_camera():
     camera.start()
 
 
-def start_stream():
-    print '{}: starting network stream'.format(SCRIPT_LABEL)
-    command = 'sudo service motion start'
-    result = subprocess.call(command.split())
+def open_stream():
+    print '{}: starting camera stream on port 8081'.format(SCRIPT_LABEL)
+    if not is_stream_running():
+        command = 'sudo service motion start'
+        result = subprocess.call(command.split())
 
-    if result == 0:
-        print '{}: success!'.format(SCRIPT_LABEL)
-    else:
-        print '{}: failed to start network stream...'.format(SCRIPT_LABEL)
+        if result == 0:
+            print '{}: stream started successfully!'.format(SCRIPT_LABEL)
+        else:
+            print '{}: failed to start stream'.format(SCRIPT_LABEL)
 
 
-def stop_stream():
-    print '{}: stopping network stream'.format(SCRIPT_LABEL)
-    command = 'sudo service motion stop'
-    result = subprocess.call(command.split())
+def close_stream():
+    print '{}: stopping camera stream'.format(SCRIPT_LABEL)
+    if is_stream_running():
+        command = 'sudo service motion stop'
+        result = subprocess.call(command.split())
 
-    if result == 0:
-        print '{}: success!'.format(SCRIPT_LABEL)
-    else:
-        print '{}: failed to stop network stream...'.format(SCRIPT_LABEL)
+        if result == 0:
+            print '{}: stream stopped successfully!'.format(SCRIPT_LABEL)
+        else:
+            print '{}: failed to stop stream'.format(SCRIPT_LABEL)
+
+
+def open_camera():
+    global camera
+
+    if not camera.running:
+        threading.Thread(target=start_camera).start()
+
+
+def close_camera():
+    global camera
+
+    if camera.running:
+        camera.stop()
 
 
 def is_stream_running():
@@ -115,13 +127,11 @@ def main():
 
     signal.signal(signal.SIGINT, signal_handler)
 
-    if is_stream_running():
-        stop_stream()
-        time.sleep(.5)
-
     camera.on_motion = on_motion
 
-    threading.Thread(target=start_camera).start()
+    close_stream()
+    time.sleep(1.5)
+    open_camera()
 
     client.on_connect = on_connect
     client.on_message = on_message

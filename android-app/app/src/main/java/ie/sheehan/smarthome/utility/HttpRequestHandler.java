@@ -7,8 +7,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,6 +21,8 @@ import java.util.List;
 import java.util.Locale;
 
 import ie.sheehan.smarthome.model.EnvironmentReading;
+
+import static java.lang.Boolean.parseBoolean;
 
 /**
  * A Singleton class for managing connections and HTTP requests to the web services.
@@ -29,7 +34,7 @@ public class HttpRequestHandler {
     // ============================================================================================
     private static final String DOMAIN = "192.167.1.31";
 
-    private static final String ENVPOINT_ENVIRONMENT = "/environment";
+    private static final String ENDPOINT_ENVIRONMENT = "/environment";
     private static final String ENDPOINT_SECURITY = "/security";
     private static final String ENDPOINT_STOCK = "/stock";
 
@@ -68,7 +73,7 @@ public class HttpRequestHandler {
         StringBuilder response = new StringBuilder();
         EnvironmentReading envReading = null;
 
-        String target = String.format("http://%s:8080%s%s", DOMAIN, ENVPOINT_ENVIRONMENT, "/get");
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_ENVIRONMENT, "/get");
 
         try {
             connection = (HttpURLConnection) new URL(target).openConnection();
@@ -110,7 +115,7 @@ public class HttpRequestHandler {
         StringBuilder response = new StringBuilder();
         List<EnvironmentReading> envReadings = new ArrayList<>();
 
-        String target = String.format("http://%s:8080%s%s", DOMAIN, ENVPOINT_ENVIRONMENT, "/get/range");
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_ENVIRONMENT, "/get/range");
         target += String.format(Locale.getDefault(), "?from=%d&to=%d", (from.getTime() / 1000L), (to.getTime() / 1000L));
 
         try {
@@ -135,6 +140,45 @@ public class HttpRequestHandler {
         }
 
         return envReadings;
+    }
+
+    public boolean toggleCameraFeed(boolean stream) {
+        boolean confirmation;
+
+        HttpURLConnection connection;
+        StringBuilder response = new StringBuilder();
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/camera/feed");
+
+        try {
+            connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+
+            OutputStream outputStream = connection.getOutputStream();
+            JSONObject output = new JSONObject();
+            output.put("stream", stream);
+
+            outputStream.write(output.toString().getBytes("UTF-8"));
+            outputStream.close();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null){
+                response.append(nextLine);
+            }
+
+            confirmation = Boolean.parseBoolean(response.toString());
+
+        } catch (Exception e){
+            Log.e("HTTP REQUEST ERROR", e.toString());
+            return false;
+        }
+
+        return confirmation;
     }
 
 }
