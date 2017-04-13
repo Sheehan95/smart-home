@@ -28,6 +28,7 @@ import ie.sheehan.smarthome.repositories.EnvironmentReadingRepository;
 public class EnvironmentController {
 	
 	private static final String MQTT_BROKER = "192.167.1.101";
+	private static final int MQTT_PORT = 1883;
 	
 	private static final String TOPIC_ENVIRONMENT_READING_REQUEST = "/ie/sheehan/smart-home/envreading/request";
 	private static final String TOPIC_ENVIRONMENT_READING_RESPONSE = "/ie/sheehan/smart-home/envreading/response";
@@ -91,7 +92,7 @@ public class EnvironmentController {
 		
 		try {
 			MQTT client = new MQTT();
-			client.setHost(MQTT_BROKER, 1883);
+			client.setHost(MQTT_BROKER, MQTT_PORT);
 			client.setConnectAttemptsMax(1);
 			client.setReconnectAttemptsMax(1);
 			

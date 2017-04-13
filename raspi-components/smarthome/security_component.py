@@ -8,6 +8,7 @@ import threading
 import time
 
 from motioncam import PiMotionCamera
+from security import Alarm
 
 
 # ==== DEFINING CONSTANTS =====================================================
@@ -16,11 +17,16 @@ SCRIPT_LABEL = '[SEC]'
 MQTT_BROKER = '192.167.1.101'
 MQTT_PORT = 1883
 
-TOPIC_CAMERA_FEED = 'ie/sheehan/smarthome/security/camera/feed'
-TOPIC_CAMERA_MOTION = 'ie/sheehan/smarthome/security/camera/motion'
+TOPIC_SECURITY_CAMERA_FEED = '/ie/sheehan/smart-home/security/camera/feed'
+TOPIC_SECURITY_CAMERA_MOTION = '/ie/sheehan/smart-home/security/camera/motion'
+
+TOPIC_SECURITY_ALARM_REQUEST = '/ie/sheehan/smart-home/security/alarm/request'
+TOPIC_SECURITY_ALARM_RESPONSE = '/ie/sheehan/smart-home/security/alarm/response'
+TOPIC_SECURITY_ALARM_ARM = '/ie/sheehan/smart-home/security/alarm/arm'
 # =============================================================================
 
 # ==== DEFINING GLOBAL VARIABLES ==============================================
+alarm = Alarm()
 camera = PiMotionCamera()
 client = mqtt.Client()
 # =============================================================================
@@ -35,24 +41,42 @@ def on_message(c, udata, message):
     global camera
 
     # stop the motion tracking service, start the streaming service
-    if message.topic == TOPIC_CAMERA_FEED:
+    if message.topic == TOPIC_SECURITY_CAMERA_FEED:
         payload = json.loads(message.payload)
 
         if payload['stream']:
-            print '{}: JSON stream property on'.format(SCRIPT_LABEL)
             close_camera()
             time.sleep(.5)
             open_stream()
         elif not payload['stream']:
-            print '{}: JSON stream property off'.format(SCRIPT_LABEL)
             close_stream()
             time.sleep(.5)
             open_camera()
 
+    elif message.topic == TOPIC_SECURITY_ALARM_ARM:
+        payload = json.loads(message.payload)
+
+        if payload['arm']:
+            print '{}: arming the alarm...'.format(SCRIPT_LABEL)
+            alarm.arm_alarm()
+        elif not payload['arm']:
+            print '{}: disarming the alarm...'.format(SCRIPT_LABEL)
+            alarm.disarm_alarm()
+
+    elif message.topic == TOPIC_SECURITY_ALARM_REQUEST:
+        if alarm.last_armed is not None:
+            payload = json.dumps({'armed': alarm.armed, 'timestamp': alarm.last_armed.strftime('%s')})
+        else:
+            payload = json.dumps({'armed': alarm.armed, 'timestamp': 0})
+        client.publish(TOPIC_SECURITY_ALARM_RESPONSE, payload)
+
 
 def on_motion():
+    global alarm
     global client
-    client.publish(TOPIC_CAMERA_MOTION)
+
+    if alarm.armed:
+        client.publish(TOPIC_SECURITY_CAMERA_MOTION)
 # =============================================================================
 
 

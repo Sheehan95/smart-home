@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import ie.sheehan.smarthome.model.AlarmStatus;
 import ie.sheehan.smarthome.model.EnvironmentReading;
 
 import static java.lang.Boolean.parseBoolean;
@@ -142,6 +143,21 @@ public class HttpRequestHandler {
         return envReadings;
     }
 
+    /**
+     * Makes a HTTP request to /environment/get/range to retrieve a list of
+     * {@link EnvironmentReading} values in a range between the two {@link Date} values.
+     *
+     * @param from the lower bound {@link Date} value for the range
+     * @param to the upper bound {@link Date} value for the range
+     * @return a list of {@link EnvironmentReading}s within the range of dates
+     */
+
+    /**
+     * Makes a HTTP request to /security/camera/feed to open or close the camera feed on port 8081.
+     *
+     * @param stream true to turn on the stream, false to turn it off
+     * @return true if successful, false otherwise
+     */
     public boolean toggleCameraFeed(boolean stream) {
         boolean confirmation;
 
@@ -179,6 +195,62 @@ public class HttpRequestHandler {
         }
 
         return confirmation;
+    }
+
+    public void armAlarm(boolean arm) {
+        HttpURLConnection connection;
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/alarm/arm");
+
+        try {
+            connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+
+            JSONObject output = new JSONObject();
+            output.put("arm", arm);
+
+            OutputStream outputStream = connection.getOutputStream();
+            outputStream.write(output.toString().getBytes("UTF-8"));
+            outputStream.close();
+        } catch (Exception e){
+            Log.e("HTTP REQUEST ERROR", e.toString());
+        }
+    }
+
+    public AlarmStatus getAlarmStatus() {
+        AlarmStatus alarm = null;
+
+        JSONObject json;
+        HttpURLConnection connection;
+        StringBuilder response = new StringBuilder();
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/alarm/status");
+
+        try {
+            connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null){
+                response.append(nextLine);
+            }
+
+            json = new JSONObject(response.toString());
+
+            boolean armed = json.getBoolean("armed");
+            Date lastArmed = new Date(json.getLong("timestamp") * 1000L);
+
+            alarm = new AlarmStatus(armed, lastArmed);
+        } catch (Exception e){
+            Log.e("HTTP REQUEST ERROR", e.toString());
+        }
+
+        return alarm;
     }
 
 }

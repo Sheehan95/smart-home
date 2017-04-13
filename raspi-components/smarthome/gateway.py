@@ -55,7 +55,7 @@ def main():
     mqtt_client.on_message = on_message
 
     mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
-    mqtt_client.subscribe('#')
+    mqtt_client.subscribe('/ie/sheehan/smart-home/#')
 
     mqtt_client.loop_forever()
 
