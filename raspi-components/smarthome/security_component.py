@@ -1,3 +1,5 @@
+import cv2
+import base64
 import json
 import paho.mqtt.client as mqtt
 import signal
@@ -72,17 +74,25 @@ def on_message(c, udata, message):
         client.publish(TOPIC_SECURITY_ALARM_RESPONSE, payload)
 
 
-def on_motion(f):
+def on_motion(frame):
     global alarm
     global client
 
-    print (type(f))
-    print (type(f.array))
-
-    payload = json.dumps({'image': f.array.tolist()})
-
     if alarm.armed:
-        client.publish(TOPIC_SECURITY_CAMERA_MOTION, payload=payload)
+        cv2.imwrite('/media/usb/test.png', frame.array)
+
+        with open('/media/usb/test.png', 'rb') as image_file:
+            encoded_str = base64.b64encode(image_file.read())
+
+        client.publish(TOPIC_SECURITY_CAMERA_MOTION, payload=encoded_str)
+
+    #print '{}: motion callback'.format(SCRIPT_LABEL)
+    #payload = json.dumps({'image': frame.array.tolist()})
+
+    #if alarm.armed:
+    #    print '{}: sending MQTT message'.format(SCRIPT_LABEL)
+    #    client.publish(TOPIC_SECURITY_CAMERA_MOTION, payload=payload)
+    #    print '{}: finished'.format(SCRIPT_LABEL)
 # =============================================================================
 
 

@@ -1,13 +1,15 @@
 package ie.sheehan.smarthome.controllers;
 
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 
+import org.apache.commons.codec.binary.Base64;
 import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.Message;
 import org.fusesource.mqtt.client.QoS;
 import org.fusesource.mqtt.client.Topic;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -67,16 +69,18 @@ public class SecurityController {
 	@ResponseBody
 	@RequestMapping(value = "/intrusion/log", method = RequestMethod.POST)
 	public void logNewInstrusion(@RequestBody String body){
+		System.out.println(body);
+		
 		try {
 			JSONObject json = new JSONObject(body);
-			JSONArray list = json.getJSONArray("image");
+			String encoded = json.getString("img");
 			
-			for (int i = 0 ; i < list.length() ; i++) {
-				System.out.println(list.get(i));
-			}
+			System.out.println(encoded);
+			byte[] data = Base64.decodeBase64(encoded);
 			
-			System.out.println("HEIGHT: " + list.length() + "\tWIDTH: " + list.getJSONArray(0).length());
-			
+			OutputStream stream = new FileOutputStream("C:/Users/Alan/Desktop/testing.png");
+			stream.write(data);
+			stream.close();
 		} catch (Exception e) {
 			System.out.println("NOPE");
 			e.printStackTrace();

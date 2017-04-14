@@ -54,10 +54,11 @@ def on_message(client, userdata, message):
 
     elif message.topic == TOPIC_SECURITY_CAMERA_MOTION:
         print '{}: Forwarding motion notice to web server'.format(SCRIPT_LABEL)
-        payload = json.loads(message.payload)
+
+        payload = json.dumps({'img': message.payload})
 
         try:
-            request = requests.post('http://192.167.1.31:8080/security/intrusion/log', json=payload)
+            request = requests.post('http://192.167.1.31:8080/security/intrusion/log', json=json.loads(payload))
             print '{}: POSTing image status code {}'.format(SCRIPT_LABEL, request.status_code)
         except requests.ConnectionError:
             print '{}: Failed to connect'.format(SCRIPT_LABEL)
