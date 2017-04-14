@@ -68,15 +68,21 @@ def on_message(c, udata, message):
             payload = json.dumps({'armed': alarm.armed, 'timestamp': alarm.last_armed.strftime('%s')})
         else:
             payload = json.dumps({'armed': alarm.armed, 'timestamp': 0})
+
         client.publish(TOPIC_SECURITY_ALARM_RESPONSE, payload)
 
 
-def on_motion():
+def on_motion(f):
     global alarm
     global client
 
+    print (type(f))
+    print (type(f.array))
+
+    payload = json.dumps({'image': f.array.tolist()})
+
     if alarm.armed:
-        client.publish(TOPIC_SECURITY_CAMERA_MOTION)
+        client.publish(TOPIC_SECURITY_CAMERA_MOTION, payload=payload)
 # =============================================================================
 
 

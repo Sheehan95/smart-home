@@ -83,7 +83,7 @@ class PiMotionCamera:
                 print '{}: Motion detected'.format(SCRIPT_LABEL)
 
                 if self.on_motion is not None:
-                    self.on_motion()
+                    self.on_motion(f)
             
             # drawing the time and room status to the screen
             ts = timestamp.strftime('%A %d %B %Y %I:%M:%S%p')
