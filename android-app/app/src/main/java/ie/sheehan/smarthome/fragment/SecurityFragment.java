@@ -2,8 +2,10 @@ package ie.sheehan.smarthome.fragment;
 
 
 import android.content.Intent;
+import android.icu.text.DateFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.BoolRes;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,7 +54,6 @@ public class SecurityFragment extends Fragment {
         alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Log.e("DID", "THAT WORK?");
                 new ArmAlarm().execute(isChecked);
             }
         });
@@ -74,7 +75,19 @@ public class SecurityFragment extends Fragment {
         @Override
         protected Void doInBackground(Boolean... params) {
             boolean arm = params[0];
-            HttpRequestHandler.getInstance().armAlarm(arm);
+
+            Log.e("DO IN BK", "HERE");
+            Log.e("ARM:", Boolean.toString(arm));
+
+            boolean success = HttpRequestHandler.getInstance().armAlarm(arm);
+
+            if (success) {
+                Log.e("WHUP", "DIE DOO IT WORKED");
+            }
+            else {
+                Log.e("AH FUCK ", "ME IT DIDN'T WORK");
+            }
+
             return null;
         }
 

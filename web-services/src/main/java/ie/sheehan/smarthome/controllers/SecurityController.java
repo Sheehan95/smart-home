@@ -7,6 +7,7 @@ import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.Message;
 import org.fusesource.mqtt.client.QoS;
 import org.fusesource.mqtt.client.Topic;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,7 @@ import ie.sheehan.smarthome.models.Alarm;
 @RequestMapping(value = "/security")
 public class SecurityController {
 	
+	// ==== DEFINING CONSTANTS ================================================
 	private static final String MQTT_BROKER = "192.167.1.101";
 	
 	private static final String TOPIC_SECURITY_CAMERA_FEED = "/ie/sheehan/smart-home/security/camera/feed";
@@ -28,20 +30,25 @@ public class SecurityController {
 	private static final String TOPIC_SECURITY_ALARM_REQUEST = "/ie/sheehan/smart-home/security/alarm/request";
 	private static final String TOPIC_SECURITY_ALARM_RESPONSE = "/ie/sheehan/smart-home/security/alarm/response";
 	private static final String TOPIC_SECURITY_ALARM_ARM = "/ie/sheehan/smart-home/security/alarm/arm";
+	// ========================================================================
 	
+	
+	// ==== REST API ==========================================================
 	@ResponseBody
 	@RequestMapping(value = "/alarm/status", method = RequestMethod.GET)
 	public Alarm getAlarmStatus() {
 		return alarmStatus();
 	}
 	
+	@ResponseBody
 	@RequestMapping(value = "/alarm/arm", method = RequestMethod.POST)
-	public void armAlarm(@RequestBody String body) {
+	public boolean armAlarm(@RequestBody String body) {
 		try {
 			boolean arm = new JSONObject(body).getBoolean("arm");
-			toggleAlarmArmed(arm);
+			return toggleAlarmArmed(arm);
 		} catch (JSONException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 	
@@ -56,6 +63,30 @@ public class SecurityController {
 			return false;
 		}
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/intrusion/log", method = RequestMethod.POST)
+	public void logNewInstrusion(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			JSONArray list = json.getJSONArray("image");
+			
+			for (int i = 0 ; i < list.length() ; i++) {
+				System.out.println(list.get(i));
+			}
+			
+			System.out.println("HEIGHT: " + list.length() + "\tWIDTH: " + list.getJSONArray(0).length());
+			
+		} catch (Exception e) {
+			System.out.println("NOPE");
+			e.printStackTrace();
+		}
+	}
+	// ========================================================================
+	
+	
+	// ==== PRIVATE METHODS ===================================================
+	private void arrayToImage(){}
 	
 	private Alarm alarmStatus() {
 		Alarm alarm = new Alarm();
@@ -149,5 +180,6 @@ public class SecurityController {
 			return false;
 		}
 	}
+	// ========================================================================
 	
 }

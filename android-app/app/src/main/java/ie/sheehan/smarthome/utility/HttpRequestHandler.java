@@ -197,8 +197,11 @@ public class HttpRequestHandler {
         return confirmation;
     }
 
-    public void armAlarm(boolean arm) {
+    public boolean armAlarm(boolean arm) {
+        boolean confirmation;
+
         HttpURLConnection connection;
+        StringBuilder response = new StringBuilder();
 
         String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/alarm/arm");
 
@@ -215,9 +218,21 @@ public class HttpRequestHandler {
             OutputStream outputStream = connection.getOutputStream();
             outputStream.write(output.toString().getBytes("UTF-8"));
             outputStream.close();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null){
+                response.append(nextLine);
+            }
+
+            confirmation = Boolean.parseBoolean(response.toString());
         } catch (Exception e){
             Log.e("HTTP REQUEST ERROR", e.toString());
+            confirmation = false;
         }
+
+        return confirmation;
     }
 
     public AlarmStatus getAlarmStatus() {
