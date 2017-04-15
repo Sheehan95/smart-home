@@ -1,7 +1,6 @@
 import json
 import paho.mqtt.client as mqtt
 import requests
-import time
 
 
 # ==== DEFINING CONSTANTS =====================================================
@@ -30,34 +29,45 @@ mqtt_client = mqtt.Client()
 def on_connect(client, userdata, flags, rc):
     print '{}: MQTT connected with status code {}'.format(SCRIPT_LABEL, rc)
 
+    if client is not None:
+        print 'Client: ', client
+
+    if userdata is not None:
+        print 'User Data: ', userdata
+
+    if flags is not None:
+        print 'Flags: ', flags
+
 
 def on_message(client, userdata, message):
-    print '{}: received message with topic {}'.format(SCRIPT_LABEL, message.topic)
+    print 'Client: ', client
+    print 'Topic: ', message.topic
+    # print 'Payload:', message.payload
+
+    if userdata is not None:
+        print 'User Data: ', userdata
 
     if message.topic == TOPIC_ENVIRONMENT_READING_LOG:
-        print '{}: forwarding temperature log to web server'.format(SCRIPT_LABEL)
         payload = json.loads(message.payload)
 
         try:
             request = requests.post('http://192.167.1.31:8080/environment/add', json=payload)
             print '{}: HTTP request status code {}'.format(SCRIPT_LABEL, request.status_code)
         except requests.ConnectionError:
-            print '{}: failed to connect to web server'.format(SCRIPT_LABEL)
+            print '{}: Failed to connect to web service'.format(SCRIPT_LABEL)
 
     elif message.topic == TOPIC_SECURITY_CAMERA_MOTION:
-        print '{}: forwarding motion notice to web server'.format(SCRIPT_LABEL)
+        print '{}: Forwarding motion notice to web server'.format(SCRIPT_LABEL)
 
-        payload = {'image': message.payload, 'timestamp': int(time.time()), 'viewed': False}
+        payload = json.dumps({'img': message.payload})
 
         try:
-            request = requests.post('http://192.167.1.31:8080/security/intrusion/log', json=payload)
+            request = requests.post('http://192.167.1.31:8080/security/intrusion/log', json=json.loads(payload))
             print '{}: POSTing image status code {}'.format(SCRIPT_LABEL, request.status_code)
         except requests.ConnectionError:
-            print '{}: failed to connect'.format(SCRIPT_LABEL)
+            print '{}: Failed to connect'.format(SCRIPT_LABEL)
         except Exception:
-            print '{}: unknown error occurred'.format(SCRIPT_LABEL)
-
-    print '\n'
+            print '{}: Something else happened'.format(SCRIPT_LABEL)
 # =============================================================================
 
 

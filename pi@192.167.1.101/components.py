@@ -7,6 +7,7 @@ from picamera import PiCamera
 from picamera.array import PiRGBArray
 
 
+# ==== DEFINING CONSTANTS =====================================================
 SCRIPT_LABEL = '[SEC]'
 
 CAMERA_FPS = 22
@@ -16,8 +17,10 @@ CAMERA_PREP_TIME = 2.5
 DELTA_THRESHOLD = 5
 MINIMUM_MOTION_AREA = 5000
 MINIMUM_MOTION_DETECTED = 8
+MINIMUM_TIME_BETWEEN_MOTION = 5
 
 SHOW_VIDEO = False
+# =============================================================================
 
 
 class PiMotionCamera:
@@ -53,7 +56,7 @@ class PiMotionCamera:
                 self.camera.close()
                 self.raw_capture.truncate(0)
                 break
-            
+
             frame = f.array
             timestamp = datetime.datetime.now()
             text = 'Unoccupied'
@@ -67,7 +70,7 @@ class PiMotionCamera:
                 self.average_frame = gray.copy().astype('float')
                 self.raw_capture.truncate(0)  # clearing the buffer
                 continue
-            
+
             cv2.accumulateWeighted(gray, self.average_frame, 0.5)  # updating average frame with current frame elements
 
             frame_delta = cv2.absdiff(gray, cv2.convertScaleAbs(self.average_frame))  # difference between two frames
@@ -83,18 +86,18 @@ class PiMotionCamera:
                 (x, y, w, h) = cv2.boundingRect(contour)
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)  # get rectangle for motion
                 text = 'Occupied'
-            
+
             # drawing the time and room status to the screen
             ts = timestamp.strftime('%A %d %B %Y %I:%M:%S%p')
             cv2.putText(frame, 'Room Status: {}'.format(text), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
             cv2.putText(frame, ts, (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
             if text == 'Occupied':
-                if (timestamp - self.last_motion).seconds > 5:
+                if (timestamp - self.last_motion).total_seconds() > MINIMUM_TIME_BETWEEN_MOTION:
                     motion_counter += 1
 
                     if motion_counter >= MINIMUM_MOTION_DETECTED:
-                        print '{}: Motion detected'.format(SCRIPT_LABEL)
+                        self.last_motion = timestamp
 
                         if self.on_motion is not None:
                             self.on_motion(f)
@@ -107,8 +110,24 @@ class PiMotionCamera:
 
                 if key == ord('q'):
                     break
-            
+
             self.raw_capture.truncate(0)
 
     def stop(self):
         self.running = False
+
+
+class Alarm:
+    def __init__(self):
+        self.armed = False
+        self.last_armed = None
+
+    def arm_alarm(self):
+        if not self.armed:
+            print '[SEC]: actually arming it now boiiiii'
+            self.armed = True
+            self.last_armed = datetime.datetime.now()
+
+    def disarm_alarm(self):
+        if self.armed:
+            self.armed = False

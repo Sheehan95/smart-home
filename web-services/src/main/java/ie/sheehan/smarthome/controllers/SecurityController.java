@@ -1,10 +1,7 @@
 package ie.sheehan.smarthome.controllers;
 
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.net.URISyntaxException;
 
-import org.apache.commons.codec.binary.Base64;
 import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.Message;
@@ -12,6 +9,7 @@ import org.fusesource.mqtt.client.QoS;
 import org.fusesource.mqtt.client.Topic;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import ie.sheehan.smarthome.models.Alarm;
+import ie.sheehan.smarthome.models.BreakInRecord;
+import ie.sheehan.smarthome.repositories.BreakInRecordRepository;
 
 @RestController
 @RequestMapping(value = "/security")
@@ -33,6 +33,10 @@ public class SecurityController {
 	private static final String TOPIC_SECURITY_ALARM_RESPONSE = "/ie/sheehan/smart-home/security/alarm/response";
 	private static final String TOPIC_SECURITY_ALARM_ARM = "/ie/sheehan/smart-home/security/alarm/arm";
 	// ========================================================================
+	
+	
+	@Autowired
+	BreakInRecordRepository repository;
 	
 	
 	// ==== REST API ==========================================================
@@ -68,30 +72,13 @@ public class SecurityController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/intrusion/log", method = RequestMethod.POST)
-	public void logNewInstrusion(@RequestBody String body){
-		System.out.println(body);
-		
-		try {
-			JSONObject json = new JSONObject(body);
-			String encoded = json.getString("img");
-			
-			System.out.println(encoded);
-			byte[] data = Base64.decodeBase64(encoded);
-			
-			OutputStream stream = new FileOutputStream("C:/Users/Alan/Desktop/testing.png");
-			stream.write(data);
-			stream.close();
-		} catch (Exception e) {
-			System.out.println("NOPE");
-			e.printStackTrace();
-		}
+	public void logNewInstrusion(@RequestBody BreakInRecord breakInRecord){
+		repository.add(breakInRecord);
 	}
 	// ========================================================================
 	
 	
 	// ==== PRIVATE METHODS ===================================================
-	private void arrayToImage(){}
-	
 	private Alarm alarmStatus() {
 		Alarm alarm = new Alarm();
 		JSONObject json;
