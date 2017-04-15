@@ -50,7 +50,7 @@ def on_message(client, userdata, message):
         payload = {'image': message.payload, 'timestamp': int(time.time()), 'viewed': False}
 
         try:
-            request = requests.post('http://192.167.1.31:8080/security/intrusion/log', json=payload)
+            request = requests.post('http://192.167.1.31:8080/security/intrusion/add', json=payload)
             print '{}: POSTing image status code {}'.format(SCRIPT_LABEL, request.status_code)
         except requests.ConnectionError:
             print '{}: failed to connect'.format(SCRIPT_LABEL)

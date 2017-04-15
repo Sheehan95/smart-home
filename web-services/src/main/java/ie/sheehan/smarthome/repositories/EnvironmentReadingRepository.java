@@ -2,6 +2,7 @@ package ie.sheehan.smarthome.repositories;
 
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -37,7 +38,7 @@ public class EnvironmentReadingRepository {
 	
 	public EnvironmentReading get(String id){
 		Query query = new Query();
-		query.addCriteria(Criteria.where("_id").is(id));
+		query.addCriteria(Criteria.where("_id").is(new ObjectId(id)));
 		
 		return database.findOne(query, EnvironmentReading.class, COLLECTION_ENVIRONMENT_READING);
 	}

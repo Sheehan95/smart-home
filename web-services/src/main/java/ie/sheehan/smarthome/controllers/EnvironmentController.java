@@ -3,8 +3,6 @@ package ie.sheehan.smarthome.controllers;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import javax.websocket.server.PathParam;
-
 import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.Message;
@@ -13,6 +11,7 @@ import org.fusesource.mqtt.client.Topic;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,7 +43,7 @@ public class EnvironmentController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-	public EnvironmentReading getById(@PathParam("id") String id){
+	public EnvironmentReading getById(@PathVariable String id){
 		return repository.get(id);
 	}
 	

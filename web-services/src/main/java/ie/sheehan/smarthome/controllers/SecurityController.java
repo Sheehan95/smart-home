@@ -1,6 +1,7 @@
 package ie.sheehan.smarthome.controllers;
 
 import java.net.URISyntaxException;
+import java.util.List;
 
 import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;
@@ -10,6 +11,7 @@ import org.fusesource.mqtt.client.Topic;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -70,11 +72,61 @@ public class SecurityController {
 		}
 	}
 	
-	@ResponseBody
-	@RequestMapping(value = "/intrusion/log", method = RequestMethod.POST)
-	public void logNewInstrusion(@RequestBody IntrusionReading intrusion){
+	
+	@RequestMapping(value = "/intrusion/add", method = RequestMethod.POST)
+	public void addIntrusion(@RequestBody IntrusionReading intrusion){
 		repository.add(intrusion);
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/intrusion/get/{id}", method = RequestMethod.GET)
+	public IntrusionReading getById(@PathVariable String id) {
+		return repository.get(id);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/intrusion/get/unseen", method = RequestMethod.GET)
+	public List<IntrusionReading> getUnseen() {
+		return repository.getUnseen();
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/intrusion/get/all", method = RequestMethod.GET)
+	public List<IntrusionReading> getAll() {
+		return repository.getAll();
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/intrusion/get/unseen/count", method = RequestMethod.GET)
+	public int getUnseenCount() {
+		return repository.getUnseenCount();
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/intrusion/get/count", method = RequestMethod.GET)
+	public int getCount() {
+		return repository.getCount();
+	}
+	
+	@RequestMapping(value = "/intrusion/view/{id}", method = RequestMethod.POST)
+	public void markAsViewed(@PathVariable String id) {
+		IntrusionReading intrusion = repository.get(id);
+		intrusion.viewed = true;
+		repository.update(intrusion);
+	}
+	
+	@RequestMapping(value = "/intrusion/view/all", method = RequestMethod.POST)
+	public void markAllAsViewed() {
+		List<IntrusionReading> intrusionReadings = repository.getUnseen();
+		
+		if (! intrusionReadings.isEmpty()) {
+			for (IntrusionReading intrusion : intrusionReadings) {
+				intrusion.viewed = true;
+				repository.update(intrusion);
+			}
+		}
+	}
+	
 	// ========================================================================
 	
 	
