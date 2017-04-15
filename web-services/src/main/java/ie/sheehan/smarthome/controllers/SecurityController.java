@@ -85,6 +85,12 @@ public class SecurityController {
 	}
 	
 	@ResponseBody
+	@RequestMapping(value = "/intrusion/get/latest", method = RequestMethod.GET)
+	public IntrusionReading getLatest() {
+		return repository.getLatest();
+	}
+	
+	@ResponseBody
 	@RequestMapping(value = "/intrusion/get/unseen", method = RequestMethod.GET)
 	public List<IntrusionReading> getUnseen() {
 		return repository.getUnseen();
@@ -126,7 +132,6 @@ public class SecurityController {
 			}
 		}
 	}
-	
 	// ========================================================================
 	
 	

@@ -102,4 +102,8 @@ public class MainActivity extends AppCompatActivity {
         adapter.securityFragment.openCamera();
     }
 
+    public void openBreakInActivity(View view) {
+        adapter.securityFragment.viewBreakInActivity();
+    }
+
 }

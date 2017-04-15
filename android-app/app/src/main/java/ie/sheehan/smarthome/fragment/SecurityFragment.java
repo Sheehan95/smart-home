@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import ie.sheehan.smarthome.BreakInActivity;
 import ie.sheehan.smarthome.CameraFeedActivity;
 import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.model.AlarmStatus;
@@ -63,6 +64,10 @@ public class SecurityFragment extends Fragment {
 
     public void openCamera(){
         new OpenCameraFeed().execute();
+    }
+
+    public void viewBreakInActivity() {
+        getActivity().startActivity(new Intent(getActivity(), BreakInActivity.class));
     }
 
 

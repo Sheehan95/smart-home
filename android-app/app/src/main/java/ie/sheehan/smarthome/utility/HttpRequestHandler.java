@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import ie.sheehan.smarthome.model.AlarmStatus;
 import ie.sheehan.smarthome.model.EnvironmentReading;
+import ie.sheehan.smarthome.model.IntrusionReading;
 
 import static java.lang.Boolean.parseBoolean;
 
@@ -266,6 +267,36 @@ public class HttpRequestHandler {
         }
 
         return alarm;
+    }
+
+    public IntrusionReading getBreakIn() {
+        IntrusionReading intrusion = new IntrusionReading();
+        JSONObject json;
+
+        HttpURLConnection connection;
+        StringBuilder response = new StringBuilder();
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/get/latest");
+
+        try {
+            connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null) {
+                response.append(nextLine);
+            }
+
+            json = new JSONObject(response.toString());
+
+            intrusion = new IntrusionReading(json);
+        } catch (Exception e) {
+            Log.e("HTTP ERROR", e.toString());
+        }
+
+        return intrusion;
     }
 
 }
