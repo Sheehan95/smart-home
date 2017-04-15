@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import ie.sheehan.smarthome.models.Alarm;
-import ie.sheehan.smarthome.models.BreakInRecord;
-import ie.sheehan.smarthome.repositories.BreakInRecordRepository;
+import ie.sheehan.smarthome.models.IntrusionReading;
+import ie.sheehan.smarthome.repositories.IntrusionReadingRepository;
 
 @RestController
 @RequestMapping(value = "/security")
@@ -36,7 +36,7 @@ public class SecurityController {
 	
 	
 	@Autowired
-	BreakInRecordRepository repository;
+	IntrusionReadingRepository repository;
 	
 	
 	// ==== REST API ==========================================================
@@ -72,8 +72,8 @@ public class SecurityController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/intrusion/log", method = RequestMethod.POST)
-	public void logNewInstrusion(@RequestBody BreakInRecord breakInRecord){
-		repository.add(breakInRecord);
+	public void logNewInstrusion(@RequestBody IntrusionReading intrusion){
+		repository.add(intrusion);
 	}
 	// ========================================================================
 	
