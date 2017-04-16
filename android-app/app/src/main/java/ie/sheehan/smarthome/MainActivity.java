@@ -1,6 +1,5 @@
 package ie.sheehan.smarthome;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -102,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
         adapter.securityFragment.openCamera();
     }
 
-    public void openBreakInActivity(View view) {
-        adapter.securityFragment.viewBreakInActivity();
+    public void openIntrusionActivity(View view) {
+        adapter.securityFragment.openIntrusionView();
     }
 
 }

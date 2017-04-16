@@ -59,7 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/button_open_camera_feed"
-        android:onClick="openBreakInActivity"
+        android:onClick="openIntrusionActivity"
         android:text="VIEW BREAK-IN"/>
 
 </RelativeLayout>

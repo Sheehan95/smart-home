@@ -12,20 +12,19 @@ import android.widget.ImageView;
 import ie.sheehan.smarthome.model.IntrusionReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
-public class BreakInActivity extends AppCompatActivity {
+public class IntrusionViewActivity extends AppCompatActivity {
 
     ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_break_in);
+        setContentView(R.layout.activity_intrusion_view);
 
         imageView = (ImageView) findViewById(R.id.break_in_image);
 
         new GetLatestBreakIn().execute();
     }
-
 
     private class GetLatestBreakIn extends AsyncTask<Void, Void, IntrusionReading> {
         @Override

@@ -90,6 +90,7 @@ public class HttpRequestHandler {
 
             json = new JSONObject(response.toString());
             envReading = new EnvironmentReading(json);
+
         } catch (MalformedURLException e) {
             Log.e("ERROR", "MALFORMED URL ERROR");
         } catch (IOException e) {
@@ -145,15 +146,6 @@ public class HttpRequestHandler {
     }
 
     /**
-     * Makes a HTTP request to /environment/get/range to retrieve a list of
-     * {@link EnvironmentReading} values in a range between the two {@link Date} values.
-     *
-     * @param from the lower bound {@link Date} value for the range
-     * @param to the upper bound {@link Date} value for the range
-     * @return a list of {@link EnvironmentReading}s within the range of dates
-     */
-
-    /**
      * Makes a HTTP request to /security/camera/feed to open or close the camera feed on port 8081.
      *
      * @param stream true to turn on the stream, false to turn it off
@@ -198,6 +190,13 @@ public class HttpRequestHandler {
         return confirmation;
     }
 
+    /**
+     * Makes a HTTP POST request to /security/alarm/arm to to arm or disarm the alarm. A boolean
+     * value is returned indicating whether the command was successful or not.
+     *
+     * @param arm true to arm the alarm, false to disarm it
+     * @return true if successful, false otherwise
+     */
     public boolean armAlarm(boolean arm) {
         boolean confirmation;
 
@@ -236,6 +235,13 @@ public class HttpRequestHandler {
         return confirmation;
     }
 
+    /**
+     * Makes a HTTP request to /security/alarm/status to retrieve an object of type
+     * {@link AlarmStatus} that indicates whether the alarm is armed or disarmed, as well as the
+     * last time it was armed.
+     *
+     * @return an up to date {@link AlarmStatus} object
+     */
     public AlarmStatus getAlarmStatus() {
         AlarmStatus alarm = null;
 

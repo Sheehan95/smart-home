@@ -20,7 +20,7 @@
         </activity>
         <activity android:name=".ChartActivity" />
         <activity android:name=".CameraFeedActivity" />
-        <activity android:name=".BreakInActivity"></activity>
+        <activity android:name=".IntrusionViewActivity"></activity>
     </application>
 
 </manifest>

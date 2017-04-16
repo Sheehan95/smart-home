@@ -2,10 +2,8 @@ package ie.sheehan.smarthome.fragment;
 
 
 import android.content.Intent;
-import android.icu.text.DateFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.BoolRes;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,10 +14,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import ie.sheehan.smarthome.BreakInActivity;
 import ie.sheehan.smarthome.CameraFeedActivity;
+import ie.sheehan.smarthome.IntrusionViewActivity;
 import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.model.AlarmStatus;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
@@ -66,40 +62,33 @@ public class SecurityFragment extends Fragment {
         new OpenCameraFeed().execute();
     }
 
-    public void viewBreakInActivity() {
-        getActivity().startActivity(new Intent(getActivity(), BreakInActivity.class));
+    public void openIntrusionView() {
+        getActivity().startActivity(new Intent(getActivity(), IntrusionViewActivity.class));
     }
 
 
-    private class ArmAlarm extends AsyncTask<Boolean, Void, Void> {
+    private class ArmAlarm extends AsyncTask<Boolean, Void, Boolean> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
         @Override
-        protected Void doInBackground(Boolean... params) {
+        protected Boolean doInBackground(Boolean... params) {
             boolean arm = params[0];
-
-            Log.e("DO IN BK", "HERE");
-            Log.e("ARM:", Boolean.toString(arm));
-
-            boolean success = HttpRequestHandler.getInstance().armAlarm(arm);
-
-            if (success) {
-                Log.e("WHUP", "DIE DOO IT WORKED");
-            }
-            else {
-                Log.e("AH FUCK ", "ME IT DIDN'T WORK");
-            }
-
-            return null;
+            return HttpRequestHandler.getInstance().armAlarm(arm);
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            new GetAlarmStatus().execute();
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+
+            if (result) {
+                new GetAlarmStatus().execute();
+            }
+            else {
+                Toast.makeText(getActivity(), "Unable to arm the alarm", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
