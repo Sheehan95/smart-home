@@ -34,6 +34,11 @@
     <string name="text_label_intrusion_viewed_seen">Seen</string>
     <string name="text_label_intrusion_viewed_unseen">Unseen</string>
 
+    <string name="text_title_intrusion_list">List of Intrusions</string>
+    <string name="text_title_intrusion_view">Intrusion</string>
+
+    <string name="text_label_intrusion_date">Date Recorded: %1$s</string>
+
     <!-- ========== PREFERENCES ========== -->
     <!-- METRICS -->
     <string name="pref_category_metrics">Metrics</string>

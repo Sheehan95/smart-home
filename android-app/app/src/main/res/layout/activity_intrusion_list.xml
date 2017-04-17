@@ -7,8 +7,19 @@
     android:orientation="vertical"
     tools:context="ie.sheehan.smarthome.IntrusionListActivity">
 
+    <TextView
+        android:id="@+id/text_intrusion_list_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/text_title_intrusion_list"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
     <ListView
         android:id="@+id/list_intrusions"
+        android:layout_below="@id/text_intrusion_list_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@color/colorAccent"
