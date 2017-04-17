@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ie.sheehan.smarthome.CameraFeedActivity;
+import ie.sheehan.smarthome.IntrusionListActivity;
 import ie.sheehan.smarthome.IntrusionViewActivity;
 import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.model.AlarmStatus;
@@ -63,7 +64,8 @@ public class SecurityFragment extends Fragment {
     }
 
     public void openIntrusionView() {
-        getActivity().startActivity(new Intent(getActivity(), IntrusionViewActivity.class));
+        // getActivity().startActivity(new Intent(getActivity(), IntrusionViewActivity.class));
+        getActivity().startActivity(new Intent(getActivity(), IntrusionListActivity.class));
     }
 
 

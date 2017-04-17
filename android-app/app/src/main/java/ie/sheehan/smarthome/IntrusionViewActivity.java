@@ -8,9 +8,12 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import ie.sheehan.smarthome.model.IntrusionReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
+
+import static android.R.attr.data;
 
 public class IntrusionViewActivity extends AppCompatActivity {
 
@@ -23,34 +26,20 @@ public class IntrusionViewActivity extends AppCompatActivity {
 
         imageView = (ImageView) findViewById(R.id.break_in_image);
 
-        new GetLatestBreakIn().execute();
-    }
+        Bundle arguments = getIntent().getExtras();
 
-    private class GetLatestBreakIn extends AsyncTask<Void, Void, IntrusionReading> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        IntrusionReading intrusionReading = (IntrusionReading) arguments.getSerializable("intrusion");
+
+        if (intrusionReading == null) {
+            Toast.makeText(this, "No intrusion to view", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        @Override
-        protected IntrusionReading doInBackground(Void... params) {
-            return HttpRequestHandler.getInstance().getBreakIn();
-        }
+        byte[] data = Base64.decode(intrusionReading.image, Base64.DEFAULT);
+        Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
 
-        @Override
-        protected void onPostExecute(IntrusionReading intrusionReading) {
-            super.onPostExecute(intrusionReading);
-
-            Log.e("STAR", "TING");
-
-            byte[] data = Base64.decode(intrusionReading.image, Base64.DEFAULT);
-            Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
-
-            imageView.setImageBitmap(image);
-            imageView.refreshDrawableState();
-
-            Log.e("FIN", "ISHED");
-        }
+        imageView.setImageBitmap(image);
+        imageView.refreshDrawableState();
     }
 
 }

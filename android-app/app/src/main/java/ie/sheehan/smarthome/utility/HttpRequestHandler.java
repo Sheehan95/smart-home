@@ -305,4 +305,37 @@ public class HttpRequestHandler {
         return intrusion;
     }
 
+    public List<IntrusionReading> getAllIntrusions() {
+        List<IntrusionReading> intrusionReadings = new ArrayList<>();
+
+        HttpURLConnection connection;
+        StringBuilder response = new StringBuilder();
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/get/all");
+
+        try {
+            connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null) {
+                response.append(nextLine);
+            }
+
+            JSONArray jsonArray = new JSONArray(response.toString());
+
+            for (int i = 0 ; i < jsonArray.length() ; i++) {
+                JSONObject json = jsonArray.getJSONObject(i);
+                intrusionReadings.add(new IntrusionReading(json));
+            }
+
+        } catch (Exception e) {
+            Log.e("HTTP", e.toString());
+        }
+
+        return intrusionReadings;
+    }
+
 }

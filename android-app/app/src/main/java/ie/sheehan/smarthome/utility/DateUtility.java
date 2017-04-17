@@ -87,4 +87,8 @@ public class DateUtility {
         return new SimpleDateFormat("EEE, dd MMM", Locale.getDefault());
     }
 
+    public static DateFormat getTimeFormat() {
+        return new SimpleDateFormat("k:m:s z", Locale.getDefault());
+    }
+
 }

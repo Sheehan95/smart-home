@@ -5,11 +5,10 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by Alan on 15/04/2017.
- */
+import java.io.Serializable;
+import java.util.Date;
 
-public class IntrusionReading {
+public class IntrusionReading implements Serializable {
 
     public String _id;
     public String image;
@@ -28,4 +27,8 @@ public class IntrusionReading {
         }
     }
 
+    @Override
+    public String toString() {
+        return String.format("Date: %s\nViewed: %b", new Date(timestamp * 1000L), viewed);
+    }
 }
