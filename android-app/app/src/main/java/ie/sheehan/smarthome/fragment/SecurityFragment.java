@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 
 import ie.sheehan.smarthome.CameraFeedActivity;
 import ie.sheehan.smarthome.IntrusionListActivity;
-import ie.sheehan.smarthome.IntrusionViewActivity;
 import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.model.AlarmStatus;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
@@ -89,7 +87,7 @@ public class SecurityFragment extends Fragment {
                 new GetAlarmStatus().execute();
             }
             else {
-                Toast.makeText(getActivity(), "Unable to arm the alarm", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.toast_unable_to_arm_alarm, Toast.LENGTH_SHORT).show();
             }
         }
     }

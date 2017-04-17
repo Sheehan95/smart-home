@@ -14,6 +14,7 @@
 
     <string name="button_open_camera_feed">Open Camera Feed</string>
     <string name="button_return_from_camera">Return</string>
+    <string name="button_open_intrusion_list">Reported Intrusions</string>
 
     <!-- TEXT VIEWS -->
     <string name="text_temperature_display_celsius">%1$.2f °C</string>
@@ -24,6 +25,14 @@
     <string name="text_to_date">To: %1$s</string>
 
     <string name="text_camera_feed_header">Security Feed</string>
+    <string name="text_security_alarm_label">Security Alarm</string>
+    <string name="text_switch_alarm_armed">Armed</string>
+    <string name="text_switch_alarm_disarmed">Disarmed</string>
+    <string name="text_label_alarm_scheduled">Scheduled for: %1$s</string>
+    <string name="text_label_alarm_armed">Last Armed: %1$s</string>
+
+    <string name="text_label_intrusion_viewed_seen">Seen</string>
+    <string name="text_label_intrusion_viewed_unseen">Unseen</string>
 
     <!-- ========== PREFERENCES ========== -->
     <!-- METRICS -->
@@ -87,9 +96,15 @@
     <string name="toast_invalid_date_range">Invalid date range</string>
     <string name="toast_unable_to_open_camera">Unable to open camera feed</string>
 
-    <!-- PLACEHOLDERS -->
+    <string name="toast_unable_to_arm_alarm">Unable to arm the alarm</string>
+    <string name="toast_no_intrusion_selected">No intrusion selected</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- PLACEHOLDERS -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!-- CONTENT DESCRIPTIONS -->
+    <string name="desc_img_intrusion_preview">Preview of intrusion image screen shot</string>
+    <string name="desc_img_btn_intrusion_remove">Removes the selected intrusion</string>
+    <string name="desc_img_btn_intrusion_view">Views the selected intrusion</string>
+    <string name="desc_img_intrusion_picture">Picture captured during the intrusion</string>
 </resources>

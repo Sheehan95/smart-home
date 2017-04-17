@@ -2,18 +2,13 @@ package ie.sheehan.smarthome;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import ie.sheehan.smarthome.model.IntrusionReading;
-import ie.sheehan.smarthome.utility.HttpRequestHandler;
-
-import static android.R.attr.data;
 
 public class IntrusionViewActivity extends AppCompatActivity {
 
@@ -31,7 +26,7 @@ public class IntrusionViewActivity extends AppCompatActivity {
         IntrusionReading intrusionReading = (IntrusionReading) arguments.getSerializable("intrusion");
 
         if (intrusionReading == null) {
-            Toast.makeText(this, "No intrusion to view", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_no_intrusion_selected, Toast.LENGTH_SHORT).show();
             return;
         }
 

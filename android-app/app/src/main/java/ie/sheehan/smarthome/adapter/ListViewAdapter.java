@@ -1,10 +1,7 @@
 package ie.sheehan.smarthome.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +14,6 @@ import android.widget.TextView;
 import java.util.Date;
 import java.util.List;
 
-import ie.sheehan.smarthome.IntrusionViewActivity;
 import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.model.IntrusionReading;
 import ie.sheehan.smarthome.utility.DateUtility;
@@ -25,18 +21,10 @@ import ie.sheehan.smarthome.utility.DateUtility;
 
 public class ListViewAdapter extends BaseAdapter {
 
-    private static final int TYPE_SEEN = 1;
-    private static final int TYPE_UNSEEN = 2;
-
-    private static final int TYPE_COUNT = 2;
-
-
-    private Activity context;
     private List<IntrusionReading> data;
 
-    public ListViewAdapter(Activity activity, List<IntrusionReading> data) {
+    public ListViewAdapter(List<IntrusionReading> data) {
         this.data = data;
-        this.context = activity;
     }
 
 
@@ -84,10 +72,10 @@ public class ListViewAdapter extends BaseAdapter {
         time.setText(DateUtility.getTimeFormat().format(new Date(entry.timestamp * 1000L)));
 
         if (entry.viewed) {
-            seen.setText("Seen");
+            seen.setText(R.string.text_label_intrusion_viewed_seen);
         }
         else {
-            seen.setText("Unseen");
+            seen.setText(R.string.text_label_intrusion_viewed_unseen);
         }
 
         viewButton.setOnClickListener(new View.OnClickListener() {

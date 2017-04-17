@@ -7,6 +7,7 @@
 
     <ImageView
         android:id="@+id/image_intrusion_preview"
+        android:contentDescription="@string/desc_img_intrusion_preview"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="10dp"
@@ -39,6 +40,7 @@
     <ImageButton
         android:id="@+id/img_button_remove_intrusion"
         android:src="@drawable/ic_remove_intrusion"
+        android:contentDescription="@string/desc_img_btn_intrusion_remove"
         android:background="@null"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
@@ -48,6 +50,7 @@
     <ImageButton
         android:id="@+id/img_button_view_intrusion"
         android:src="@drawable/ic_view_intrusion"
+        android:contentDescription="@string/desc_img_btn_intrusion_view"
         android:background="@null"
         android:layout_centerVertical="true"
         android:layout_toStartOf="@id/img_button_remove_intrusion"

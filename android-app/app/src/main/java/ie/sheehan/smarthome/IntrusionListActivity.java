@@ -2,9 +2,8 @@ package ie.sheehan.smarthome;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -35,7 +34,7 @@ public class IntrusionListActivity extends AppCompatActivity {
 
         intrusionReadings = new ArrayList<>();
         listView = (ListView) findViewById(R.id.list_intrusions);
-        listViewAdapter = new ListViewAdapter(this, intrusionReadings);
+        listViewAdapter = new ListViewAdapter(intrusionReadings);
         listView.setAdapter(listViewAdapter);
 
         new GetAllIntrusionReadings().execute();
