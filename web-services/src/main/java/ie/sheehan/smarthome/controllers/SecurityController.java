@@ -132,6 +132,20 @@ public class SecurityController {
 			}
 		}
 	}
+	
+	@RequestMapping(value = "/intrusion/remove/{id}", method = RequestMethod.POST)
+	public void removeIntrusion(@PathVariable String id) {
+		repository.remove(repository.get(id));
+	}
+	
+	@RequestMapping(value = "/intrusion/remove/all", method = RequestMethod.POST)
+	public void removeAll() {
+		List<IntrusionReading> intrusionReadings = repository.getAll();
+		
+		for (IntrusionReading reading : intrusionReadings) {
+			repository.remove(reading);
+		}
+	}
 	// ========================================================================
 	
 	

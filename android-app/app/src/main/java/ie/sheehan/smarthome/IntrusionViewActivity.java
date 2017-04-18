@@ -2,9 +2,11 @@ package ie.sheehan.smarthome;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,11 +15,13 @@ import java.util.Date;
 
 import ie.sheehan.smarthome.model.IntrusionReading;
 import ie.sheehan.smarthome.utility.DateUtility;
+import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
 public class IntrusionViewActivity extends AppCompatActivity {
 
     ImageView imageView;
     TextView dateView;
+    IntrusionReading intrusionReading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +32,7 @@ public class IntrusionViewActivity extends AppCompatActivity {
         dateView = (TextView) findViewById(R.id.text_label_intrusion_date);
 
         Bundle arguments = getIntent().getExtras();
-
-        IntrusionReading intrusionReading = (IntrusionReading) arguments.getSerializable("intrusion");
+        intrusionReading = (IntrusionReading) arguments.getSerializable("intrusion");
 
         if (intrusionReading == null) {
             Toast.makeText(this, R.string.toast_no_intrusion_selected, Toast.LENGTH_SHORT).show();

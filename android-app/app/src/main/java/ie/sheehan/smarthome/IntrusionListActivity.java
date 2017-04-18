@@ -4,15 +4,17 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import ie.sheehan.smarthome.adapter.ListViewAdapter;
+import ie.sheehan.smarthome.adapter.IntrusionListViewAdapter;
 import ie.sheehan.smarthome.model.IntrusionReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
@@ -21,7 +23,7 @@ public class IntrusionListActivity extends AppCompatActivity {
     ProgressBar progressBar;
 
     ListView listView;
-    ListViewAdapter listViewAdapter;
+    IntrusionListViewAdapter intrusionListViewAdapter;
     List<IntrusionReading> intrusionReadings;
 
 
@@ -34,8 +36,8 @@ public class IntrusionListActivity extends AppCompatActivity {
 
         intrusionReadings = new ArrayList<>();
         listView = (ListView) findViewById(R.id.list_intrusions);
-        listViewAdapter = new ListViewAdapter(intrusionReadings);
-        listView.setAdapter(listViewAdapter);
+        intrusionListViewAdapter = new IntrusionListViewAdapter(intrusionReadings);
+        listView.setAdapter(intrusionListViewAdapter);
 
         new GetAllIntrusionReadings().execute();
 
@@ -44,16 +46,34 @@ public class IntrusionListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(IntrusionListActivity.this, IntrusionViewActivity.class);
                 Bundle arguments = new Bundle();
-                arguments.putSerializable("intrusion", intrusionReadings.get(position));
 
+                IntrusionReading intrusionReading = intrusionReadings.get(position);
+                arguments.putSerializable("intrusion", intrusionReading);
                 intent.putExtras(arguments);
+
+                new MarkIntrusionAsViewed().execute(intrusionReading);
+
                 IntrusionListActivity.this.startActivity(intent);
             }
         });
     }
 
-    private class GetAllIntrusionReadings extends AsyncTask<Void, Void, List<IntrusionReading>> {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        intrusionListViewAdapter.notifyDataSetChanged();
+    }
 
+    public void markAllAsViewed(View view) {
+        new MarkAllIntrusionsAsViewed().execute();
+    }
+
+    public void removeAll(View view) {
+        new RemoveAllIntrusions().execute();
+    }
+
+
+    private class GetAllIntrusionReadings extends AsyncTask<Void, Void, List<IntrusionReading>> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -69,10 +89,78 @@ public class IntrusionListActivity extends AppCompatActivity {
         protected void onPostExecute(List<IntrusionReading> intrusionReadings) {
             super.onPostExecute(intrusionReadings);
             IntrusionListActivity.this.intrusionReadings = intrusionReadings;
-            listViewAdapter.setData(intrusionReadings);
+            intrusionListViewAdapter.setData(intrusionReadings);
             progressBar.setVisibility(View.GONE);
         }
+    }
 
+    private class MarkIntrusionAsViewed extends AsyncTask<IntrusionReading, Void, Void> {
+
+        IntrusionReading intrusionReading;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(IntrusionReading... params) {
+            intrusionReading = params[0];
+            HttpRequestHandler.getInstance().markIntrusionAsViewed(intrusionReading);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            intrusionReading.viewed = true;
+            intrusionListViewAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private class MarkAllIntrusionsAsViewed extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            HttpRequestHandler.getInstance().markAllIntrusionsAsViewed();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            for (IntrusionReading intrusionReading : IntrusionListActivity.this.intrusionReadings) {
+                intrusionReading.viewed = true;
+            }
+
+            IntrusionListActivity.this.intrusionListViewAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private class RemoveAllIntrusions extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            HttpRequestHandler.getInstance().removeAllIntrusions();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            IntrusionListActivity.this.intrusionReadings.clear();
+            IntrusionListActivity.this.intrusionListViewAdapter.notifyDataSetChanged();
+        }
     }
 
 }

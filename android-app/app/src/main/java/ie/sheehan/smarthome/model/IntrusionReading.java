@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class IntrusionReading implements Serializable {
 
-    public String _id;
+    public String id;
     public String image;
     public long timestamp;
     public boolean viewed;
@@ -19,6 +19,7 @@ public class IntrusionReading implements Serializable {
 
     public IntrusionReading(JSONObject jsonObject) {
         try {
+            id = jsonObject.getString("id");
             image = jsonObject.getString("image");
             timestamp = jsonObject.getLong("timestamp");
             viewed = jsonObject.getBoolean("viewed");

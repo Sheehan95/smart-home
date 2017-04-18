@@ -24,6 +24,7 @@ import ie.sheehan.smarthome.model.AlarmStatus;
 import ie.sheehan.smarthome.model.EnvironmentReading;
 import ie.sheehan.smarthome.model.IntrusionReading;
 
+import static android.R.attr.id;
 import static java.lang.Boolean.parseBoolean;
 
 /**
@@ -275,36 +276,12 @@ public class HttpRequestHandler {
         return alarm;
     }
 
-    public IntrusionReading getBreakIn() {
-        IntrusionReading intrusion = new IntrusionReading();
-        JSONObject json;
-
-        HttpURLConnection connection;
-        StringBuilder response = new StringBuilder();
-
-        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/get/latest");
-
-        try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
-            connection.setRequestMethod("GET");
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String nextLine;
-
-            while ((nextLine = reader.readLine()) != null) {
-                response.append(nextLine);
-            }
-
-            json = new JSONObject(response.toString());
-
-            intrusion = new IntrusionReading(json);
-        } catch (Exception e) {
-            Log.e("HTTP ERROR", e.toString());
-        }
-
-        return intrusion;
-    }
-
+    /**
+     * Makes a HTTP request to /security/intrusion/get/all to retrieve a list of every
+     * {@link IntrusionReading} object stored on the web server.
+     *
+     * @return a list of {@link IntrusionReading} objects
+     */
     public List<IntrusionReading> getAllIntrusions() {
         List<IntrusionReading> intrusionReadings = new ArrayList<>();
 
@@ -328,6 +305,9 @@ public class HttpRequestHandler {
 
             for (int i = 0 ; i < jsonArray.length() ; i++) {
                 JSONObject json = jsonArray.getJSONObject(i);
+
+                Log.e("ID", json.getString("id"));
+
                 intrusionReadings.add(new IntrusionReading(json));
             }
 
@@ -336,6 +316,119 @@ public class HttpRequestHandler {
         }
 
         return intrusionReadings;
+    }
+
+
+    public boolean markIntrusionAsViewed(IntrusionReading intrusionReading) {
+        HttpURLConnection connection;
+        StringBuilder response = new StringBuilder();
+
+        String id = intrusionReading.id;
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/view/" + id);
+
+        try {
+            connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null) {
+                response.append(nextLine);
+            }
+
+            return true;
+
+        } catch (Exception e) {
+            Log.e("ERROR", e.toString());
+            return false;
+        }
+    }
+
+    public boolean markAllIntrusionsAsViewed() {
+        HttpURLConnection connection;
+        StringBuilder response = new StringBuilder();
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/view/all");
+
+        try {
+            connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null) {
+                response.append(nextLine);
+            }
+
+            return true;
+
+        } catch (Exception e) {
+            Log.e("ERROR", e.toString());
+            return false;
+        }
+    }
+
+    public boolean removeIntrusion(IntrusionReading intrusionReading) {
+        HttpURLConnection connection;
+        StringBuilder response = new StringBuilder();
+
+        String id = intrusionReading.id;
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/remove/" + id);
+
+        try {
+            connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setUseCaches(false);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                return true;
+            }
+            else {
+                Log.e("CODE", Integer.toString(responseCode));
+                return false;
+            }
+
+        } catch (Exception e) {
+            Log.e("ERROR", e.toString());
+            return false;
+        }
+    }
+
+    public boolean removeAllIntrusions() {
+        HttpURLConnection connection;
+        StringBuilder response = new StringBuilder();
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/remove/all");
+
+        try {
+            connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("POST");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null) {
+                response.append(nextLine);
+            }
+
+            return true;
+
+        } catch (Exception e) {
+            Log.e("ERROR", e.toString());
+            return false;
+        }
     }
 
 }

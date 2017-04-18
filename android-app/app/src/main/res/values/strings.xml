@@ -16,6 +16,9 @@
     <string name="button_return_from_camera">Return</string>
     <string name="button_open_intrusion_list">Reported Intrusions</string>
 
+    <string name="button_intrusion_view_all">View All</string>
+    <string name="button_intrusion_remove_all">Remove All</string>
+
     <!-- TEXT VIEWS -->
     <string name="text_temperature_display_celsius">%1$.2f °C</string>
     <string name="text_temperature_display_fahrenheit">%1$.2f °F</string>

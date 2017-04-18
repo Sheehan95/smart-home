@@ -75,4 +75,8 @@ public class IntrusionReadingRepository {
 		database.save(intrusion, COLLECTION_INTRUSION_READINGS);
 	}
 	
+	public void remove(IntrusionReading intrusion) {
+		database.remove(intrusion, COLLECTION_INTRUSION_READINGS);
+	}
+	
 }
