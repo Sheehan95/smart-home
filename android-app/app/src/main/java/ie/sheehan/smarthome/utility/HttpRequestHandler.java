@@ -318,6 +318,33 @@ public class HttpRequestHandler {
         return intrusionReadings;
     }
 
+    public IntrusionReading getLatestIntrusionReading() {
+        HttpURLConnection connection;
+        StringBuilder response = new StringBuilder();
+        IntrusionReading intrusionReading = null;
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/get/latest");
+
+        try {
+            connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null) {
+                response.append(nextLine);
+            }
+
+            JSONObject json = new JSONObject(response.toString());
+
+            intrusionReading = new IntrusionReading(json);
+        } catch (Exception e) {
+            Log.e("ERROR", e.toString());
+        }
+
+        return intrusionReading;
+    }
 
     public boolean markIntrusionAsViewed(IntrusionReading intrusionReading) {
         HttpURLConnection connection;

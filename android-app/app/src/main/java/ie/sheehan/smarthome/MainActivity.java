@@ -1,5 +1,8 @@
 package ie.sheehan.smarthome;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -10,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import ie.sheehan.smarthome.adapter.TabPagerAdapter;
+import ie.sheehan.smarthome.service.IntrusionService;
 
 /**
  * Main Activity.
@@ -28,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        if (! isServiceRunning(IntrusionService.class)) {
+            startService(new Intent(this, IntrusionService.class));
+        }
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -78,6 +86,18 @@ public class MainActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {}
         });
 
+    }
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 

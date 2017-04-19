@@ -40,6 +40,7 @@ public class IntrusionReadingRepository {
 	
 	public IntrusionReading getLatest() {
 		List<IntrusionReading> intrusionReadings = database.findAll(IntrusionReading.class, COLLECTION_INTRUSION_READINGS);
+		intrusionReadings.sort(new IntrusionReading.IntrusionReadingTimeComparator());
 		return intrusionReadings.get(intrusionReadings.size() - 1);
 	}
 	
