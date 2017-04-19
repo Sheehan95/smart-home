@@ -19,6 +19,8 @@
     <string name="button_intrusion_view_all">View All</string>
     <string name="button_intrusion_remove_all">Remove All</string>
 
+    <string name="button_return_to_intrusion_list">Return to Intrusion List</string>
+
     <!-- TEXT VIEWS -->
     <string name="text_temperature_display_celsius">%1$.2f °C</string>
     <string name="text_temperature_display_fahrenheit">%1$.2f °F</string>
@@ -40,7 +42,10 @@
     <string name="text_title_intrusion_list">List of Intrusions</string>
     <string name="text_title_intrusion_view">Intrusion</string>
 
-    <string name="text_label_intrusion_date">Date Recorded: %1$s</string>
+    <string name="text_label_intrusion_date">Date Taken: %1$s</string>
+    <string name="text_label_intrusion_time">Time Taken: %1$s</string>
+
+    <string name="text_no_intrusions_found">No Intrusions Found</string>
 
     <!-- ========== PREFERENCES ========== -->
     <!-- METRICS -->

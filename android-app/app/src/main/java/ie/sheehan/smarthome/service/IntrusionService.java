@@ -73,6 +73,7 @@ public class IntrusionService extends Service {
         Intent intent = new Intent(IntrusionService.this, IntrusionViewActivity.class);
         Bundle arguments = new Bundle();
         arguments.putSerializable("intrusion", intrusionReading);
+        arguments.putInt("source", IntrusionViewActivity.INTENT_SOURCE_SERVICE);
         intent.putExtras(arguments);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(IntrusionService.this);

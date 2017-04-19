@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import ie.sheehan.smarthome.CameraFeedActivity;
 import ie.sheehan.smarthome.IntrusionListActivity;
@@ -24,7 +24,7 @@ import ie.sheehan.smarthome.utility.HttpRequestHandler;
  */
 public class SecurityFragment extends Fragment {
 
-    Switch alarmSwitch;
+    ToggleButton alarmSwitch;
     TextView labelAlarmScheduled;
     TextView labelAlarmLastArmed;
 
@@ -43,7 +43,7 @@ public class SecurityFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        alarmSwitch = (Switch) getActivity().findViewById(R.id.switch_alarm);
+        alarmSwitch = (ToggleButton) getActivity().findViewById(R.id.switch_alarm);
         labelAlarmScheduled = (TextView) getActivity().findViewById(R.id.label_alarm_scheduled);
         labelAlarmLastArmed = (TextView) getActivity().findViewById(R.id.label_alarm_last_armed);
 
@@ -62,7 +62,6 @@ public class SecurityFragment extends Fragment {
     }
 
     public void openIntrusionView() {
-        // getActivity().startActivity(new Intent(getActivity(), IntrusionViewActivity.class));
         getActivity().startActivity(new Intent(getActivity(), IntrusionListActivity.class));
     }
 
@@ -114,7 +113,10 @@ public class SecurityFragment extends Fragment {
             }
 
             alarmSwitch.setChecked(alarmStatus.armed);
-            labelAlarmLastArmed.setText(alarmStatus.lastArmed.toString());
+
+            String dateLastArmed = alarmStatus.lastArmed.toString();
+            String lastArmed = String.format(getResources().getString(R.string.text_label_alarm_armed), dateLastArmed);
+            labelAlarmLastArmed.setText(lastArmed);
         }
     }
 

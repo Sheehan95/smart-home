@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -81,9 +83,9 @@ public class CameraFeedActivity extends AppCompatActivity {
     private String getHTML(String url) {
         String html = "";
 
-        html += "<html style=\"background-color:#000000;\">";
-        html += "<center>";
-        html += "<img src='" + url + "'/>";
+        html += "<html style=\"background-color:#FFFFFF; margin:0; padding:0;\">";
+        html += "<center style=\"margin:0; padding:0;\">";
+        html += "<img src='" + url + "' style=\"float:left; margin:0; padding:0;\"/>";
         html += "</center>";
         html += "</html>";
 
@@ -113,7 +115,7 @@ public class CameraFeedActivity extends AppCompatActivity {
             try {
                 Thread.sleep(5000);
             } catch (Exception e) {
-                Log.e("Error", e.toString());
+
             }
         }
 

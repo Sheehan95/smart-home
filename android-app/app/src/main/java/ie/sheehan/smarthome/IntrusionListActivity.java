@@ -49,6 +49,7 @@ public class IntrusionListActivity extends AppCompatActivity {
 
                 IntrusionReading intrusionReading = intrusionReadings.get(position);
                 arguments.putSerializable("intrusion", intrusionReading);
+                arguments.putInt("source", IntrusionViewActivity.INTENT_SOURCE_ACTIVITY);
                 intent.putExtras(arguments);
 
                 new MarkIntrusionAsViewed().execute(intrusionReading);
@@ -91,17 +92,16 @@ public class IntrusionListActivity extends AppCompatActivity {
             IntrusionListActivity.this.intrusionReadings = intrusionReadings;
             intrusionListViewAdapter.setData(intrusionReadings);
             progressBar.setVisibility(View.GONE);
+
+            if (intrusionReadings.isEmpty()) {
+                IntrusionListActivity.this.findViewById(R.id.text_label_no_intrusions).setVisibility(View.VISIBLE);
+            }
         }
     }
 
     private class MarkIntrusionAsViewed extends AsyncTask<IntrusionReading, Void, Void> {
 
         IntrusionReading intrusionReading;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
 
         @Override
         protected Void doInBackground(IntrusionReading... params) {
@@ -119,11 +119,6 @@ public class IntrusionListActivity extends AppCompatActivity {
     }
 
     private class MarkAllIntrusionsAsViewed extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
         @Override
         protected Void doInBackground(Void... params) {
             HttpRequestHandler.getInstance().markAllIntrusionsAsViewed();
@@ -143,11 +138,6 @@ public class IntrusionListActivity extends AppCompatActivity {
     }
 
     private class RemoveAllIntrusions extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
         @Override
         protected Void doInBackground(Void... params) {
             HttpRequestHandler.getInstance().removeAllIntrusions();
