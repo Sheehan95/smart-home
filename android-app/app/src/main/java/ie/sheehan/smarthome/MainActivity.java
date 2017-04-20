@@ -106,15 +106,15 @@ public class MainActivity extends AppCompatActivity {
     // DECLARING LISTENER METHODS
     // ============================================================================================
     public void openGraphActivity(View view) {
-        adapter.temperatureFragment.openChart();
+        adapter.environmentFragment.openChart();
     }
 
     public void showFromDatePickerDialog(View view) {
-        adapter.temperatureFragment.openSetFromDateDialog();
+        adapter.environmentFragment.openSetFromDateDialog();
     }
 
     public void showToDatePickerDialog(View view) {
-        adapter.temperatureFragment.openSetToDateDialog();
+        adapter.environmentFragment.openSetToDateDialog();
     }
 
     public void openCameraActivity(View view) {

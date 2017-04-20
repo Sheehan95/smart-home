@@ -1,5 +1,8 @@
 package ie.sheehan.smarthome.utility;
 
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -93,5 +96,17 @@ public class DateUtility {
 
     public static DateFormat getShortTimeFormat() {
         return new SimpleDateFormat("kk:mm:ss", Locale.getDefault());
+    }
+
+    public static PeriodFormatter getPeriodFormat() {
+        return new PeriodFormatterBuilder()
+                .printZeroAlways()
+                .appendHours()
+                .appendSeparator(" hours, ")
+                .appendMinutes()
+                .appendSeparator(" minutes and ")
+                .appendSeconds()
+                .toFormatter();
+
     }
 }

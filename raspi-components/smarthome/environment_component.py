@@ -4,7 +4,7 @@ import threading
 
 import paho.mqtt.client as mqtt
 
-from components import Heating
+from environment import Heating
 from datetime import datetime
 from sensors import TemperatureSensor
 # from sensors import FakeTemperatureSensor
@@ -49,12 +49,6 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, message):
-    print 'Client: ', client
-    print 'Topic: ', message.topic
-    print 'Payload: ', message.payload
-
-    if userdata is not None:
-        print 'User Data: ', userdata
 
     if message.topic == TOPIC_ENVIRONMENT_READING_REQUESTS:
         environment_reading_response(sensor.get_temp(), sensor.get_humidity())
@@ -70,7 +64,12 @@ def on_message(client, userdata, message):
             heating.turn_off()
 
     elif message.topic == TOPIC_ENVIRONMENT_HEATING_REQUEST:
-        payload = json.dumps({'on': heating.on, 'timestamp': heating.last_on, 'duration': heating.last_duration})
+        if heating.last_on is not None:
+            payload = json.dumps(
+                {'on': heating.on, 'timestamp': heating.last_on.strftime('%s'), 'duration': heating.last_duration})
+        else:
+            payload = json.dumps({'on': heating.on, 'timestamp': 0, 'duration': heating.last_duration})
+
         client.publish(TOPIC_ENVIRONMENT_HEATING_RESPONSE, payload)
 # =============================================================================
 
@@ -108,6 +107,8 @@ def main():
 
     mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
     mqtt_client.subscribe(TOPIC_ENVIRONMENT_READING_REQUESTS)
+    mqtt_client.subscribe(TOPIC_ENVIRONMENT_HEATING_REQUEST)
+    mqtt_client.subscribe(TOPIC_ENVIRONMENT_HEATING_ACTIVATE)
 
     mqtt_client.loop_forever()
 

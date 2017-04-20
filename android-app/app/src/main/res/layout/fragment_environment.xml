@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context="ie.sheehan.smarthome.fragment.TemperatureFragment">
+    tools:context="ie.sheehan.smarthome.fragment.EnvironmentFragment">
 
     <TextView
         android:layout_width="wrap_content"
@@ -39,19 +39,37 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:text="Heating"
+            android:text="@string/text_environment_heating_label"
             android:textSize="18sp"
             android:textStyle="bold" />
 
         <ToggleButton
             android:id="@+id/switch_heating"
-            android:textOn="On"
-            android:textOff="Off"
+            android:textOn="@string/text_switch_heating_on"
+            android:textOff="@string/text_switch_heating_off"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_label_heating_last_on"
+        android:layout_below="@id/container"
+        android:layout_alignParentStart="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin" />
+
+    <TextView
+        android:id="@+id/text_label_heating_duration"
+        android:layout_below="@id/text_label_heating_last_on"
+        android:layout_alignParentStart="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin" />
 
     <Button
         android:text="@string/button_view_graph"

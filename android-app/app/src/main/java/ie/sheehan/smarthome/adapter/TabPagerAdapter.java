@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import ie.sheehan.smarthome.fragment.SecurityFragment;
 import ie.sheehan.smarthome.fragment.SettingsFragment;
 import ie.sheehan.smarthome.fragment.StockFragment;
-import ie.sheehan.smarthome.fragment.TemperatureFragment;
+import ie.sheehan.smarthome.fragment.EnvironmentFragment;
 
 /**
  * An implementation of {@link FragmentStatePagerAdapter} for displaying {@link Fragment}s as tabs
@@ -22,7 +22,7 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     public static final int TAB_STOCK = 2;
     public static final int TAB_SETTINGS = 3;
 
-    public TemperatureFragment temperatureFragment = new TemperatureFragment();
+    public EnvironmentFragment environmentFragment = new EnvironmentFragment();
     public SecurityFragment securityFragment = new SecurityFragment();
     public StockFragment stockFragment = new StockFragment();
     public SettingsFragment settingsFragment = new SettingsFragment();
@@ -44,7 +44,7 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case TAB_TEMPERATURE:
-                return temperatureFragment;
+                return environmentFragment;
             case TAB_SECURITY:
                 return securityFragment;
             case TAB_STOCK:

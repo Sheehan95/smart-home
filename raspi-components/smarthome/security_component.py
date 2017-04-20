@@ -9,7 +9,7 @@ import subprocess
 import threading
 import time
 
-from components import PiMotionCamera, Alarm
+from security import PiMotionCamera, Alarm
 
 
 # ==== DEFINING CONSTANTS =====================================================

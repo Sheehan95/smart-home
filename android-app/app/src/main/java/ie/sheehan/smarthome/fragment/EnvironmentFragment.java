@@ -12,10 +12,18 @@ import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import org.joda.time.Duration;
+import org.joda.time.Period;
+import org.joda.time.chrono.StrictChronology;
+import org.w3c.dom.Text;
+
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,11 +36,13 @@ import ie.sheehan.smarthome.ChartActivity;
 import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.dialog.DatePickerFragment;
 import ie.sheehan.smarthome.model.EnvironmentReading;
+import ie.sheehan.smarthome.model.HeatingStatus;
+import ie.sheehan.smarthome.utility.DateUtility;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
 import static ie.sheehan.smarthome.utility.DateUtility.getDateFormat;
 
-public class TemperatureFragment extends Fragment {
+public class EnvironmentFragment extends Fragment {
 
     static final long PERIOD_HALF_SECOND = 500;
     static final long PERIOD_ONE_SECOND = 1000;
@@ -47,6 +57,8 @@ public class TemperatureFragment extends Fragment {
     // ============================================================================================
     // DECLARING CLASS VARIABLES
     // ============================================================================================
+    HeatingStatus heatingStatus;
+
     Resources res;
     SharedPreferences preferences;
 
@@ -55,8 +67,13 @@ public class TemperatureFragment extends Fragment {
     Date fromDate;
     Date toDate;
 
+    ToggleButton toggleHeating;
+
     TextView temperatureView;
     TextView humidityView;
+
+    TextView heatingLastOn;
+    TextView heatingDuration;
 
     TextView fromDateView;
     TextView toDateView;
@@ -65,7 +82,7 @@ public class TemperatureFragment extends Fragment {
     /**
      * Default constructor.
      */
-    public TemperatureFragment() {}
+    public EnvironmentFragment() {}
 
 
     // ============================================================================================
@@ -74,7 +91,7 @@ public class TemperatureFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_temperature, container, false);
+        return inflater.inflate(R.layout.fragment_environment, container, false);
     }
 
     @Override
@@ -88,8 +105,13 @@ public class TemperatureFragment extends Fragment {
 
         setInitialDateValues();
 
+        toggleHeating = (ToggleButton) getActivity().findViewById(R.id.switch_heating);
+
         temperatureView = (TextView) getActivity().findViewById(R.id.text_temperature);
         humidityView = (TextView) getActivity().findViewById(R.id.text_humidity);
+
+        heatingLastOn = (TextView) getActivity().findViewById(R.id.text_label_heating_last_on);
+        heatingDuration = (TextView) getActivity().findViewById(R.id.text_label_heating_duration);
 
         fromDateView = (TextView) getActivity().findViewById(R.id.text_from_date);
         toDateView = (TextView) getActivity().findViewById(R.id.text_to_date);
@@ -106,6 +128,14 @@ public class TemperatureFragment extends Fragment {
             }
         }, INITIAL_DELAY, period, TimeUnit.MILLISECONDS);
 
+        new GetHeatingStatus().execute();
+
+        toggleHeating.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                new ToggleHeating().execute(isChecked);
+            }
+        });
     }
 
     @Override
@@ -125,6 +155,7 @@ public class TemperatureFragment extends Fragment {
                 @Override
                 public void run() {
                     new GetTemperature().execute();
+                    new GetHeatingStatus().execute();
                 }
             }, INITIAL_DELAY, period, TimeUnit.MILLISECONDS);
         }
@@ -189,7 +220,7 @@ public class TemperatureFragment extends Fragment {
 
     /**
      * Opens a new {@link DatePickerFragment} dialog to select a date and set the value of
-     * {@link TemperatureFragment#fromDate} to the result.
+     * {@link EnvironmentFragment#fromDate} to the result.
      */
     public void openSetFromDateDialog(){
         DatePickerFragment fragment = new DatePickerFragment();
@@ -214,7 +245,7 @@ public class TemperatureFragment extends Fragment {
 
     /**
      * Opens a new {@link DatePickerFragment} dialog to select a date and set the value of
-     * {@link TemperatureFragment#toDate} to the result.
+     * {@link EnvironmentFragment#toDate} to the result.
      */
     public void openSetToDateDialog(){
         DatePickerFragment fragment = new DatePickerFragment();
@@ -305,6 +336,50 @@ public class TemperatureFragment extends Fragment {
             getActivity().startActivity(intent);
         }
 
+    }
+
+    private class GetHeatingStatus extends AsyncTask<Void, Void, HeatingStatus> {
+        @Override
+        protected HeatingStatus doInBackground(Void... params) {
+            return HttpRequestHandler.getInstance().getHeatingStatus();
+        }
+
+        @Override
+        protected void onPostExecute(HeatingStatus heatingStatus) {
+            super.onPostExecute(heatingStatus);
+
+            String heatingLastOnText = res.getString(R.string.text_heating_last_on);
+            String heatingDurationText = res.getString(R.string.text_heating_duration);
+
+            if (heatingStatus != null) {
+                heatingLastOn.setText(String.format(heatingLastOnText, DateUtility.getShortDateFormat().format(heatingStatus.lastOn)));
+
+                Period period = heatingStatus.duration.toPeriod();
+                heatingDuration.setText(String.format(heatingDurationText, DateUtility.getPeriodFormat().print(period)));
+
+                toggleHeating.setChecked(heatingStatus.on);
+            }
+        }
+    }
+
+    private class ToggleHeating extends AsyncTask<Boolean, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Boolean... params) {
+            boolean on = params[0];
+            return HttpRequestHandler.getInstance().toggleHeating(on);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+
+            if (aBoolean) {
+                new GetHeatingStatus().execute();
+            }
+            else {
+                Toast.makeText(getActivity(), "Failure", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
 }

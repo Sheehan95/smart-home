@@ -47,6 +47,13 @@
 
     <string name="text_no_intrusions_found">No Intrusions Found</string>
 
+    <string name="text_heating_last_on">Last On: %1$s</string>
+    <string name="text_heating_duration">For: %1$s seconds</string>
+
+    <string name="text_environment_heating_label">Heating</string>
+    <string name="text_switch_heating_on">On</string>
+    <string name="text_switch_heating_off">Off</string>
+
     <!-- ========== PREFERENCES ========== -->
     <!-- METRICS -->
     <string name="pref_category_metrics">Metrics</string>

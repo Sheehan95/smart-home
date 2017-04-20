@@ -2,13 +2,12 @@ package ie.sheehan.smarthome.utility;
 
 import android.util.Log;
 
+import org.joda.time.Duration;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.DataOutput;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -22,10 +21,8 @@ import java.util.Locale;
 
 import ie.sheehan.smarthome.model.AlarmStatus;
 import ie.sheehan.smarthome.model.EnvironmentReading;
+import ie.sheehan.smarthome.model.HeatingStatus;
 import ie.sheehan.smarthome.model.IntrusionReading;
-
-import static android.R.attr.id;
-import static java.lang.Boolean.parseBoolean;
 
 /**
  * A Singleton class for managing connections and HTTP requests to the web services.
@@ -144,6 +141,77 @@ public class HttpRequestHandler {
         }
 
         return envReadings;
+    }
+
+    public HeatingStatus getHeatingStatus() {
+        HeatingStatus heatingStatus = null;
+        HttpURLConnection connection;
+        StringBuilder response = new StringBuilder();
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_ENVIRONMENT, "/heating/status");
+
+        try {
+            connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null) {
+                response.append(nextLine);
+            }
+
+            JSONObject json = new JSONObject(response.toString());
+
+            boolean on = json.getBoolean("on");
+            Date lastOn = new Date(json.getLong("timestamp") * 1000L);
+            Duration duration = new Duration(json.getInt("duration") * 1000L);
+
+            heatingStatus = new HeatingStatus(on, lastOn, duration);
+
+        } catch (Exception e) {
+            Log.e("PANIC", e.toString());
+        }
+
+        return heatingStatus;
+    }
+
+    public boolean toggleHeating(boolean on) {
+        boolean confirmation;
+
+        HttpURLConnection connection;
+        StringBuilder response = new StringBuilder();
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_ENVIRONMENT, "/heating/activate");
+
+        try {
+            connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+
+            OutputStream outputStream = connection.getOutputStream();
+            JSONObject output = new JSONObject();
+            output.put("on", on);
+
+            outputStream.write(output.toString().getBytes("UTF-8"));
+            outputStream.close();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null) {
+                response.append(nextLine);
+            }
+
+            confirmation = Boolean.parseBoolean(response.toString());
+        } catch (Exception e) {
+            Log.e("HELP", e.toString());
+            confirmation = false;
+        }
+
+        return confirmation;
     }
 
     /**
@@ -340,7 +408,7 @@ public class HttpRequestHandler {
 
             intrusionReading = new IntrusionReading(json);
         } catch (Exception e) {
-            Log.e("ERROR", e.toString());
+            Log.e("INTRUSION", e.toString());
         }
 
         return intrusionReading;
@@ -370,7 +438,7 @@ public class HttpRequestHandler {
             return true;
 
         } catch (Exception e) {
-            Log.e("ERROR", e.toString());
+            Log.e("VIEW", e.toString());
             return false;
         }
     }
@@ -398,7 +466,7 @@ public class HttpRequestHandler {
             return true;
 
         } catch (Exception e) {
-            Log.e("ERROR", e.toString());
+            Log.e("MARKALL", e.toString());
             return false;
         }
     }
@@ -428,7 +496,7 @@ public class HttpRequestHandler {
             }
 
         } catch (Exception e) {
-            Log.e("ERROR", e.toString());
+            Log.e("REMOVE", e.toString());
             return false;
         }
     }
@@ -453,7 +521,7 @@ public class HttpRequestHandler {
             return true;
 
         } catch (Exception e) {
-            Log.e("ERROR", e.toString());
+            Log.e("REMOVEALL", e.toString());
             return false;
         }
     }
