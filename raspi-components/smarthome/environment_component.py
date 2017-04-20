@@ -4,22 +4,30 @@ import threading
 
 import paho.mqtt.client as mqtt
 
+from components import Heating
 from datetime import datetime
 from sensors import TemperatureSensor
 # from sensors import FakeTemperatureSensor
 
 
 # ==== DEFINING CONSTANTS =====================================================
+SCRIPT_LABEL = '[ENV]'
+
 MQTT_BROKER = '192.167.1.101'
 MQTT_PORT = 1883
 
 TOPIC_ENVIRONMENT_READING_LOG = '/ie/sheehan/smart-home/envreading/log'
 TOPIC_ENVIRONMENT_READING_REQUESTS = '/ie/sheehan/smart-home/envreading/request'
 TOPIC_ENVIRONMENT_READING_RESPONSE = '/ie/sheehan/smart-home/envreading/response'
+
+TOPIC_ENVIRONMENT_HEATING_REQUEST = '/ie/sheehan/smart-home/envreading/heating/request'
+TOPIC_ENVIRONMENT_HEATING_RESPONSE = '/ie/sheehan/smart-home/envreading/heating/response'
+TOPIC_ENVIRONMENT_HEATING_ACTIVATE = '/ie/sheehan/smart-home/envreading/heating/activate'
 # =============================================================================
 
 
 # ==== DEFINING VARIABLES =====================================================
+heating = Heating()
 mqtt_client = mqtt.Client()
 sensor = TemperatureSensor()
 # sensor = FakeTemperatureSensor()
@@ -50,6 +58,20 @@ def on_message(client, userdata, message):
 
     if message.topic == TOPIC_ENVIRONMENT_READING_REQUESTS:
         environment_reading_response(sensor.get_temp(), sensor.get_humidity())
+
+    elif message.topic == TOPIC_ENVIRONMENT_HEATING_ACTIVATE:
+        payload = json.loads(message.payload)
+
+        if payload['on']:
+            print '{}: turning on heating'.format(SCRIPT_LABEL)
+            heating.turn_on()
+        elif not payload['on']:
+            print '{}: turning off heating'.format(SCRIPT_LABEL)
+            heating.turn_off()
+
+    elif message.topic == TOPIC_ENVIRONMENT_HEATING_REQUEST:
+        payload = json.dumps({'on': heating.on, 'timestamp': heating.last_on, 'duration': heating.last_duration})
+        client.publish(TOPIC_ENVIRONMENT_HEATING_RESPONSE, payload)
 # =============================================================================
 
 

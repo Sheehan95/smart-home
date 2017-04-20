@@ -88,7 +88,10 @@ public class DateUtility {
     }
 
     public static DateFormat getTimeFormat() {
-        return new SimpleDateFormat("k:m:s z", Locale.getDefault());
+        return new SimpleDateFormat("kk:mm:ss z", Locale.getDefault());
     }
 
+    public static DateFormat getShortTimeFormat() {
+        return new SimpleDateFormat("kk:mm:ss", Locale.getDefault());
+    }
 }

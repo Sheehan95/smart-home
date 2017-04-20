@@ -17,6 +17,7 @@ import ie.sheehan.smarthome.CameraFeedActivity;
 import ie.sheehan.smarthome.IntrusionListActivity;
 import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.model.AlarmStatus;
+import ie.sheehan.smarthome.utility.DateUtility;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
 /**
@@ -114,7 +115,8 @@ public class SecurityFragment extends Fragment {
 
             alarmSwitch.setChecked(alarmStatus.armed);
 
-            String dateLastArmed = alarmStatus.lastArmed.toString();
+            String dateLastArmed = DateUtility.getShortDateFormat().format(alarmStatus.lastArmed);
+            dateLastArmed += " @ " + DateUtility.getShortTimeFormat().format(alarmStatus.lastArmed);
             String lastArmed = String.format(getResources().getString(R.string.text_label_alarm_armed), dateLastArmed);
             labelAlarmLastArmed.setText(lastArmed);
         }
