@@ -352,7 +352,9 @@ public class EnvironmentFragment extends Fragment {
             String heatingDurationText = res.getString(R.string.text_heating_duration);
 
             if (heatingStatus != null) {
-                heatingLastOn.setText(String.format(heatingLastOnText, DateUtility.getShortDateFormat().format(heatingStatus.lastOn)));
+                heatingLastOn.setText(String.format(heatingLastOnText,
+                        DateUtility.getShortDateFormat().format(heatingStatus.lastOn),
+                        DateUtility.getShortTimeFormat().format(heatingStatus.lastOn)));
 
                 Period period = heatingStatus.duration.toPeriod();
                 heatingDuration.setText(String.format(heatingDurationText, DateUtility.getPeriodFormat().print(period)));

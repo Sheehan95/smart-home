@@ -101,10 +101,11 @@ public class DateUtility {
     public static PeriodFormatter getPeriodFormat() {
         return new PeriodFormatterBuilder()
                 .printZeroAlways()
+                .minimumPrintedDigits(2)
                 .appendHours()
-                .appendSeparator(" hours, ")
+                .appendSeparator(":")
                 .appendMinutes()
-                .appendSeparator(" minutes and ")
+                .appendSeparator(":")
                 .appendSeconds()
                 .toFormatter();
 

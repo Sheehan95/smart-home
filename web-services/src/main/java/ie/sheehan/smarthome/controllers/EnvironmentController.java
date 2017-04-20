@@ -167,7 +167,7 @@ public class EnvironmentController {
 			
 			heating.on = json.getBoolean("on");
 			heating.timestamp = json.getLong("timestamp");
-			heating.duration = json.getInt("duration");
+			heating.duration = (int) json.getLong("duration");
 			
 			message.ack();
 			connection.disconnect();
@@ -175,7 +175,7 @@ public class EnvironmentController {
 			System.out.println("Broker incorrectly configured.");
 			return new Heating();
 		} catch (JSONException e) {
-			System.out.println("Unable to parse value from JSON. Yeah it's here...");
+			System.out.println("Unable to parse value from JSON.");
 			System.out.println(e.toString());
 			return new Heating();
 		} catch (Exception e) {
