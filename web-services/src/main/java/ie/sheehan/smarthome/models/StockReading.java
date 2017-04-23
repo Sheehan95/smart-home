@@ -14,7 +14,7 @@ public class StockReading {
 	@Id
 	public String id;
 	
-	public String productName;
+	public String product;
 	
 	public double weight;
 	
@@ -24,7 +24,7 @@ public class StockReading {
 	@Override
 	public String toString() {
 		return String.format("ID: %s\n%s\nProduct: %s\tWeight: %f", 
-				id, new Date(timestamp * 1000L).toString(), productName, weight);
+				id, new Date(timestamp * 1000L).toString(), product, weight);
 	}
 	
 	@Override
@@ -34,14 +34,20 @@ public class StockReading {
 		}
 		
 		StockReading other = (StockReading) obj;
-		return this.id.equals(other.id);
+		
+		if (! this.id.isEmpty() && ! other.id.isEmpty()) {
+			return this.id.equals(other.id);
+		}
+		else {
+			return false;
+		}
 	}
 	
 	public static class StockReadingTimeComparator implements Comparator<StockReading> {
 		@Override
 		public int compare(StockReading o1, StockReading o2) {
 			Date d1 = new Date(o1.timestamp * 1000L);
-			Date d2 = new Date(o1.timestamp * 1000L);
+			Date d2 = new Date(o2.timestamp * 1000L);
 			
 			return d1.compareTo(d2);
 		}

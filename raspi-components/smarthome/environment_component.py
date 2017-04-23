@@ -1,13 +1,12 @@
 import json
-import time
 import threading
+import time
+from datetime import datetime
 
 import paho.mqtt.client as mqtt
 
-from environment import Heating
-from datetime import datetime
-from sensors import TemperatureSensor
-# from sensors import FakeTemperatureSensor
+from components.environment import Heating
+from components.sensors import TemperatureSensor
 
 
 # ==== DEFINING CONSTANTS =====================================================
@@ -30,7 +29,6 @@ TOPIC_ENVIRONMENT_HEATING_ACTIVATE = '/ie/sheehan/smart-home/envreading/heating/
 heating = Heating()
 mqtt_client = mqtt.Client()
 sensor = TemperatureSensor()
-# sensor = FakeTemperatureSensor()
 # =============================================================================
 
 

@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import ie.sheehan.smarthome.models.Alarm;
 import ie.sheehan.smarthome.models.EnvironmentReading;
 import ie.sheehan.smarthome.models.Heating;
 import ie.sheehan.smarthome.repositories.EnvironmentReadingRepository;
@@ -167,7 +166,16 @@ public class EnvironmentController {
 			
 			heating.on = json.getBoolean("on");
 			heating.timestamp = json.getLong("timestamp");
-			heating.duration = (int) json.getLong("duration");
+			
+			if (json.get("duration") instanceof Integer) {
+				heating.duration = json.getInt("duration");
+			}
+			else if (json.get("duration") instanceof Long) {
+				heating.duration = (int) json.getLong("duration");
+			}
+			else {
+				heating.duration = json.getInt("duration");
+			}
 			
 			message.ack();
 			connection.disconnect();

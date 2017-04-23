@@ -1,16 +1,16 @@
-import cv2
 import base64
 import json
-import paho.mqtt.client as mqtt
 import signal
 import socket
-import sys
 import subprocess
+import sys
 import threading
 import time
 
-from security import PiMotionCamera, Alarm
+import cv2
+import paho.mqtt.client as mqtt
 
+from components.security import Alarm, PiMotionCamera
 
 # ==== DEFINING CONSTANTS =====================================================
 SCRIPT_LABEL = '[SEC]'
