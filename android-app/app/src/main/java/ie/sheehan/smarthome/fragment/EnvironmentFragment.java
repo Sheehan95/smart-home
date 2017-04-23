@@ -18,12 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import org.joda.time.Duration;
 import org.joda.time.Period;
-import org.joda.time.chrono.StrictChronology;
-import org.w3c.dom.Text;
 
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -57,8 +53,6 @@ public class EnvironmentFragment extends Fragment {
     // ============================================================================================
     // DECLARING CLASS VARIABLES
     // ============================================================================================
-    HeatingStatus heatingStatus;
-
     Resources res;
     SharedPreferences preferences;
 

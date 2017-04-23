@@ -90,14 +90,32 @@ public class DateUtility {
         return new SimpleDateFormat("EEE, dd MMM", Locale.getDefault());
     }
 
+    /**
+     * Returns a {@link DateFormat} object for formatting dates in the style: 'HH:MM:SS ZONE'
+     * E.G.: 11:30:15 GMT
+     *
+     * @return a {@link DateFormat} object for formatting date times
+     */
     public static DateFormat getTimeFormat() {
         return new SimpleDateFormat("kk:mm:ss z", Locale.getDefault());
     }
 
+    /**
+     * Returns a {@link DateFormat} object for formatting dates in the style: 'HH:MM:SS'
+     * E.G.: 11:30:15
+     *
+     * @return a {@link DateFormat} object for formatting date times
+     */
     public static DateFormat getShortTimeFormat() {
         return new SimpleDateFormat("kk:mm:ss", Locale.getDefault());
     }
 
+    /**
+     * Returns a {@link PeriodFormatter} object for formatting time periods in the style: 'HH:MM:SS'
+     * E.G.: 01:05:35
+     *
+     * @return a {@link PeriodFormatter} object for formatting time periods
+     */
     public static PeriodFormatter getPeriodFormat() {
         return new PeriodFormatterBuilder()
                 .printZeroAlways()
@@ -110,4 +128,5 @@ public class DateUtility {
                 .toFormatter();
 
     }
+
 }

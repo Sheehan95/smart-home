@@ -9,33 +9,33 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
 
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import ie.sheehan.smarthome.IntrusionViewActivity;
-import ie.sheehan.smarthome.MainActivity;
 import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.model.IntrusionReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
+/**
+ * A service that runs when the phone is booted. Checks for newly reported {@link IntrusionReading}
+ * objects and sends a notification if one is found.
+ */
 public class IntrusionService extends Service {
 
     Timer timer;
     TimerTask task;
     String lastIntrusionId = "";
 
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         timer = new Timer();
-
         task = new TimerTask() {
             @Override
             public void run() {
@@ -62,6 +62,12 @@ public class IntrusionService extends Service {
         timer.cancel();
     }
 
+    /**
+     * Creates and sends a notification. When clicked, the notification starts the
+     * {@link IntrusionViewActivity} containing the given {@link IntrusionReading}.
+     *
+     * @param intrusionReading to open in the {@link IntrusionViewActivity}
+     */
     public void sendNotification(IntrusionReading intrusionReading) {
         Notification.Builder notification = new Notification.Builder(IntrusionService.this);
         notification.setSmallIcon(R.drawable.ic_tab_security);
@@ -86,7 +92,10 @@ public class IntrusionService extends Service {
         notificationManager.notify(0, notification.build());
     }
 
-
+    /**
+     * An {@link AsyncTask} which checks for a new {@link IntrusionReading} reported on the web
+     * server and triggers a notification if there is.
+     */
     private class CheckForIntrusions extends AsyncTask<Void, Void, IntrusionReading> {
         @Override
         protected IntrusionReading doInBackground(Void... params) {

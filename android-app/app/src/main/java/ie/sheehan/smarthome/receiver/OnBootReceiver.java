@@ -16,4 +16,5 @@ public class OnBootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         context.startService(new Intent(context, IntrusionService.class));
     }
+
 }

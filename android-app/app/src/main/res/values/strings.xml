@@ -119,6 +119,12 @@
     <string name="toast_unable_to_arm_alarm">Unable to arm the alarm</string>
     <string name="toast_no_intrusion_selected">No intrusion selected</string>
 
+    <string name="toast_view_intrusion_failure">Unable to mark intrusion as viewed</string>
+    <string name="toast_view_intrusion_success">Marked intrusion as viewed</string>
+
+    <string name="toast_remove_intrusion_failure">Unable to remove intrusion</string>
+    <string name="toast_remove_intrusion_success">Removed intrusion from list</string>
+
     <!-- PLACEHOLDERS -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

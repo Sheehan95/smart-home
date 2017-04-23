@@ -8,6 +8,9 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * An object representing an intrusion on the premises.
+ */
 public class IntrusionReading implements Serializable {
 
     public String id;
@@ -15,8 +18,13 @@ public class IntrusionReading implements Serializable {
     public long timestamp;
     public boolean viewed;
 
-    public IntrusionReading() {}
 
+    /**
+     * Default constructor that creates an {@link IntrusionReading} object from a {@link JSONObject}
+     * with the properties id, image, timestamp & viewed.
+     *
+     * @param jsonObject with the properties id, image, timestamp & viewed
+     */
     public IntrusionReading(JSONObject jsonObject) {
         try {
             id = jsonObject.getString("id");

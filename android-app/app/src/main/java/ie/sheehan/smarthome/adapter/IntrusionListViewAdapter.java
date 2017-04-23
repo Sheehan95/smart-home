@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Date;
 import java.util.List;
@@ -43,12 +41,13 @@ public class IntrusionListViewAdapter extends BaseAdapter {
     /**
      * Sets the {@link android.widget.ListView} data to a new data set
      *
-     * @param data
+     * @param data to act as the data set for this adapter
      */
     public void setData(List<IntrusionReading> data) {
         this.data = data;
         notifyDataSetChanged();
     }
+
 
     @Override
     public int getCount() {
@@ -122,60 +121,34 @@ public class IntrusionListViewAdapter extends BaseAdapter {
             }
         });
 
+        // removing button focus so they don't consume adapter item clicks
         viewButton.setFocusable(false);
         removeButton.setFocusable(false);
 
         return itemView;
     }
 
-
+    /**
+     * Private inner class that starts an asynchronous task, marking the given
+     * {@link IntrusionReading} as viewed.
+     */
     private class MarkIntrusionAsViewed extends AsyncTask<IntrusionReading, Void, Boolean> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
         @Override
         protected Boolean doInBackground(IntrusionReading... params) {
             IntrusionReading intrusionReading = params[0];
             return HttpRequestHandler.getInstance().markIntrusionAsViewed(intrusionReading);
         }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-
-            if (aBoolean) {
-                Log.e("MARK", "SUCCESS");
-            }
-            else {
-                Log.e("MARK", "FAILURE");
-            }
-        }
     }
 
+    /**
+     * Private inner class that starts an asynchronous task, removing the given
+     * {@link IntrusionReading} from the list.
+     */
     private class RemoveIntrusion extends AsyncTask<IntrusionReading, Void, Boolean> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
         @Override
         protected Boolean doInBackground(IntrusionReading... params) {
             IntrusionReading intrusionReading = params[0];
             return HttpRequestHandler.getInstance().removeIntrusion(intrusionReading);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-
-            if (aBoolean) {
-                Log.e("REMOVE", "SUCCESS");
-            }
-            else {
-                Log.e("REMOVE", "FAILURE");
-            }
         }
     }
 
