@@ -17,6 +17,7 @@ ENDPOINT_SECURITY = 'security'
 TOPIC_SMARTHOME_ROOT = '/ie/sheehan/smart-home/#'
 
 TOPIC_ENVIRONMENT_READING_LOG = '/ie/sheehan/smart-home/envreading/log'
+TOPIC_STOCK_SCALE_LOG = '/ie/sheehan/smart-home/stock/scale/log'
 TOPIC_SECURITY_CAMERA_MOTION = '/ie/sheehan/smart-home/security/camera/motion'
 # =============================================================================
 
@@ -40,6 +41,16 @@ def on_message(client, userdata, message):
 
         try:
             request = requests.post('http://192.167.1.31:8080/environment/add', json=payload)
+            print '{}: HTTP request status code {}'.format(SCRIPT_LABEL, request.status_code)
+        except requests.ConnectionError:
+            print '{}: failed to connect to web server'.format(SCRIPT_LABEL)
+
+    elif message.topic == TOPIC_STOCK_SCALE_LOG:
+        print '{}: forwarding stock log to web server'.format(SCRIPT_LABEL)
+        payload = json.loads(message.payload)
+
+        try:
+            request = requests.post('http://192.167.1.31:8080/stock/add', json=payload)
             print '{}: HTTP request status code {}'.format(SCRIPT_LABEL, request.status_code)
         except requests.ConnectionError:
             print '{}: failed to connect to web server'.format(SCRIPT_LABEL)

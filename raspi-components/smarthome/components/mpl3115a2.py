@@ -1,6 +1,6 @@
 from ctypes import *
 
-sensor = CDLL("./sensor.so")
+sensor = CDLL("components/sensor.so")
 
 
 class MPL:

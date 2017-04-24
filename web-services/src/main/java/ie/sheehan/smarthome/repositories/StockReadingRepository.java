@@ -50,11 +50,27 @@ public class StockReadingRepository {
 		return stockReadings.get(stockReadings.size() - 1);
 	}
 	
+	public List<StockReading> getAll() {
+		return database.findAll(StockReading.class, COLLECTION_STOCK_READING);
+	}
+	
 	public List<StockReading> getRange(long from, long to){
 		Query query = new Query();
 		query.addCriteria(Criteria.where("timestamp").gte(from).andOperator(Criteria.where("timestamp").lte(to)));
 		
 		return database.find(query, StockReading.class, COLLECTION_STOCK_READING);
+	}
+	
+	public List<StockReading> getByProduct(String product) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("product").is(product));
+		
+		return database.find(query, StockReading.class, COLLECTION_STOCK_READING);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getProducts() {
+		return database.getCollection(COLLECTION_STOCK_READING).distinct("product");
 	}
 	
 	public int getCount(){

@@ -37,6 +37,7 @@ public class EnvironmentController {
 	private static final String TOPIC_ENVIRONMENT_HEATING_RESPONSE = "/ie/sheehan/smart-home/envreading/heating/response";
 	private static final String TOPIC_ENVIRONMENT_HEATING_ACTIVATE = "/ie/sheehan/smart-home/envreading/heating/activate";
 	
+	
 	@Autowired
 	EnvironmentReadingRepository repository;
 	

@@ -18,6 +18,8 @@ public class StockReading {
 	
 	public double weight;
 	
+	public double capacity;
+	
 	public long timestamp;
 	
 	
