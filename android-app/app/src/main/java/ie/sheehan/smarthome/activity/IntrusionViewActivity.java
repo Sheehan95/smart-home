@@ -1,4 +1,4 @@
-package ie.sheehan.smarthome;
+package ie.sheehan.smarthome.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import java.util.Date;
 
+import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.model.IntrusionReading;
 import ie.sheehan.smarthome.utility.DateUtility;
 

@@ -1,14 +1,11 @@
-package ie.sheehan.smarthome;
+package ie.sheehan.smarthome.activity;
 
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -19,6 +16,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
 public class CameraFeedActivity extends AppCompatActivity {

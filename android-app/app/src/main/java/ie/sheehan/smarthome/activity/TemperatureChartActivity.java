@@ -1,4 +1,4 @@
-package ie.sheehan.smarthome;
+package ie.sheehan.smarthome.activity;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.model.EnvironmentReading;
 
 import static ie.sheehan.smarthome.model.EnvironmentReading.getAverageTemperatureInRange;

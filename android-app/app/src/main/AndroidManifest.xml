@@ -19,10 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CameraFeedActivity" />
-        <activity android:name=".IntrusionViewActivity" />
-        <activity android:name=".IntrusionListActivity" />
-        <activity android:name=".TemperatureChartActivity" />
+        <activity android:name=".activity.CameraFeedActivity" />
+        <activity android:name=".activity.IntrusionViewActivity" />
+        <activity android:name=".activity.IntrusionListActivity" />
+        <activity android:name=".activity.TemperatureChartActivity" />
 
         <service
             android:name=".service.IntrusionService"

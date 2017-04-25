@@ -13,8 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import ie.sheehan.smarthome.CameraFeedActivity;
-import ie.sheehan.smarthome.IntrusionListActivity;
+import ie.sheehan.smarthome.activity.CameraFeedActivity;
+import ie.sheehan.smarthome.activity.IntrusionListActivity;
 import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.model.AlarmStatus;
 import ie.sheehan.smarthome.utility.DateUtility;

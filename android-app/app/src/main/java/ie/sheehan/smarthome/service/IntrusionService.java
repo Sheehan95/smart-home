@@ -17,7 +17,7 @@ import android.support.v4.app.TaskStackBuilder;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import ie.sheehan.smarthome.IntrusionViewActivity;
+import ie.sheehan.smarthome.activity.IntrusionViewActivity;
 import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.model.IntrusionReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;

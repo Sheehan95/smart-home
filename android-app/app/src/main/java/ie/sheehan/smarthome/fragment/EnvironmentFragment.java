@@ -30,7 +30,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import ie.sheehan.smarthome.R;
-import ie.sheehan.smarthome.TemperatureChartActivity;
+import ie.sheehan.smarthome.activity.TemperatureChartActivity;
 import ie.sheehan.smarthome.dialog.DatePickerFragment;
 import ie.sheehan.smarthome.model.EnvironmentReading;
 import ie.sheehan.smarthome.model.HeatingStatus;
