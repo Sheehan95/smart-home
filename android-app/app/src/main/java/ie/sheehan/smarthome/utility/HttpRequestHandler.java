@@ -23,6 +23,7 @@ import ie.sheehan.smarthome.model.AlarmStatus;
 import ie.sheehan.smarthome.model.EnvironmentReading;
 import ie.sheehan.smarthome.model.HeatingStatus;
 import ie.sheehan.smarthome.model.IntrusionReading;
+import ie.sheehan.smarthome.model.StockReading;
 
 /**
  * A Singleton class for managing connections and HTTP requests to the web services.
@@ -524,6 +525,37 @@ public class HttpRequestHandler {
             Log.e("REMOVEALL", e.toString());
             return false;
         }
+    }
+
+    public StockReading getStockReading() {
+        HttpURLConnection connection;
+        StockReading stockReading = null;
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_STOCK, "/get");
+
+        try {
+            connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null) {
+                response.append(nextLine);
+            }
+
+            JSONObject json = new JSONObject(response.toString());
+            String product = json.getString("product");
+            int weight = (int) json.getDouble("weight");
+            int capacity = (int) json.getDouble("capacity");
+
+            stockReading = new StockReading(product, weight, capacity);
+        } catch (Exception e) {
+            Log.e("ERROR", e.toString());
+        }
+
+        return stockReading;
     }
 
 }

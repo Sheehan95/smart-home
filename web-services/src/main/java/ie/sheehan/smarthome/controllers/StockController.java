@@ -54,6 +54,12 @@ public class StockController {
 		return repository.getByProduct(product);
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "/get/{product}/latest")
+	public List<StockReading> getLatestByProduct(@PathVariable String product) {
+		return repository.getByProduct(product);
+	}
+	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public void add(@RequestBody StockReading stockReading) {
 		repository.add(stockReading);
@@ -96,6 +102,7 @@ public class StockController {
 			
 			stockReading.product = json.getString("product");
 			stockReading.weight = json.getDouble("weight");
+			stockReading.capacity = json.getDouble("capacity");
 			stockReading.timestamp = json.getLong("timestamp");
 			
 			message.ack();

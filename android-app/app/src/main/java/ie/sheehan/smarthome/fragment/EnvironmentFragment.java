@@ -119,10 +119,9 @@ public class EnvironmentFragment extends Fragment {
             @Override
             public void run() {
                 new GetTemperature().execute();
+                new GetHeatingStatus().execute();
             }
         }, INITIAL_DELAY, period, TimeUnit.MILLISECONDS);
-
-        new GetHeatingStatus().execute();
 
         toggleHeating.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

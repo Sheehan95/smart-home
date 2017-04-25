@@ -55,10 +55,11 @@ def on_message(c, userdata, message):
 # ==== METHOD DECLARATION =====================================================
 def stock_reading_response():
     weight = scale.current_weight
+    capacity = scale.capacity
     timestamp = int(time.time())
     product = scale.product
 
-    payload = json.dumps({'product': product, 'weight': weight, 'timestamp': timestamp})
+    payload = json.dumps({'product': product, 'weight': weight, 'capacity': capacity, 'timestamp': timestamp})
     client.publish(TOPIC_STOCK_SCALE_RESPONSE, payload)
 
 

@@ -54,6 +54,10 @@
     <string name="text_switch_heating_on">On</string>
     <string name="text_switch_heating_off">Off</string>
 
+    <string name="text_label_stock_product">Product</string>
+    <string name="text_label_stock_weight">Weight</string>
+    <string name="text_stock_weight">%1$d / %2$d g</string>
+
     <!-- ========== PREFERENCES ========== -->
     <!-- METRICS -->
     <string name="pref_category_metrics">Metrics</string>
