@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,8 @@ public class StockFragment extends Fragment {
     TextView textProduct;
     TextView textWeight;
 
+    View cover;
+
     public StockFragment() {
         // Required empty public constructor
     }
@@ -56,6 +59,8 @@ public class StockFragment extends Fragment {
 
         textProduct = (TextView) getActivity().findViewById(R.id.label_product);
         textWeight = (TextView) getActivity().findViewById(R.id.label_weight);
+
+        cover = getActivity().findViewById(R.id.gui_cover);
 
         executorService = Executors.newScheduledThreadPool(10);
 
@@ -98,6 +103,15 @@ public class StockFragment extends Fragment {
         @Override
         protected void onPostExecute(StockReading stockReading) {
             super.onPostExecute(stockReading);
+
+            if (stockReading.weight < 0) {
+                if (cover.getVisibility() == View.INVISIBLE) {
+                    cover.setVisibility(View.VISIBLE);
+                }
+            }
+            else {
+                cover.setVisibility(View.INVISIBLE);
+            }
 
             textProduct.setText(stockReading.product);
 

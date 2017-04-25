@@ -28,8 +28,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import ie.sheehan.smarthome.ChartActivity;
 import ie.sheehan.smarthome.R;
+import ie.sheehan.smarthome.TemperatureChartActivity;
 import ie.sheehan.smarthome.dialog.DatePickerFragment;
 import ie.sheehan.smarthome.model.EnvironmentReading;
 import ie.sheehan.smarthome.model.HeatingStatus;
@@ -119,9 +119,10 @@ public class EnvironmentFragment extends Fragment {
             @Override
             public void run() {
                 new GetTemperature().execute();
-                new GetHeatingStatus().execute();
             }
         }, INITIAL_DELAY, period, TimeUnit.MILLISECONDS);
+
+        new GetHeatingStatus().execute();
 
         toggleHeating.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -141,6 +142,8 @@ public class EnvironmentFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        new GetHeatingStatus().execute();
+
         if (executorService.isShutdown()) {
             executorService = Executors.newScheduledThreadPool(10);
 
@@ -148,7 +151,6 @@ public class EnvironmentFragment extends Fragment {
                 @Override
                 public void run() {
                     new GetTemperature().execute();
-                    new GetHeatingStatus().execute();
                 }
             }, INITIAL_DELAY, period, TimeUnit.MILLISECONDS);
         }
@@ -199,7 +201,7 @@ public class EnvironmentFragment extends Fragment {
     // BUTTON LISTENER METHODS
     // ============================================================================================
     /**
-     * Launches a {@link ChartActivity} to display a bar chart of {@link EnvironmentReading} values
+     * Launches a {@link TemperatureChartActivity} to display a bar chart of {@link EnvironmentReading} values
      * between two specified dates.
      */
     public void openChart(){
@@ -324,7 +326,7 @@ public class EnvironmentFragment extends Fragment {
 
             Bundle arguments = new Bundle();
             arguments.putSerializable("envReadings", (ArrayList) environmentReadings);
-            Intent intent = new Intent(getActivity(), ChartActivity.class);
+            Intent intent = new Intent(getActivity(), TemperatureChartActivity.class);
             intent.putExtras(arguments);
             getActivity().startActivity(intent);
         }
