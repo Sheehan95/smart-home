@@ -125,4 +125,8 @@ public class MainActivity extends AppCompatActivity {
         adapter.securityFragment.openIntrusionView();
     }
 
+    public void openScaleCalibrationActivity(View view) {
+        adapter.stockFragment.openScaleCalibrationActivity();
+    }
+
 }

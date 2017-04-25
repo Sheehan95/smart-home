@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -371,7 +372,12 @@ public class EnvironmentFragment extends Fragment {
             super.onPostExecute(aBoolean);
 
             if (aBoolean) {
-                new GetHeatingStatus().execute();
+                try {
+                    Thread.sleep(1500);
+                    new GetHeatingStatus().execute();
+                } catch (InterruptedException e) {
+                    Log.e("ERROR", e.toString());
+                }
             }
             else {
                 Toast.makeText(getActivity(), "Failure", Toast.LENGTH_SHORT).show();

@@ -2,7 +2,7 @@
     <string name="app_name">Smart Home</string>
 
     <!-- TAB TITLES -->
-    <string name="title_environment_fragment">Environment Readings</string>
+    <string name="title_environment_fragment">Environment</string>
     <string name="title_security_fragment">Security</string>
     <string name="title_stock_fragment">Stock</string>
     <string name="title_settings_fragment">Settings</string>
@@ -20,6 +20,8 @@
     <string name="button_intrusion_remove_all">Remove All</string>
 
     <string name="button_return_to_intrusion_list">Return to Intrusion List</string>
+
+    <string name="button_calibrate_scale_text">Calibrate</string>
 
     <!-- TEXT VIEWS -->
     <string name="text_temperature_display_celsius">%1$.2f °C</string>
@@ -57,6 +59,12 @@
     <string name="text_label_stock_product">Product</string>
     <string name="text_label_stock_weight">Weight</string>
     <string name="text_stock_weight">%1$d / %2$d g</string>
+
+    <string name="text_scale_calibrate_weight_g">%1$d g</string>
+    <string name="text_scale_calibrate_weight_oz">%1$d oz</string>
+
+    <string name="text_scale_instructions_header">Instructions</string>
+    <string name="text_scale_instructions">Place a new product on the scale. Once the weight has settled, assign the product a name and click the calibrate button</string>
 
     <!-- ========== PREFERENCES ========== -->
     <!-- METRICS -->

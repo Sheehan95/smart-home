@@ -1,6 +1,7 @@
 package ie.sheehan.smarthome.fragment;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
@@ -18,6 +19,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import ie.sheehan.smarthome.R;
+import ie.sheehan.smarthome.activity.CalibrateScaleActivity;
 import ie.sheehan.smarthome.model.StockReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
@@ -93,6 +95,12 @@ public class StockFragment extends Fragment {
             }, DELAY, PERIOD, TimeUnit.MILLISECONDS);
         }
     }
+
+
+    public void openScaleCalibrationActivity() {
+        getActivity().startActivity(new Intent(getActivity(), CalibrateScaleActivity.class));
+    }
+
 
     private class GetStock extends AsyncTask<Void, Void, StockReading> {
         @Override

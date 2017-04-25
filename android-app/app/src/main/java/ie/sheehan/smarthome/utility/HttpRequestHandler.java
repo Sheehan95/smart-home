@@ -558,4 +558,39 @@ public class HttpRequestHandler {
         return stockReading;
     }
 
+
+    public boolean calibrateScale(String product) {
+        HttpURLConnection connection;
+        StringBuilder response = new StringBuilder();
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_STOCK, "/scale/calibrate");
+
+        try {
+            connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+
+            JSONObject output = new JSONObject();
+            output.put("product", product);
+
+            OutputStream outputStream = connection.getOutputStream();
+            outputStream.write(output.toString().getBytes("UTF-8"));
+            outputStream.close();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null) {
+                response.append(nextLine);
+            }
+
+            return Boolean.parseBoolean(response.toString());
+        } catch (Exception e) {
+            Log.e("CALIBRATE", e.toString());
+            return false;
+        }
+    }
+
 }

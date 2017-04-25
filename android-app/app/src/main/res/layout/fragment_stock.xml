@@ -53,6 +53,7 @@
     </LinearLayout>
 
     <Button
+        android:onClick="openScaleCalibrationActivity"
         android:layout_below="@id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
