@@ -38,7 +38,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.CalibrateScaleActivity"></activity>
+        <activity android:name=".activity.CalibrateScaleActivity" />
+        <activity android:name=".activity.StockChartActivity"></activity>
     </application>
 
 </manifest>

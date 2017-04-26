@@ -65,6 +65,7 @@
 
     <string name="text_scale_instructions_header">Instructions</string>
     <string name="text_scale_instructions">Place a new product on the scale. Once the weight has settled, assign the product a name and click the calibrate button</string>
+    <string name="text_error_scale_disconnected">Scale Disconnected</string>
 
     <!-- ========== PREFERENCES ========== -->
     <!-- METRICS -->

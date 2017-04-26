@@ -9,17 +9,24 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.activity.CalibrateScaleActivity;
+import ie.sheehan.smarthome.activity.StockChartActivity;
 import ie.sheehan.smarthome.model.StockReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
@@ -38,6 +45,11 @@ public class StockFragment extends Fragment {
 
     TextView textProduct;
     TextView textWeight;
+
+    Button openChartButton;
+
+    Spinner productSpinner;
+    ArrayAdapter<String> adapter;
 
     View cover;
 
@@ -62,6 +74,9 @@ public class StockFragment extends Fragment {
         textProduct = (TextView) getActivity().findViewById(R.id.label_product);
         textWeight = (TextView) getActivity().findViewById(R.id.label_weight);
 
+        productSpinner = (Spinner) getActivity().findViewById(R.id.spinner_products);
+        openChartButton = (Button) getActivity().findViewById(R.id.button_view_product_chart);
+
         cover = getActivity().findViewById(R.id.gui_cover);
 
         executorService = Executors.newScheduledThreadPool(10);
@@ -72,6 +87,15 @@ public class StockFragment extends Fragment {
                 new GetStock().execute();
             }
         }, DELAY, PERIOD, TimeUnit.MILLISECONDS);
+
+        new GetProducts().execute();
+
+        openChartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openProductChart((String) productSpinner.getSelectedItem());
+            }
+        });
     }
 
     @Override
@@ -101,6 +125,16 @@ public class StockFragment extends Fragment {
         getActivity().startActivity(new Intent(getActivity(), CalibrateScaleActivity.class));
     }
 
+    public void openProductChart(String product) {
+        Bundle arguments = new Bundle();
+        arguments.putString("product", product);
+
+        Intent intent = new Intent(getActivity(), StockChartActivity.class);
+        intent.putExtras(arguments);
+
+        getActivity().startActivity(intent);
+    }
+
 
     private class GetStock extends AsyncTask<Void, Void, StockReading> {
         @Override
@@ -126,6 +160,31 @@ public class StockFragment extends Fragment {
             String weightText = res.getString(R.string.text_stock_weight);
             weightText = String.format(weightText, stockReading.weight, stockReading.capacity);
             textWeight.setText(weightText);
+        }
+    }
+
+    private class GetProducts extends AsyncTask<Void, Void, List<String>> {
+        @Override
+        protected List<String> doInBackground(Void... params) {
+            return HttpRequestHandler.getInstance().getAllProducts();
+        }
+
+        @Override
+        protected void onPostExecute(List<String> strings) {
+            super.onPostExecute(strings);
+
+            if (strings.isEmpty()) {
+                openChartButton.setEnabled(false);
+                return;
+            }
+            else {
+                openChartButton.setEnabled(true);
+            }
+
+            String[] productList = strings.toArray(new String[strings.size()]);
+
+            adapter = new ArrayAdapter<>(getActivity(), R.layout.support_simple_spinner_dropdown_item, productList);
+            productSpinner.setAdapter(adapter);
         }
     }
 

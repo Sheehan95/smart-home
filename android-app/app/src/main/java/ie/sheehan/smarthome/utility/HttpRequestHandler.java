@@ -558,7 +558,6 @@ public class HttpRequestHandler {
         return stockReading;
     }
 
-
     public boolean calibrateScale(String product) {
         HttpURLConnection connection;
         StringBuilder response = new StringBuilder();
@@ -591,6 +590,37 @@ public class HttpRequestHandler {
             Log.e("CALIBRATE", e.toString());
             return false;
         }
+    }
+
+    public List<String> getAllProducts() {
+        HttpURLConnection connection;
+        List<String> productList = new ArrayList<>();
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_STOCK, "/get/products");
+
+        try {
+            connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null) {
+                response.append(nextLine);
+            }
+
+            JSONArray json = new JSONArray(response.toString());
+
+            for (int i = 0 ; i < json.length() ; i++) {
+                productList.add(json.getString(i));
+            }
+
+        } catch (Exception e) {
+            Log.e("ERROR", e.toString());
+        }
+
+        return productList;
     }
 
 }

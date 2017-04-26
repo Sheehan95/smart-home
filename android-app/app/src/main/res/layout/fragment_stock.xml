@@ -53,10 +53,36 @@
     </LinearLayout>
 
     <Button
+        android:text="@string/button_calibrate_scale_text"
         android:onClick="openScaleCalibrationActivity"
         android:layout_below="@id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Spinner
+            android:id="@+id/spinner_products"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@android:style/Widget.Holo.Light.Spinner"
+            android:spinnerMode="dropdown"/>
+
+        <Button
+            android:id="@+id/button_view_product_chart"
+            android:text="@string/button_view_graph"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/gui_cover"
@@ -65,7 +91,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
-            android:text="Scale Disconnected"
+            android:text="@string/text_error_scale_disconnected"
             android:layout_centerInParent="true"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
