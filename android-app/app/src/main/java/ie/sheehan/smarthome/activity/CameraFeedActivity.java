@@ -24,7 +24,7 @@ public class CameraFeedActivity extends AppCompatActivity {
     // ============================================================================================
     // DEFINING STATIC VARIABLES
     // ============================================================================================
-    private final static String ENDPOINT = "http://192.167.1.103:8081/";
+    private final static String ENDPOINT = "http://192.168.0.103:8081/";
     private final static String ENCODING = "UTF-8";
     private final static String ACCEPT = "text/html";
 

@@ -8,8 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,13 +125,7 @@ public class StockFragment extends Fragment {
     }
 
     public void openProductChart(String product) {
-        Bundle arguments = new Bundle();
-        arguments.putString("product", product);
-
-        Intent intent = new Intent(getActivity(), StockChartActivity.class);
-        intent.putExtras(arguments);
-
-        getActivity().startActivity(intent);
+        new GetStockByProduct().execute(product);
     }
 
 
@@ -185,6 +178,33 @@ public class StockFragment extends Fragment {
 
             adapter = new ArrayAdapter<>(getActivity(), R.layout.support_simple_spinner_dropdown_item, productList);
             productSpinner.setAdapter(adapter);
+        }
+    }
+
+    private class GetStockByProduct extends AsyncTask<String, Void, List<StockReading>> {
+        @Override
+        protected List<StockReading> doInBackground(String... params) {
+            String product = params[0];
+            return HttpRequestHandler.getInstance().getStockReadingsByProduct(product);
+        }
+
+        @Override
+        protected void onPostExecute(List<StockReading> stockReadings) {
+            super.onPostExecute(stockReadings);
+
+            if (stockReadings.isEmpty()) {
+                Toast.makeText(getContext(), "NO DATA", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Bundle arguments = new Bundle();
+            arguments.putString("product", (String) productSpinner.getSelectedItem());
+            arguments.putSerializable("stockReadings", (ArrayList) stockReadings);
+
+            Intent intent = new Intent(getActivity(), StockChartActivity.class);
+            intent.putExtras(arguments);
+
+            getActivity().startActivity(intent);
         }
     }
 

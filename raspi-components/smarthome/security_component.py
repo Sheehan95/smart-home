@@ -15,7 +15,7 @@ from components.security import Alarm, PiMotionCamera
 # ==== DEFINING CONSTANTS =====================================================
 SCRIPT_LABEL = '[SEC]'
 
-MQTT_BROKER = '192.167.1.101'
+MQTT_BROKER = '192.168.0.101'
 MQTT_PORT = 1883
 
 TOPIC_SECURITY_CAMERA_FEED = '/ie/sheehan/smart-home/security/camera/feed'

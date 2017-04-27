@@ -33,7 +33,7 @@ public class HttpRequestHandler {
     // ============================================================================================
     // DECLARING STATIC VARIABLES
     // ============================================================================================
-    private static final String DOMAIN = "192.167.1.31";
+    private static final String DOMAIN = "192.168.0.30";
 
     private static final String ENDPOINT_ENVIRONMENT = "/environment";
     private static final String ENDPOINT_SECURITY = "/security";
@@ -556,6 +556,46 @@ public class HttpRequestHandler {
         }
 
         return stockReading;
+    }
+
+    public List<StockReading> getStockReadingsByProduct(String product) {
+        HttpURLConnection connection;
+        List<StockReading> stockReadings = new ArrayList<>();
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_STOCK, "/get/");
+        target += product;
+
+        try {
+            connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("GET");
+
+            StringBuilder response = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null) {
+                response.append(nextLine);
+            }
+
+            JSONArray array = new JSONArray(response.toString());
+
+            for (int i = 0 ; i < array.length() ; i++) {
+                JSONObject json = array.getJSONObject(i);
+
+                int weight = json.getInt("weight");
+                int capacity = json.getInt("capacity");
+                long timestamp = json.getLong("timestamp");
+
+                StockReading stockReading = new StockReading(product, weight, capacity);
+                stockReading.timestamp = timestamp;
+
+                stockReadings.add(stockReading);
+            }
+        } catch (Exception e) {
+            Log.e("PRODUCTSTOCK", e.toString());
+        }
+
+        return stockReadings;
     }
 
     public boolean calibrateScale(String product) {

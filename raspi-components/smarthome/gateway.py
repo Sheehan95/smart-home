@@ -10,7 +10,7 @@ SCRIPT_LABEL = '[GATE]'
 MQTT_BROKER = '127.0.0.1'
 MQTT_PORT = 1883
 
-DOMAIN = '192.167.1.31'
+DOMAIN = '192.168.0.30'
 ENDPOINT_ENVIRONMENT = 'environment'
 ENDPOINT_SECURITY = 'security'
 
@@ -40,7 +40,7 @@ def on_message(client, userdata, message):
         payload = json.loads(message.payload)
 
         try:
-            request = requests.post('http://192.167.1.31:8080/environment/add', json=payload)
+            request = requests.post('http://192.168.0.30:8080/environment/add', json=payload)
             print '{}: HTTP request status code {}'.format(SCRIPT_LABEL, request.status_code)
         except requests.ConnectionError:
             print '{}: failed to connect to web server'.format(SCRIPT_LABEL)
@@ -50,7 +50,7 @@ def on_message(client, userdata, message):
         payload = json.loads(message.payload)
 
         try:
-            request = requests.post('http://192.167.1.31:8080/stock/add', json=payload)
+            request = requests.post('http://192.168.0.30:8080/stock/add', json=payload)
             print '{}: HTTP request status code {}'.format(SCRIPT_LABEL, request.status_code)
         except requests.ConnectionError:
             print '{}: failed to connect to web server'.format(SCRIPT_LABEL)
@@ -61,7 +61,7 @@ def on_message(client, userdata, message):
         payload = {'image': message.payload, 'timestamp': int(time.time()), 'viewed': False}
 
         try:
-            request = requests.post('http://192.167.1.31:8080/security/intrusion/add', json=payload)
+            request = requests.post('http://192.168.0.30:8080/security/intrusion/add', json=payload)
             print '{}: POSTing image status code {}'.format(SCRIPT_LABEL, request.status_code)
         except requests.ConnectionError:
             print '{}: failed to connect'.format(SCRIPT_LABEL)

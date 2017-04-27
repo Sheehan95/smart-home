@@ -27,7 +27,7 @@ import ie.sheehan.smarthome.repositories.IntrusionReadingRepository;
 public class SecurityController {
 	
 	// ==== DEFINING CONSTANTS ================================================
-	private static final String MQTT_BROKER = "192.167.1.101";
+	private static final String MQTT_BROKER = "192.168.0.101";
 	
 	private static final String TOPIC_SECURITY_CAMERA_FEED = "/ie/sheehan/smart-home/security/camera/feed";
 	

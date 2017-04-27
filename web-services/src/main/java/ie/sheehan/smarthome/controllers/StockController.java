@@ -23,7 +23,7 @@ import ie.sheehan.smarthome.repositories.StockReadingRepository;
 @RequestMapping(value = "/stock")
 public class StockController {
 	
-	private static final String MQTT_BROKER = "192.167.1.101";
+	private static final String MQTT_BROKER = "192.168.0.101";
 	private static final int MQTT_PORT = 1883;
 	
 	private static final String TOPIC_STOCK_SCALE_REQUEST = "/ie/sheehan/smart-home/stock/scale/request";

@@ -10,7 +10,7 @@ from datetime import datetime
 # ==== DEFINING CONSTANTS =====================================================
 SCRIPT_LABEL = '[STOCK]'
 
-MQTT_BROKER = '192.167.1.101'
+MQTT_BROKER = '192.168.0.101'
 MQTT_PORT = 1883
 
 TOPIC_STOCK_SCALE_LOG = '/ie/sheehan/smart-home/stock/scale/log'
