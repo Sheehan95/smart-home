@@ -1,0 +1,6 @@
+DOMAIN = '192.168.0.30'
+PORT = '8080'
+
+ENDPOINT_ENVIRONMENT = 'environment'
+ENDPOINT_SECURITY = 'security'
+ENDPOINT_STOCK = 'stock'

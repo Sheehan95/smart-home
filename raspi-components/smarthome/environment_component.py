@@ -7,13 +7,11 @@ import paho.mqtt.client as mqtt
 
 from components.environment import Heating
 from components.sensors import TemperatureSensor
+from constants.mqtt import *
 
 
 # ==== DEFINING CONSTANTS =====================================================
 SCRIPT_LABEL = '[ENV]'
-
-MQTT_BROKER = '192.168.0.101'
-MQTT_PORT = 1883
 
 TOPIC_ENVIRONMENT_READING_LOG = '/ie/sheehan/smart-home/envreading/log'
 TOPIC_ENVIRONMENT_READING_REQUESTS = '/ie/sheehan/smart-home/envreading/request'
@@ -27,26 +25,18 @@ TOPIC_ENVIRONMENT_HEATING_ACTIVATE = '/ie/sheehan/smart-home/envreading/heating/
 
 # ==== DEFINING VARIABLES =====================================================
 heating = Heating()
-mqtt_client = mqtt.Client()
 sensor = TemperatureSensor()
+client = mqtt.Client(userdata=SCRIPT_LABEL)
 # =============================================================================
 
 
 # ==== DECLARING MQTT CALLBACK METHODS ========================================
-def on_connect(client, userdata, flags, rc):
-    print 'Client connected with status code ', rc
-
-    if client is not None:
-        print 'Client: ', client
-
-    if userdata is not None:
-        print 'User Data: ', userdata
-
-    if flags is not None:
-        print 'Flags: ', flags
+def on_connect(c, userdata, flags, rc):
+    print '{}: MQTT connected with status code {}'.format(SCRIPT_LABEL, rc)
 
 
-def on_message(client, userdata, message):
+def on_message(c, userdata, message):
+    print '{}: received message with topic {} from {}'.format(SCRIPT_LABEL, message.topic, userdata)
 
     if message.topic == TOPIC_ENVIRONMENT_READING_REQUESTS:
         environment_reading_response(sensor.get_temp(), sensor.get_humidity())
@@ -76,7 +66,7 @@ def on_message(client, userdata, message):
 def environment_reading_response(temperature, humidity):
     timestamp = int(time.time())
     payload = json.dumps({'temperature': temperature, 'humidity': humidity, 'timestamp': timestamp})
-    mqtt_client.publish(TOPIC_ENVIRONMENT_READING_RESPONSE, payload)
+    client.publish(TOPIC_ENVIRONMENT_READING_RESPONSE, payload)
 
 
 def environment_reading_log():
@@ -85,7 +75,7 @@ def environment_reading_log():
     timestamp = int(time.time())
 
     payload = json.dumps({'temperature': temperature, 'humidity': humidity, 'timestamp': timestamp})
-    mqtt_client.publish(TOPIC_ENVIRONMENT_READING_LOG, payload)
+    client.publish(TOPIC_ENVIRONMENT_READING_LOG, payload)
 
     threading.Timer(60, environment_reading_log).start()
 
@@ -100,15 +90,15 @@ def initial_wait():
 def main():
     initial_wait()
 
-    mqtt_client.on_connect = on_connect
-    mqtt_client.on_message = on_message
+    client.on_connect = on_connect
+    client.on_message = on_message
 
-    mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
-    mqtt_client.subscribe(TOPIC_ENVIRONMENT_READING_REQUESTS)
-    mqtt_client.subscribe(TOPIC_ENVIRONMENT_HEATING_REQUEST)
-    mqtt_client.subscribe(TOPIC_ENVIRONMENT_HEATING_ACTIVATE)
+    client.connect(MQTT_BROKER, MQTT_PORT)
+    client.subscribe(TOPIC_ENVIRONMENT_READING_REQUESTS)
+    client.subscribe(TOPIC_ENVIRONMENT_HEATING_REQUEST)
+    client.subscribe(TOPIC_ENVIRONMENT_HEATING_ACTIVATE)
 
-    mqtt_client.loop_forever()
+    client.loop_forever()
 
 
 if __name__ == '__main__':
