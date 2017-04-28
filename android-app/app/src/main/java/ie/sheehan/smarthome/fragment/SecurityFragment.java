@@ -113,10 +113,10 @@ public class SecurityFragment extends Fragment {
                 return;
             }
 
-            alarmSwitch.setChecked(alarmStatus.armed);
+            alarmSwitch.setChecked(alarmStatus.isArmed());
 
-            String dateLastArmed = DateUtility.getShortDateFormat().format(alarmStatus.lastArmed);
-            dateLastArmed += " @ " + DateUtility.getShortTimeFormat().format(alarmStatus.lastArmed);
+            String dateLastArmed = DateUtility.getShortDateFormat().format(alarmStatus.getLastArmed());
+            dateLastArmed += " @ " + DateUtility.getShortTimeFormat().format(alarmStatus.getLastArmed());
             String lastArmed = String.format(getResources().getString(R.string.text_label_alarm_armed), dateLastArmed);
             labelAlarmLastArmed.setText(lastArmed);
         }

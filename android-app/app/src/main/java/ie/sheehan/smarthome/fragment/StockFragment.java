@@ -139,7 +139,7 @@ public class StockFragment extends Fragment {
         protected void onPostExecute(StockReading stockReading) {
             super.onPostExecute(stockReading);
 
-            if (stockReading.weight < 0) {
+            if (stockReading.getWeight() < 0) {
                 if (cover.getVisibility() == View.INVISIBLE) {
                     cover.setVisibility(View.VISIBLE);
                 }
@@ -148,10 +148,10 @@ public class StockFragment extends Fragment {
                 cover.setVisibility(View.INVISIBLE);
             }
 
-            textProduct.setText(stockReading.product);
+            textProduct.setText(stockReading.getProduct());
 
             String weightText = res.getString(R.string.text_stock_weight);
-            weightText = String.format(weightText, stockReading.weight, stockReading.capacity);
+            weightText = String.format(weightText, stockReading.getWeight(), stockReading.getCapacity());
             textWeight.setText(weightText);
         }
     }

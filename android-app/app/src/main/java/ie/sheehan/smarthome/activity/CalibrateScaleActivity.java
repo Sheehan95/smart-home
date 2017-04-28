@@ -102,7 +102,7 @@ public class CalibrateScaleActivity extends AppCompatActivity {
             if (stockReading == null) { return; }
 
             String weight = res.getString(R.string.text_scale_calibrate_weight_g);
-            weight = String.format(weight, stockReading.weight);
+            weight = String.format(weight, stockReading.getWeight());
             weightText.setText(weight);
         }
     }

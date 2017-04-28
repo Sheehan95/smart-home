@@ -1,29 +1,36 @@
 <resources>
+
     <string name="app_name">Smart Home</string>
 
-    <!-- TAB TITLES -->
+    <!-- ==== TAB TITLES ====================================================== -->
     <string name="title_environment_fragment">Environment</string>
     <string name="title_security_fragment">Security</string>
     <string name="title_stock_fragment">Stock</string>
     <string name="title_settings_fragment">Settings</string>
+    <!-- ====================================================================== -->
 
-    <!-- BUTTONS -->
+
+    <!-- ==== BUTTONS ========================================================= -->
+    <!-- ENVIRONMENT -->
     <string name="button_view_graph">Open Chart</string>
     <string name="button_from_date">From Date</string>
     <string name="button_to_date">To Date</string>
 
+    <!-- SECURITY -->
     <string name="button_open_camera_feed">Open Camera Feed</string>
     <string name="button_return_from_camera">Return</string>
     <string name="button_open_intrusion_list">Reported Intrusions</string>
-
     <string name="button_intrusion_view_all">View All</string>
     <string name="button_intrusion_remove_all">Remove All</string>
-
     <string name="button_return_to_intrusion_list">Return to Intrusion List</string>
 
+    <!-- STOCK -->
     <string name="button_calibrate_scale_text">Calibrate</string>
+    <!-- ====================================================================== -->
 
-    <!-- TEXT VIEWS -->
+
+    <!-- ==== TEXT VIEWS ====================================================== -->
+    <!-- ENVIRONMENT -->
     <string name="text_temperature_display_celsius">%1$.2f °C</string>
     <string name="text_temperature_display_fahrenheit">%1$.2f °F</string>
     <string name="text_humidity_display">Humidity: %1$.2f%%</string>
@@ -31,6 +38,14 @@
     <string name="text_from_date">From: %1$s</string>
     <string name="text_to_date">To: %1$s</string>
 
+    <string name="text_heating_last_on">Last On: %1$s @ %2$s</string>
+    <string name="text_heating_duration">For: %1$s</string>
+
+    <string name="text_environment_heating_label">Heating</string>
+    <string name="text_switch_heating_on">On</string>
+    <string name="text_switch_heating_off">Off</string>
+
+    <!-- SECURITY -->
     <string name="text_camera_feed_header">Security Feed</string>
     <string name="text_security_alarm_label">Security Alarm</string>
     <string name="text_switch_alarm_armed">Armed</string>
@@ -49,13 +64,7 @@
 
     <string name="text_no_intrusions_found">No Intrusions Found</string>
 
-    <string name="text_heating_last_on">Last On: %1$s @ %2$s</string>
-    <string name="text_heating_duration">For: %1$s</string>
-
-    <string name="text_environment_heating_label">Heating</string>
-    <string name="text_switch_heating_on">On</string>
-    <string name="text_switch_heating_off">Off</string>
-
+    <!-- STOCK -->
     <string name="text_label_stock_product">Product</string>
     <string name="text_label_stock_weight">Weight</string>
     <string name="text_stock_weight">%1$d / %2$d g</string>
@@ -66,19 +75,19 @@
     <string name="text_scale_instructions_header">Instructions</string>
     <string name="text_scale_instructions">Place a new product on the scale. Once the weight has settled, assign the product a name and click the calibrate button</string>
     <string name="text_error_scale_disconnected">Scale Disconnected</string>
+    <!-- ====================================================================== -->
 
-    <!-- ========== PREFERENCES ========== -->
+
+    <!-- ==== PREFERENCES ===================================================== -->
     <!-- METRICS -->
     <string name="pref_category_metrics">Metrics</string>
 
     <string name="pref_title_metrics_temperature">Temperature</string>
     <string name="pref_desc_metrics_temperature">Choose which measurement the temperature values display in.</string>
-
     <string-array name="pref_metrics_temperature_options">
         <item>Celsius</item>
         <item>Fahrenheit</item>
     </string-array>
-
     <string-array name="pref_metrics_temperature_values">
         <item>0</item>
         <item>1</item>
@@ -86,12 +95,10 @@
 
     <string name="pref_title_metrics_weight">Weight</string>
     <string name="pref_desc_metrics_weight">Choose which measurement the weight values display in.</string>
-
     <string-array name="pref_metrics_weight_options">
         <item>Metric</item>
         <item>Imperial</item>
     </string-array>
-
     <string-array name="pref_metrics_weight_values">
         <item>0</item>
         <item>1</item>
@@ -102,14 +109,12 @@
 
     <string name="pref_title_connection_frequency">Frequency</string>
     <string name="pref_desc_connection_frequency">How frequently values are requested from the cloud.</string>
-
     <string-array name="pref_connection_frequency_options">
         <item>Every Half Second</item>
         <item>Every Second</item>
         <item>Every Two Seconds</item>
         <item>Every Five Seconds</item>
     </string-array>
-
     <string-array name="pref_connection_frequency_values">
         <item>0</item>
         <item>1</item>
@@ -122,9 +127,10 @@
 
     <string name="pref_title_notification_push">Push Notifications</string>
     <string name="pref_desc_notification_push">Allow this app to send push notifications.</string>
+    <!-- ====================================================================== -->
 
 
-    <!-- TOAST -->
+    <!-- ==== TOAST =========================================================== -->
     <string name="toast_no_readings_found">No data found for those dates</string>
     <string name="toast_invalid_date_range">Invalid date range</string>
     <string name="toast_unable_to_open_camera">Unable to open camera feed</string>
@@ -137,13 +143,14 @@
 
     <string name="toast_remove_intrusion_failure">Unable to remove intrusion</string>
     <string name="toast_remove_intrusion_success">Removed intrusion from list</string>
+    <!-- ====================================================================== -->
 
-    <!-- PLACEHOLDERS -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!-- CONTENT DESCRIPTIONS -->
+    <!-- ==== CONTENT DESCRIPTIONS ============================================ -->
     <string name="desc_img_intrusion_preview">Preview of intrusion image screen shot</string>
     <string name="desc_img_btn_intrusion_remove">Removes the selected intrusion</string>
     <string name="desc_img_btn_intrusion_view">Views the selected intrusion</string>
     <string name="desc_img_intrusion_picture">Picture captured during the intrusion</string>
+    <!-- ====================================================================== -->
+
 </resources>

@@ -112,7 +112,7 @@ public class IntrusionListActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            intrusionReading.viewed = true;
+            intrusionReading.setViewed(true);
             intrusionListViewAdapter.notifyDataSetChanged();
         }
     }
@@ -129,7 +129,7 @@ public class IntrusionListActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
 
             for (IntrusionReading intrusionReading : IntrusionListActivity.this.intrusionReadings) {
-                intrusionReading.viewed = true;
+                intrusionReading.setViewed(true);
             }
 
             IntrusionListActivity.this.intrusionListViewAdapter.notifyDataSetChanged();

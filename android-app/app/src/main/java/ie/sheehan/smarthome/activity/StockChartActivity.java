@@ -83,13 +83,17 @@ public class StockChartActivity extends AppCompatActivity {
             int lowestWeight = Integer.MAX_VALUE;
 
             for (StockReading reading : readingsForDay) {
-                if (reading.weight < lowestWeight) {
-                    lowestWeight = reading.weight;
+                if (reading.getWeight() < lowestWeight) {
+                    lowestWeight = reading.getWeight();
                 }
             }
 
-            StockReading averageReading = new StockReading(product, lowestWeight, stockReadings.get(0).capacity);
-            averageReading.timestamp = (date.getTime() / 1000L);
+            StockReading averageReading = new StockReading();
+            averageReading.setProduct(product);
+            averageReading.setWeight(lowestWeight);
+            averageReading.setCapacity(stockReadings.get(0).getCapacity());
+            averageReading.setDate(new Date((date.getTime() / 1000L)));
+
             graphData.add(averageReading);
         }
 
@@ -100,7 +104,7 @@ public class StockChartActivity extends AppCompatActivity {
         List<Entry> entries = new ArrayList<>();
 
         for (int i = 0 ; i < chartData.size() ; i++){
-            float weight = (float) chartData.get(i).weight;
+            float weight = (float) chartData.get(i).getWeight();
             entries.add(new Entry(weight, i));
         }
 

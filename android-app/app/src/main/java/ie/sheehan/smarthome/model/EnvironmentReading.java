@@ -1,7 +1,5 @@
 package ie.sheehan.smarthome.model;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,11 +18,10 @@ public class EnvironmentReading implements Serializable {
     // ============================================================================================
     // DECLARING CLASS VARIABLES
     // ============================================================================================
-    private String _id;
+    private String id;
     private double temperature;
     private double humidity;
-    private long timestamp;
-
+    private Date date;
 
 
     // ============================================================================================
@@ -38,48 +35,43 @@ public class EnvironmentReading implements Serializable {
     /**
      * Creates a new object by parsing the values of a {@link JSONObject}.
      *
-     * @param jsonObject representing an {@link EnvironmentReading}.
+     * @param json representing an {@link EnvironmentReading}.
      */
-    public EnvironmentReading(JSONObject jsonObject) {
-        try {
-            setTemperature(jsonObject.getDouble("temperature"));
-            setHumidity(jsonObject.getDouble("humidity"));
-            setTimestamp(jsonObject.getLong("timestamp"));
-        } catch (JSONException e) {
-            Log.d("ERROR", "Unable to construct from JSON object.");
-        }
+    public EnvironmentReading(JSONObject json) throws JSONException {
+        setTemperature(json.getDouble("temperature"));
+        setHumidity(json.getDouble("humidity"));
+        setDate(new Date(json.getLong("timestamp") * 1000L));
     }
-
 
 
     // ============================================================================================
     // DECLARING METHODS
     // ============================================================================================
     /**
-     * Gets a {@link Date} object representing the time the {@link EnvironmentReading} was read.
+     * Converts the temperature read from celsius to fahrenheit.
      *
-     * @return the date of the reading
+     * @return the temperature value in fahrenheit
      */
-    public Date getDate() {
-        return new Date(timestamp * 1000L);
-    }
-
     public double getTemperatureInFahrenheit() {
         return 32 + (getTemperature() * 9 / 5);
     }
 
     @Override
     public String toString() {
-        Date date = new Date(timestamp * 1000L);
-        return String.format(Locale.ENGLISH, "Temp: %f\tHum: %f\tTime: %d\nDate: %s",
-                temperature, humidity, timestamp, date.toString());
+        return String.format(Locale.getDefault(), "Temperature: %f\tHumidity: %f\nDate: %s",
+                getTemperature(), getHumidity(), getDate().toString());
     }
-
 
 
     // ============================================================================================
     // STATIC METHOD DECLARATION
     // ============================================================================================
+    /**
+     * Gets the average temperature value from a list of {@link EnvironmentReading} objects.
+     *
+     * @param readings a list of {@link EnvironmentReading} objects
+     * @return the average temperature from the list
+     */
     public static double getAverageTemperatureInRange(List<EnvironmentReading> readings) {
         double average = 0;
 
@@ -92,8 +84,14 @@ public class EnvironmentReading implements Serializable {
         return average;
     }
 
-    public static double getLargestTemperatureValueInRange(List<EnvironmentReading> readings) {
-        double largest = 0;
+    /**
+     * Gets the largest temperature value from a list of {@link EnvironmentReading} objects.
+     *
+     * @param readings a list of {@link EnvironmentReading} objects
+     * @return the largest temperature from the list
+     */
+    public static double getLargestTemperatureInRange(List<EnvironmentReading> readings) {
+        double largest = Integer.MIN_VALUE;
 
         for (EnvironmentReading reading : readings) {
             if (reading.getTemperature() > largest) {
@@ -104,22 +102,90 @@ public class EnvironmentReading implements Serializable {
         return largest;
     }
 
+    /**
+     * Gets the largest temperature value from a list of {@link EnvironmentReading} objects.
+     *
+     * @param readings a list of {@link EnvironmentReading} objects
+     * @return the largest temperature from the list
+     */
+    public static double getLowestTemperatureInRange(List<EnvironmentReading> readings) {
+        double lowest = Integer.MAX_VALUE;
 
+        for (EnvironmentReading reading : readings) {
+            if (reading.getTemperature() < lowest) {
+                lowest = reading.getTemperature();
+            }
+        }
+
+        return lowest;
+    }
+
+    /**
+     * Gets the average temperature value from a list of {@link EnvironmentReading} objects.
+     *
+     * @param readings a list of {@link EnvironmentReading} objects
+     * @return the average humidity from the list
+     */
+    public static double getAverageHumidityInRange(List<EnvironmentReading> readings) {
+        double average = 0;
+
+        for (EnvironmentReading reading : readings) {
+            average += reading.getHumidity();
+        }
+
+        average /= readings.size();
+
+        return average;
+    }
+
+    /**
+     * Gets the largest humidity value from a list of {@link EnvironmentReading} objects.
+     *
+     * @param readings a list of {@link EnvironmentReading} objects
+     * @return the largest humidity from the list
+     */
+    public static double getLargestHumidityInRange(List<EnvironmentReading> readings) {
+        double largest = Integer.MIN_VALUE;
+
+        for (EnvironmentReading reading : readings) {
+            if (reading.getTemperature() > largest) {
+                largest = reading.getHumidity();
+            }
+        }
+
+        return largest;
+    }
+
+    /**
+     * Gets the largest temperature value from a list of {@link EnvironmentReading} objects.
+     *
+     * @param readings a list of {@link EnvironmentReading} objects
+     * @return the largest temperature from the list
+     */
+    public static double getLowestHumidityInRange(List<EnvironmentReading> readings) {
+        double lowest = Integer.MAX_VALUE;
+
+        for (EnvironmentReading reading : readings) {
+            if (reading.getHumidity() < lowest) {
+                lowest = reading.getHumidity();
+            }
+        }
+
+        return lowest;
+    }
 
     // ============================================================================================
     // DECLARING GETTERS AND SETTERS
     // ============================================================================================
     public String getId() {
-        return _id;
+        return id;
     }
 
     public void setId(String id) {
-        this._id = id;
+        this.id = id;
     }
 
-    public double getTemperature() {
-        return temperature;
-    }
+    public double getTemperature() { return temperature; }
 
     public void setTemperature(double temperature) {
         this.temperature = temperature;
@@ -133,12 +199,12 @@ public class EnvironmentReading implements Serializable {
         this.humidity = humidity;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public Date getDate() {
+        return date;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
 }

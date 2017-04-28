@@ -88,14 +88,13 @@ public class IntrusionListViewAdapter extends BaseAdapter {
         ImageButton removeButton = (ImageButton) itemView.findViewById(R.id.img_button_remove_intrusion);
 
         // populating the GUI components
-        byte[] imageData = Base64.decode(entry.image, Base64.DEFAULT);
-        image.setImageBitmap(BitmapFactory.decodeByteArray(imageData, 0, imageData.length));
+        image.setImageBitmap(entry.getImage());
         image.refreshDrawableState();
 
-        date.setText(DateUtility.getDateFormat().format(new Date(entry.timestamp * 1000L)));
-        time.setText(DateUtility.getTimeFormat().format(new Date(entry.timestamp * 1000L)));
+        date.setText(DateUtility.getDateFormat().format(entry.getDate()));
+        time.setText(DateUtility.getTimeFormat().format(entry.getDate()));
 
-        if (entry.viewed) {
+        if (entry.isViewed()) {
             seen.setText(R.string.text_label_intrusion_viewed_seen);
         }
         else {
@@ -107,7 +106,7 @@ public class IntrusionListViewAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 new MarkIntrusionAsViewed().execute(entry);
-                data.get(position).viewed = true;
+                data.get(position).setViewed(true);
                 IntrusionListViewAdapter.this.notifyDataSetChanged();
             }
         });

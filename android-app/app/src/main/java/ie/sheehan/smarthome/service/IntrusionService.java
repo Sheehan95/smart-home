@@ -114,9 +114,9 @@ public class IntrusionService extends Service {
 
             if (intrusionReading == null) { return; }
 
-            if (! intrusionReading.viewed) {
-                if (! intrusionReading.id.equals(lastIntrusionId)) {
-                    lastIntrusionId = intrusionReading.id;
+            if (! intrusionReading.isViewed()) {
+                if (! intrusionReading.getId().equals(lastIntrusionId)) {
+                    lastIntrusionId = intrusionReading.getId();
                     sendNotification(intrusionReading);
                 }
             }

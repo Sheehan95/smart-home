@@ -2,7 +2,6 @@ package ie.sheehan.smarthome.utility;
 
 import android.util.Log;
 
-import org.joda.time.Duration;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,14 +31,16 @@ public class HttpRequestHandler {
     // ============================================================================================
     // DECLARING STATIC VARIABLES
     // ============================================================================================
+    private static final String TAG = "HTTP_REQ";
+
     private static final String DOMAIN = "192.168.0.30";
 
     private static final String ENDPOINT_ENVIRONMENT = "/environment";
     private static final String ENDPOINT_SECURITY = "/security";
     private static final String ENDPOINT_STOCK = "/stock";
 
-    private static final HttpRequestHandler instance = new HttpRequestHandler();
 
+    private static final HttpRequestHandler instance = new HttpRequestHandler();
 
 
     // ============================================================================================
@@ -59,9 +59,8 @@ public class HttpRequestHandler {
     public static HttpRequestHandler getInstance() { return instance; }
 
 
-
     // ============================================================================================
-    // DEFINING METHODS
+    // ENVIRONMENT-RELATED HTTP REQUESTS
     // ============================================================================================
     /**
      * Makes a HTTP request to /environment/get to retrieve the latest {@link EnvironmentReading}.
@@ -69,17 +68,16 @@ public class HttpRequestHandler {
      * @return the latest {@link EnvironmentReading}
      */
     public EnvironmentReading getEnvironmentReading() {
-        JSONObject json;
-        HttpURLConnection connection;
-        StringBuilder response = new StringBuilder();
-        EnvironmentReading envReading = null;
+        EnvironmentReading environmentReading = null;
 
         String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_ENVIRONMENT, "/get");
 
         try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
             connection.setRequestMethod("GET");
 
+            StringBuilder response = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String nextLine;
 
@@ -87,20 +85,14 @@ public class HttpRequestHandler {
                 response.append(nextLine);
             }
 
-            json = new JSONObject(response.toString());
-            envReading = new EnvironmentReading(json);
+            environmentReading = new EnvironmentReading(new JSONObject(response.toString()));
 
-        } catch (MalformedURLException e) {
-            Log.e("ERROR", "MALFORMED URL ERROR");
-        } catch (IOException e) {
-            Log.e("ERROR", "IO ERROR");
-        } catch (JSONException e) {
-            Log.e("ERROR", "JSON ERROR");
-        } catch (Exception e) {
-            Log.e("ERROR", "UNKNOWN ERROR");
+        } catch (IOException | JSONException e) {
+            Log.e(TAG, "error in getEnvironmentReading");
+            Log.e(e.getClass().getName(), e.getMessage());
         }
 
-        return envReading;
+        return environmentReading;
     }
 
     /**
@@ -112,18 +104,17 @@ public class HttpRequestHandler {
      * @return a list of {@link EnvironmentReading}s within the range of dates
      */
     public List<EnvironmentReading> getEnvironmentReadingsInRange(Date from, Date to) {
-        JSONArray json;
-        HttpURLConnection connection;
-        StringBuilder response = new StringBuilder();
-        List<EnvironmentReading> envReadings = new ArrayList<>();
+        List<EnvironmentReading> environmentReadings = new ArrayList<>();
 
         String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_ENVIRONMENT, "/get/range");
         target += String.format(Locale.getDefault(), "?from=%d&to=%d", (from.getTime() / 1000L), (to.getTime() / 1000L));
 
         try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
             connection.setRequestMethod("GET");
 
+            StringBuilder response = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String nextLine;
 
@@ -131,30 +122,32 @@ public class HttpRequestHandler {
                 response.append(nextLine);
             }
 
-            json = new JSONArray(response.toString());
+            JSONArray array = new JSONArray(response.toString());
 
-            for (int i = 0 ; i < json.length() ; i++){
-                envReadings.add(new EnvironmentReading(json.getJSONObject(i)));
+            for (int i = 0 ; i < array.length() ; i++){
+                environmentReadings.add(new EnvironmentReading(array.getJSONObject(i)));
             }
 
-        } catch (Exception e){
-            Log.e("HTTP REQUEST ERROR", e.toString());
+        } catch (IOException | JSONException e) {
+            Log.e(TAG, "error in getEnvironmentReadingsInRange");
+            Log.e(e.getClass().getName(), e.getMessage());
         }
 
-        return envReadings;
+        return environmentReadings;
     }
+
 
     public HeatingStatus getHeatingStatus() {
         HeatingStatus heatingStatus = null;
-        HttpURLConnection connection;
-        StringBuilder response = new StringBuilder();
 
         String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_ENVIRONMENT, "/heating/status");
 
         try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
             connection.setRequestMethod("GET");
 
+            StringBuilder response = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String nextLine;
 
@@ -162,31 +155,22 @@ public class HttpRequestHandler {
                 response.append(nextLine);
             }
 
-            JSONObject json = new JSONObject(response.toString());
+            heatingStatus = new HeatingStatus(new JSONObject((response.toString())));
 
-            boolean on = json.getBoolean("on");
-            Date lastOn = new Date(json.getLong("timestamp") * 1000L);
-            Duration duration = new Duration(json.getInt("duration") * 1000L);
-
-            heatingStatus = new HeatingStatus(on, lastOn, duration);
-
-        } catch (Exception e) {
-            Log.e("PANIC", e.toString());
+        } catch (IOException | JSONException e) {
+            Log.e(TAG, "error in getHeatingStatus");
+            Log.e(e.getClass().getName(), e.getMessage());
         }
 
         return heatingStatus;
     }
 
     public boolean toggleHeating(boolean on) {
-        boolean confirmation;
-
-        HttpURLConnection connection;
-        StringBuilder response = new StringBuilder();
-
         String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_ENVIRONMENT, "/heating/activate");
 
         try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             connection.setDoOutput(true);
@@ -199,6 +183,7 @@ public class HttpRequestHandler {
             outputStream.write(output.toString().getBytes("UTF-8"));
             outputStream.close();
 
+            StringBuilder response = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String nextLine;
 
@@ -206,15 +191,20 @@ public class HttpRequestHandler {
                 response.append(nextLine);
             }
 
-            confirmation = Boolean.parseBoolean(response.toString());
-        } catch (Exception e) {
-            Log.e("HELP", e.toString());
-            confirmation = false;
-        }
+            return Boolean.parseBoolean(response.toString());
 
-        return confirmation;
+        } catch (IOException | JSONException e) {
+            Log.e(TAG, "error in toggleHeating");
+            Log.e(e.getClass().getName(), e.getMessage());
+
+            return false;
+        }
     }
 
+
+    // ============================================================================================
+    // SECURITY-RELATED HTTP REQUESTS
+    // ============================================================================================
     /**
      * Makes a HTTP request to /security/camera/feed to open or close the camera feed on port 8081.
      *
@@ -222,15 +212,11 @@ public class HttpRequestHandler {
      * @return true if successful, false otherwise
      */
     public boolean toggleCameraFeed(boolean stream) {
-        boolean confirmation;
-
-        HttpURLConnection connection;
-        StringBuilder response = new StringBuilder();
-
         String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/camera/feed");
 
         try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             connection.setDoOutput(true);
@@ -243,6 +229,7 @@ public class HttpRequestHandler {
             outputStream.write(output.toString().getBytes("UTF-8"));
             outputStream.close();
 
+            StringBuilder response = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String nextLine;
 
@@ -250,14 +237,14 @@ public class HttpRequestHandler {
                 response.append(nextLine);
             }
 
-            confirmation = Boolean.parseBoolean(response.toString());
+            return Boolean.parseBoolean(response.toString());
 
-        } catch (Exception e){
-            Log.e("HTTP REQUEST ERROR", e.toString());
+        } catch (IOException | JSONException e) {
+            Log.e(TAG, "error in toggleCameraFeed");
+            Log.e(e.getClass().getName(), e.getMessage());
+
             return false;
         }
-
-        return confirmation;
     }
 
     /**
@@ -268,15 +255,11 @@ public class HttpRequestHandler {
      * @return true if successful, false otherwise
      */
     public boolean armAlarm(boolean arm) {
-        boolean confirmation;
-
-        HttpURLConnection connection;
-        StringBuilder response = new StringBuilder();
-
         String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/alarm/arm");
 
         try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             connection.setDoOutput(true);
@@ -289,6 +272,7 @@ public class HttpRequestHandler {
             outputStream.write(output.toString().getBytes("UTF-8"));
             outputStream.close();
 
+            StringBuilder response = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String nextLine;
 
@@ -296,13 +280,14 @@ public class HttpRequestHandler {
                 response.append(nextLine);
             }
 
-            confirmation = Boolean.parseBoolean(response.toString());
-        } catch (Exception e){
-            Log.e("HTTP REQUEST ERROR", e.toString());
-            confirmation = false;
-        }
+            return Boolean.parseBoolean(response.toString());
 
-        return confirmation;
+        } catch (IOException | JSONException e) {
+            Log.e(TAG, "error in armAlarm");
+            Log.e(e.getClass().getName(), e.getMessage());
+
+            return false;
+        }
     }
 
     /**
@@ -315,16 +300,14 @@ public class HttpRequestHandler {
     public AlarmStatus getAlarmStatus() {
         AlarmStatus alarm = null;
 
-        JSONObject json;
-        HttpURLConnection connection;
-        StringBuilder response = new StringBuilder();
-
         String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/alarm/status");
 
         try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
             connection.setRequestMethod("GET");
 
+            StringBuilder response = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String nextLine;
 
@@ -332,14 +315,11 @@ public class HttpRequestHandler {
                 response.append(nextLine);
             }
 
-            json = new JSONObject(response.toString());
+            alarm = new AlarmStatus(new JSONObject(response.toString()));
 
-            boolean armed = json.getBoolean("armed");
-            Date lastArmed = new Date(json.getLong("timestamp") * 1000L);
-
-            alarm = new AlarmStatus(armed, lastArmed);
-        } catch (Exception e){
-            Log.e("HTTP REQUEST ERROR", e.toString());
+        } catch (IOException | JSONException e) {
+            Log.e(TAG, "error in getAlarmStatus");
+            Log.e(e.getClass().getName(), e.getMessage());
         }
 
         return alarm;
@@ -354,219 +334,11 @@ public class HttpRequestHandler {
     public List<IntrusionReading> getAllIntrusions() {
         List<IntrusionReading> intrusionReadings = new ArrayList<>();
 
-        HttpURLConnection connection;
-        StringBuilder response = new StringBuilder();
-
         String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/get/all");
 
         try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
-            connection.setRequestMethod("GET");
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String nextLine;
-
-            while ((nextLine = reader.readLine()) != null) {
-                response.append(nextLine);
-            }
-
-            JSONArray jsonArray = new JSONArray(response.toString());
-
-            for (int i = 0 ; i < jsonArray.length() ; i++) {
-                JSONObject json = jsonArray.getJSONObject(i);
-
-                Log.e("ID", json.getString("id"));
-
-                intrusionReadings.add(new IntrusionReading(json));
-            }
-
-        } catch (Exception e) {
-            Log.e("HTTP", e.toString());
-        }
-
-        return intrusionReadings;
-    }
-
-    public IntrusionReading getLatestIntrusionReading() {
-        HttpURLConnection connection;
-        StringBuilder response = new StringBuilder();
-        IntrusionReading intrusionReading = null;
-
-        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/get/latest");
-
-        try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
-            connection.setRequestMethod("GET");
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String nextLine;
-
-            while ((nextLine = reader.readLine()) != null) {
-                response.append(nextLine);
-            }
-
-            JSONObject json = new JSONObject(response.toString());
-
-            intrusionReading = new IntrusionReading(json);
-        } catch (Exception e) {
-            Log.e("INTRUSION", e.toString());
-        }
-
-        return intrusionReading;
-    }
-
-    public boolean markIntrusionAsViewed(IntrusionReading intrusionReading) {
-        HttpURLConnection connection;
-        StringBuilder response = new StringBuilder();
-
-        String id = intrusionReading.id;
-        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/view/" + id);
-
-        try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String nextLine;
-
-            while ((nextLine = reader.readLine()) != null) {
-                response.append(nextLine);
-            }
-
-            return true;
-
-        } catch (Exception e) {
-            Log.e("VIEW", e.toString());
-            return false;
-        }
-    }
-
-    public boolean markAllIntrusionsAsViewed() {
-        HttpURLConnection connection;
-        StringBuilder response = new StringBuilder();
-
-        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/view/all");
-
-        try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String nextLine;
-
-            while ((nextLine = reader.readLine()) != null) {
-                response.append(nextLine);
-            }
-
-            return true;
-
-        } catch (Exception e) {
-            Log.e("MARKALL", e.toString());
-            return false;
-        }
-    }
-
-    public boolean removeIntrusion(IntrusionReading intrusionReading) {
-        HttpURLConnection connection;
-        StringBuilder response = new StringBuilder();
-
-        String id = intrusionReading.id;
-        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/remove/" + id);
-
-        try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
-            connection.setRequestMethod("POST");
-            connection.setUseCaches(false);
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-
-            int responseCode = connection.getResponseCode();
-
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                return true;
-            }
-            else {
-                Log.e("CODE", Integer.toString(responseCode));
-                return false;
-            }
-
-        } catch (Exception e) {
-            Log.e("REMOVE", e.toString());
-            return false;
-        }
-    }
-
-    public boolean removeAllIntrusions() {
-        HttpURLConnection connection;
-        StringBuilder response = new StringBuilder();
-
-        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/remove/all");
-
-        try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
-            connection.setRequestMethod("POST");
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String nextLine;
-
-            while ((nextLine = reader.readLine()) != null) {
-                response.append(nextLine);
-            }
-
-            return true;
-
-        } catch (Exception e) {
-            Log.e("REMOVEALL", e.toString());
-            return false;
-        }
-    }
-
-    public StockReading getStockReading() {
-        HttpURLConnection connection;
-        StockReading stockReading = null;
-
-        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_STOCK, "/get");
-
-        try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
-            connection.setRequestMethod("GET");
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String nextLine;
-
-            while ((nextLine = reader.readLine()) != null) {
-                response.append(nextLine);
-            }
-
-            JSONObject json = new JSONObject(response.toString());
-            String product = json.getString("product");
-            int weight = (int) json.getDouble("weight");
-            int capacity = (int) json.getDouble("capacity");
-
-            stockReading = new StockReading(product, weight, capacity);
-        } catch (Exception e) {
-            Log.e("ERROR", e.toString());
-        }
-
-        return stockReading;
-    }
-
-    public List<StockReading> getStockReadingsByProduct(String product) {
-        HttpURLConnection connection;
-        List<StockReading> stockReadings = new ArrayList<>();
-
-        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_STOCK, "/get/");
-        target += product;
-
-        try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
             connection.setRequestMethod("GET");
 
             StringBuilder response = new StringBuilder();
@@ -580,32 +352,204 @@ public class HttpRequestHandler {
             JSONArray array = new JSONArray(response.toString());
 
             for (int i = 0 ; i < array.length() ; i++) {
-                JSONObject json = array.getJSONObject(i);
-
-                int weight = json.getInt("weight");
-                int capacity = json.getInt("capacity");
-                long timestamp = json.getLong("timestamp");
-
-                StockReading stockReading = new StockReading(product, weight, capacity);
-                stockReading.timestamp = timestamp;
-
-                stockReadings.add(stockReading);
+                intrusionReadings.add(new IntrusionReading(array.getJSONObject(i)));
             }
+
         } catch (Exception e) {
-            Log.e("PRODUCTSTOCK", e.toString());
+            Log.e(TAG, "error in getAllIntrusions");
+            Log.e(e.getClass().getName(), e.getMessage());
+        }
+
+        return intrusionReadings;
+    }
+
+    public IntrusionReading getLatestIntrusionReading() {
+        IntrusionReading intrusionReading = null;
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/get/latest");
+
+        try {
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("GET");
+
+            StringBuilder response = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null) {
+                response.append(nextLine);
+            }
+
+            intrusionReading = new IntrusionReading(new JSONObject(response.toString()));
+
+        } catch (Exception e) {
+            Log.e(TAG, "error in getLatestIntrusionReading");
+            Log.e(e.getClass().getName(), e.getMessage());
+        }
+
+        return intrusionReading;
+    }
+
+    public boolean markIntrusionAsViewed(IntrusionReading intrusionReading) {
+        String id = intrusionReading.getId();
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/view/" + id);
+
+        try {
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+
+            return connection.getResponseCode() == HttpURLConnection.HTTP_OK;
+
+        } catch (Exception e) {
+            Log.e(TAG, "error in markIntrusionAsViewed");
+            Log.e(e.getClass().getName(), e.getMessage());
+
+            return false;
+        }
+    }
+
+    public boolean markAllIntrusionsAsViewed() {
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/view/all");
+
+        try {
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+
+            return connection.getResponseCode() == HttpURLConnection.HTTP_OK;
+
+        } catch (Exception e) {
+            Log.e(TAG, "error in markAllIntrusionsAsViewed");
+            Log.e(e.getClass().getName(), e.getMessage());
+
+            return false;
+        }
+    }
+
+    public boolean removeIntrusion(IntrusionReading intrusionReading) {
+        String id = intrusionReading.getId();
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/remove/" + id);
+
+        try {
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setUseCaches(false);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            return connection.getResponseCode() == HttpURLConnection.HTTP_OK;
+
+        } catch (IOException e) {
+            Log.e(TAG, "error in removeIntrusion");
+            Log.e(e.getClass().getName(), e.getMessage());
+
+            return false;
+        }
+    }
+
+    public boolean removeAllIntrusions() {
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SECURITY, "/intrusion/remove/all");
+
+        try {
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setUseCaches(false);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            return connection.getResponseCode() == HttpURLConnection.HTTP_OK;
+
+        } catch (IOException e) {
+            Log.e(TAG, "error in removeAllIntrusions");
+            Log.e(e.getClass().getName(), e.getMessage());
+
+            return false;
+        }
+    }
+
+
+    // ============================================================================================
+    // STOCK-RELATED HTTP REQUESTS
+    // ============================================================================================
+    public StockReading getStockReading() {
+        StockReading stockReading = null;
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_STOCK, "/get");
+
+        try {
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("GET");
+
+            StringBuilder response = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null) {
+                response.append(nextLine);
+            }
+
+            stockReading = new StockReading(new JSONObject(response.toString()));
+
+        } catch (IOException | JSONException e) {
+            Log.e(TAG, "error in getStockReading");
+            Log.e(e.getClass().getName(), e.getMessage());
+        }
+
+        return stockReading;
+    }
+
+    public List<StockReading> getStockReadingsByProduct(String product) {
+        List<StockReading> stockReadings = new ArrayList<>();
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_STOCK, "/get/");
+        target += product;
+
+        try {
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("GET");
+
+            StringBuilder response = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null) {
+                response.append(nextLine);
+            }
+
+            JSONArray array = new JSONArray(response.toString());
+
+            for (int i = 0 ; i < array.length() ; i++) {
+                stockReadings.add(new StockReading(array.getJSONObject(i)));
+            }
+
+        } catch (IOException | JSONException e) {
+            Log.e(TAG, "error in getStockReadingsByProduct");
+            Log.e(e.getClass().getName(), e.getMessage());
         }
 
         return stockReadings;
     }
 
     public boolean calibrateScale(String product) {
-        HttpURLConnection connection;
-        StringBuilder response = new StringBuilder();
-
         String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_STOCK, "/scale/calibrate");
 
         try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             connection.setDoOutput(true);
@@ -618,6 +562,7 @@ public class HttpRequestHandler {
             outputStream.write(output.toString().getBytes("UTF-8"));
             outputStream.close();
 
+            StringBuilder response = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String nextLine;
 
@@ -626,24 +571,26 @@ public class HttpRequestHandler {
             }
 
             return Boolean.parseBoolean(response.toString());
+
         } catch (Exception e) {
-            Log.e("CALIBRATE", e.toString());
+            Log.e(TAG, "error in calibrateScale");
+            Log.e(e.getClass().getName(), e.getMessage());
+
             return false;
         }
     }
 
     public List<String> getAllProducts() {
-        HttpURLConnection connection;
         List<String> productList = new ArrayList<>();
 
         String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_STOCK, "/get/products");
 
         try {
-            connection = (HttpURLConnection) new URL(target).openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
             connection.setRequestMethod("GET");
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder response = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String nextLine;
 
             while ((nextLine = reader.readLine()) != null) {
@@ -656,8 +603,9 @@ public class HttpRequestHandler {
                 productList.add(json.getString(i));
             }
 
-        } catch (Exception e) {
-            Log.e("ERROR", e.toString());
+        } catch (IOException | JSONException e) {
+            Log.e(TAG, "error in getAllProducts");
+            Log.e(e.getClass().getName(), e.getMessage());
         }
 
         return productList;

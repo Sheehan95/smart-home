@@ -47,18 +47,13 @@ public class IntrusionViewActivity extends AppCompatActivity {
             return;
         }
 
-        Date date = new Date(intrusionReading.timestamp * 1000L);
-
-        String dateText = DateUtility.getDateFormat().format(date);
+        String dateText = DateUtility.getDateFormat().format(intrusionReading.getDate());
         dateView.setText(String.format(getResources().getString(R.string.text_label_intrusion_date), dateText));
 
-        String timeText = DateUtility.getTimeFormat().format(date);
+        String timeText = DateUtility.getTimeFormat().format(intrusionReading.getDate());
         timeView.setText(String.format(getResources().getString(R.string.text_label_intrusion_time), timeText));
 
-        byte[] data = Base64.decode(intrusionReading.image, Base64.DEFAULT);
-        Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
-
-        imageView.setImageBitmap(image);
+        imageView.setImageBitmap(intrusionReading.getImage());
         imageView.refreshDrawableState();
     }
 

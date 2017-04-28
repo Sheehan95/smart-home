@@ -349,13 +349,13 @@ public class EnvironmentFragment extends Fragment {
 
             if (heatingStatus != null) {
                 heatingLastOn.setText(String.format(heatingLastOnText,
-                        DateUtility.getShortDateFormat().format(heatingStatus.lastOn),
-                        DateUtility.getShortTimeFormat().format(heatingStatus.lastOn)));
+                        DateUtility.getShortDateFormat().format(heatingStatus.getLastOn()),
+                        DateUtility.getShortTimeFormat().format(heatingStatus.getLastOn())));
 
-                Period period = heatingStatus.duration.toPeriod();
+                Period period = heatingStatus.getDuration().toPeriod();
                 heatingDuration.setText(String.format(heatingDurationText, DateUtility.getPeriodFormat().print(period)));
 
-                toggleHeating.setChecked(heatingStatus.on);
+                toggleHeating.setChecked(heatingStatus.isOn());
             }
         }
     }
