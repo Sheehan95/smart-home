@@ -1,6 +1,5 @@
 package ie.sheehan.smarthome.fragment;
 
-
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;

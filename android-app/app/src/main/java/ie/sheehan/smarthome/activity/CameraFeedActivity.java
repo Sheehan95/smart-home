@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -81,10 +82,16 @@ public class CameraFeedActivity extends AppCompatActivity {
     private String getHTML(String url) {
         String html = "";
 
-        html += "<html style=\"background-color:#FFFFFF; margin:0; padding:0;\">";
-        html += "<center style=\"margin:0; padding:0;\">";
-        html += "<img src='" + url + "' style=\"float:left; margin:0; padding:0;\"/>";
-        html += "</center>";
+        html += "<html>";
+
+        //html += "<head>";
+        //html += "<meta name=\"viewport\" content=\"width=device-width, minimum-scale=0.1\">";
+        //html += "</head>";
+
+        html += "<body style=\"margin: 0px; \">";
+        html += "<img style=\"-webkit-user-select: none;\" src='" + url + "'/>";
+        html += "</body>";
+
         html += "</html>";
 
         return html;
@@ -111,9 +118,9 @@ public class CameraFeedActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
 
             try {
-                Thread.sleep(5000);
+                 Thread.sleep(5000);
             } catch (Exception e) {
-
+                Log.e("ERROR SLEEPING", e.toString());
             }
         }
 
@@ -131,12 +138,8 @@ public class CameraFeedActivity extends AppCompatActivity {
         }
     }
 
-    private class CloseCameraFeed extends AsyncTask<Void, Void, Boolean> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
 
+    private class CloseCameraFeed extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Void... params) {
             return HttpRequestHandler.getInstance().toggleCameraFeed(false);

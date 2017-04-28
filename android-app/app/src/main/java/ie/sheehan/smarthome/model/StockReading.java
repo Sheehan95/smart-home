@@ -42,13 +42,15 @@ public class StockReading implements Serializable {
         setProduct(json.getString("product"));
         setWeight(json.getInt("weight"));
         setCapacity(json.getInt("capacity"));
-        setDate(new Date(json.getLong("timestamp")));
+        setDate(new Date(json.getLong("timestamp") * 1000L));
     }
 
 
     // ============================================================================================
     // DECLARING METHODS
     // ============================================================================================
+    public double getWeightInOunces() { return weight * 0.035274; }
+
     @Override
     public String toString() {
         return String.format(Locale.getDefault(), "Product: %s\tWeight: %d/%d\nDate: %s",

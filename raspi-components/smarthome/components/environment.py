@@ -5,7 +5,7 @@ class Heating:
     def __init__(self):
         self.on = False
         self.last_on = None
-        self.last_duration = None
+        self.last_duration = 0
 
     def turn_on(self):
         if not self.on:
