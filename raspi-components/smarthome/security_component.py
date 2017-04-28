@@ -38,8 +38,6 @@ def on_connect(c, userdata, flags, rc):
 
 
 def on_message(c, userdata, message):
-    global camera
-
     print '{}: received message with topic {}'.format(SCRIPT_LABEL, message.topic)
 
     if message.topic == TOPIC_SECURITY_CAMERA_FEED:
@@ -74,10 +72,6 @@ def on_message(c, userdata, message):
 
 
 def on_motion(frame):
-    global alarm
-    global client
-    global camera
-
     print '{}: camera has detected motion'.format(SCRIPT_LABEL)
 
     if alarm.armed:
@@ -94,16 +88,12 @@ def on_motion(frame):
 
 # ==== DECLARING METHODS ======================================================
 def signal_handler(signal, frame):
-    global camera
-    global client
-
     camera.stop()
     client.loop_stop()
     sys.exit(0)
 
 
 def start_camera():
-    global camera
     camera.start()
 
 
@@ -134,15 +124,11 @@ def close_stream():
 
 
 def open_camera():
-    global camera
-
     if not camera.running:
         threading.Thread(target=start_camera).start()
 
 
 def close_camera():
-    global camera
-
     if camera.running:
         camera.stop()
 
@@ -160,9 +146,6 @@ def is_stream_running():
 
 # ==== ENTRY POINT ============================================================
 def main():
-    global camera
-    global client
-
     signal.signal(signal.SIGINT, signal_handler)
 
     camera.on_motion = on_motion
