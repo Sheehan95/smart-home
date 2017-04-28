@@ -19,7 +19,7 @@ TOPIC_SECURITY_CAMERA_MOTION = '/ie/sheehan/smart-home/security/camera/motion'
 
 
 # ==== DEFINING VARIABLES =====================================================
-client = mqtt.Client(userdata=SCRIPT_LABEL)
+client = mqtt.Client()
 # =============================================================================
 
 
@@ -29,7 +29,7 @@ def on_connect(c, userdata, flags, rc):
 
 
 def on_message(c, userdata, message):
-    print '{}: received message with topic {} from {}'.format(SCRIPT_LABEL, message.topic, userdata)
+    print '{}: received message with topic {}'.format(SCRIPT_LABEL, message.topic)
 
     if message.topic == TOPIC_ENVIRONMENT_READING_LOG:
         print '{}: forwarding temperature log to web server'.format(SCRIPT_LABEL)

@@ -7,6 +7,7 @@ import org.fusesource.mqtt.client.MQTT;
 public class MqttClient {
 	
 	public static final String MQTT_BROKER = "192.167.1.101";
+	public static final String MQTT_IDENTITY = "[WEB]";
 	public static final int MQTT_PORT = 1883;
 	
 	public static final String TOPIC_ENVIRONMENT_READING_REQUEST = "/ie/sheehan/smart-home/envreading/request";

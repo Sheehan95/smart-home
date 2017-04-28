@@ -28,7 +28,7 @@ TOPIC_SECURITY_ALARM_ARM = '/ie/sheehan/smart-home/security/alarm/arm'
 # ==== DEFINING GLOBAL VARIABLES ==============================================
 alarm = Alarm()
 camera = PiMotionCamera()
-client = mqtt.Client(userdata=SCRIPT_LABEL)
+client = mqtt.Client()
 # =============================================================================
 
 
@@ -40,7 +40,7 @@ def on_connect(c, userdata, flags, rc):
 def on_message(c, userdata, message):
     global camera
 
-    print '{}: received message with topic {} from {}'.format(SCRIPT_LABEL, message.topic, userdata)
+    print '{}: received message with topic {}'.format(SCRIPT_LABEL, message.topic)
 
     if message.topic == TOPIC_SECURITY_CAMERA_FEED:
         payload = json.loads(message.payload)

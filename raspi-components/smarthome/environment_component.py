@@ -26,7 +26,7 @@ TOPIC_ENVIRONMENT_HEATING_ACTIVATE = '/ie/sheehan/smart-home/envreading/heating/
 # ==== DEFINING VARIABLES =====================================================
 heating = Heating()
 sensor = TemperatureSensor()
-client = mqtt.Client(userdata=SCRIPT_LABEL)
+client = mqtt.Client()
 # =============================================================================
 
 
@@ -36,7 +36,7 @@ def on_connect(c, userdata, flags, rc):
 
 
 def on_message(c, userdata, message):
-    print '{}: received message with topic {} from {}'.format(SCRIPT_LABEL, message.topic, userdata)
+    print '{}: received message with topic {}'.format(SCRIPT_LABEL, message.topic)
 
     if message.topic == TOPIC_ENVIRONMENT_READING_REQUESTS:
         environment_reading_response(sensor.get_temp(), sensor.get_humidity())

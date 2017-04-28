@@ -20,7 +20,7 @@ TOPIC_STOCK_SCALE_CALIBRATE = '/ie/sheehan/smart-home/stock/scale/calibrate'
 
 # ==== DEFINING VARIABLES =====================================================
 scale = WeighingScale()
-client = mqtt.Client(userdata=SCRIPT_LABEL)
+client = mqtt.Client()
 # =============================================================================
 
 
@@ -30,7 +30,7 @@ def on_connect(c, userdata, flags, rc):
 
 
 def on_message(c, userdata, message):
-    print '{}: received message with topic {} from {}'.format(SCRIPT_LABEL, message.topic, userdata)
+    print '{}: received message with topic {}'.format(SCRIPT_LABEL, message.topic)
 
     if message.topic == TOPIC_STOCK_SCALE_REQUEST:
         stock_reading_response()
