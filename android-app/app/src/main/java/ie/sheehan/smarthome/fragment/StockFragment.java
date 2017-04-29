@@ -29,6 +29,10 @@ import ie.sheehan.smarthome.activity.StockChartActivity;
 import ie.sheehan.smarthome.model.StockReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
+import static ie.sheehan.smarthome.fragment.SettingsFragment.VALUE_METRIC_WEIGHT_IMPERIAL;
+import static ie.sheehan.smarthome.fragment.SettingsFragment.VALUE_METRIC_WEIGHT_METRIC;
+import static ie.sheehan.smarthome.fragment.SettingsFragment.getPreferredWeightMetric;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -52,7 +56,9 @@ public class StockFragment extends Fragment {
 
     View cover;
 
-    public StockFragment() {}
+    public StockFragment() {
+        // Required empty public constructor
+    }
 
 
     @Override
@@ -148,8 +154,18 @@ public class StockFragment extends Fragment {
 
             textProduct.setText(stockReading.getProduct());
 
-            String weightText = res.getString(R.string.text_stock_weight);
-            weightText = String.format(weightText, stockReading.getWeight(), stockReading.getCapacity());
+
+            String weightText = "";
+
+            if (getPreferredWeightMetric() == VALUE_METRIC_WEIGHT_METRIC) {
+                weightText = res.getString(R.string.text_stock_weight_g);
+                weightText = String.format(weightText, stockReading.getWeight(), stockReading.getCapacity());
+            }
+            else if (getPreferredWeightMetric() == VALUE_METRIC_WEIGHT_IMPERIAL) {
+                weightText = res.getString(R.string.text_stock_weight_oz);
+                weightText = String.format(weightText, stockReading.getWeightInOunces(), stockReading.getCapacity());
+            }
+
             textWeight.setText(weightText);
         }
     }

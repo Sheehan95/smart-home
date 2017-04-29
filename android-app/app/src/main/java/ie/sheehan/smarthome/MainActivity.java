@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import ie.sheehan.smarthome.adapter.TabPagerAdapter;
+import ie.sheehan.smarthome.fragment.SettingsFragment;
 import ie.sheehan.smarthome.service.IntrusionService;
 
 /**
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        SettingsFragment.prefs = android.preference.PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_environment_fragment);

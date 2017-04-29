@@ -22,6 +22,8 @@ import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.model.IntrusionReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
+import static ie.sheehan.smarthome.fragment.SettingsFragment.getPreferredNotifications;
+
 /**
  * A service that runs when the phone is booted. Checks for newly reported {@link IntrusionReading}
  * objects and sends a notification if one is found.
@@ -75,6 +77,9 @@ public class IntrusionService extends Service {
      * @param intrusionReading to open in the {@link IntrusionViewActivity}
      */
     public void sendNotification(IntrusionReading intrusionReading) {
+
+        if (! getPreferredNotifications()) { return; }
+
         Notification.Builder notification = new Notification.Builder(IntrusionService.this);
         notification.setSmallIcon(R.drawable.ic_tab_security);
         notification.setContentTitle("BREAK IN");

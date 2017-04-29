@@ -36,14 +36,12 @@ import ie.sheehan.smarthome.model.HeatingStatus;
 import ie.sheehan.smarthome.utility.DateUtility;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
+import static ie.sheehan.smarthome.fragment.SettingsFragment.VALUE_METRIC_TEMPERATURE_CELSIUS;
+import static ie.sheehan.smarthome.fragment.SettingsFragment.VALUE_METRIC_TEMPERATURE_FAHRENHEIT;
+import static ie.sheehan.smarthome.fragment.SettingsFragment.getPreferredTemperatureMetric;
 import static ie.sheehan.smarthome.utility.DateUtility.getDateFormat;
 
 public class EnvironmentFragment extends Fragment {
-
-    static final long PERIOD_HALF_SECOND = 500;
-    static final long PERIOD_ONE_SECOND = 1000;
-    static final long PERIOD_TWO_SECONDS = 2000;
-    static final long PERIOD_FIVE_SECONDS = 5000;
 
     static final long INITIAL_DELAY = 500;
 
@@ -95,7 +93,7 @@ public class EnvironmentFragment extends Fragment {
         res = getResources();
         preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        period = getPreferredPeriod();
+        period = SettingsFragment.getPreferredConnectionPeriod();
 
         setInitialDateValues();
 
@@ -160,27 +158,6 @@ public class EnvironmentFragment extends Fragment {
     // ============================================================================================
     // PRIVATE METHODS
     // ============================================================================================
-    private long getPreferredPeriod() {
-        int preferencePeriod = Integer.parseInt(preferences.getString(SettingsFragment.KEY_PREF_CONNECTION_FREQUENCY, "0"));
-
-        switch (preferencePeriod) {
-            case SettingsFragment.VALUE_CONNECTION_FREQUENCY_SHORTEST:
-                return PERIOD_HALF_SECOND;
-            case SettingsFragment.VALUE_CONNECTION_FREQUENCY_SHORT:
-                return PERIOD_ONE_SECOND;
-            case SettingsFragment.VALUE_CONNECTION_FREQUENCY_LONG:
-                return PERIOD_TWO_SECONDS;
-            case SettingsFragment.VALUE_CONNECTION_FREQUENCY_LONGEST:
-                return PERIOD_FIVE_SECONDS;
-            default:
-                return PERIOD_ONE_SECOND;
-        }
-    }
-
-    private int getPreferredTemperatureMetric() {
-        return Integer.parseInt(preferences.getString(SettingsFragment.KEY_PREF_METRIC_TEMPERATURE, "0"));
-    }
-
     private void setInitialDateValues() {
         Calendar fromDateCal = Calendar.getInstance();
         fromDateCal.set(Calendar.HOUR, 0);
@@ -271,12 +248,6 @@ public class EnvironmentFragment extends Fragment {
      * An {@link AsyncTask} that executes a HTTP request for the latest {@link EnvironmentReading}.
      */
     private class GetTemperature extends AsyncTask<Void, Void, EnvironmentReading> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
         @Override
         protected EnvironmentReading doInBackground(Void... params) {
             return HttpRequestHandler.getInstance().getEnvironmentReading();
@@ -284,16 +255,15 @@ public class EnvironmentFragment extends Fragment {
 
         @Override
         protected void onPostExecute(EnvironmentReading envReading) {
-            if (getPreferredTemperatureMetric() == SettingsFragment.VALUE_METRIC_TEMPERATURE_CELSIUS) {
+            if (getPreferredTemperatureMetric() == VALUE_METRIC_TEMPERATURE_CELSIUS) {
                 temperatureView.setText(res.getString(R.string.text_temperature_display_celsius, envReading.getTemperature()));
             }
-            else {
+            else if (getPreferredTemperatureMetric() == VALUE_METRIC_TEMPERATURE_FAHRENHEIT){
                 temperatureView.setText(res.getString(R.string.text_temperature_display_fahrenheit, envReading.getTemperatureInFahrenheit()));
             }
 
             humidityView.setText(res.getString(R.string.text_humidity_display, envReading.getHumidity()));
         }
-
     }
 
     /**
@@ -301,12 +271,6 @@ public class EnvironmentFragment extends Fragment {
      * values that were logged within a range of dates.
      */
     private class GetTemperatureInRange extends AsyncTask<Date, Void, List<EnvironmentReading>> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
         @Override
         protected List<EnvironmentReading> doInBackground(Date... range) {
             Date from = range[0];
@@ -330,7 +294,6 @@ public class EnvironmentFragment extends Fragment {
             intent.putExtras(arguments);
             getActivity().startActivity(intent);
         }
-
     }
 
     private class GetHeatingStatus extends AsyncTask<Void, Void, HeatingStatus> {
