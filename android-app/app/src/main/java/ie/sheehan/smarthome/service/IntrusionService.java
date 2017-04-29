@@ -22,6 +22,7 @@ import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.model.IntrusionReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
+import static ie.sheehan.smarthome.fragment.SettingsFragment.KEY_PREF_NOTIFICATION;
 import static ie.sheehan.smarthome.fragment.SettingsFragment.getPreferredNotifications;
 
 /**
@@ -78,7 +79,7 @@ public class IntrusionService extends Service {
      */
     public void sendNotification(IntrusionReading intrusionReading) {
 
-        if (! getPreferredNotifications()) { return; }
+        if (! preferences.getBoolean(KEY_PREF_NOTIFICATION, true)){ return; }
 
         Notification.Builder notification = new Notification.Builder(IntrusionService.this);
         notification.setSmallIcon(R.drawable.ic_tab_security);

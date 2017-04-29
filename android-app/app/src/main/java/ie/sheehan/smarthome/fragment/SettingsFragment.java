@@ -14,15 +14,15 @@ import static ie.sheehan.smarthome.R.xml.preferences;
  */
 public class SettingsFragment extends PreferenceFragmentCompat {
 
-    private static final long PERIOD_HALF_SECOND = 500;
-    private static final long PERIOD_ONE_SECOND = 1000;
-    private static final long PERIOD_TWO_SECONDS = 2000;
-    private static final long PERIOD_FIVE_SECONDS = 5000;
+    public static final long PERIOD_HALF_SECOND = 500;
+    public static final long PERIOD_ONE_SECOND = 1000;
+    public static final long PERIOD_TWO_SECONDS = 2000;
+    public static final long PERIOD_FIVE_SECONDS = 5000;
 
-    private static final String KEY_PREF_METRIC_TEMPERATURE = "pref_metric_temperature";
-    private static final String KEY_PREF_METRIC_WEIGHT = "pref_metric_weight";
-    private static final String KEY_PREF_CONNECTION_FREQUENCY = "pref_connection_frequency";
-    private static final String KEY_PREF_NOTIFICATION = "pref_notifications_send";
+    public static final String KEY_PREF_METRIC_TEMPERATURE = "pref_metric_temperature";
+    public static final String KEY_PREF_METRIC_WEIGHT = "pref_metric_weight";
+    public static final String KEY_PREF_CONNECTION_FREQUENCY = "pref_connection_frequency";
+    public static final String KEY_PREF_NOTIFICATION = "pref_notifications_send";
 
     public static final int VALUE_METRIC_TEMPERATURE_CELSIUS = 0;
     public static final int VALUE_METRIC_TEMPERATURE_FAHRENHEIT = 1;

@@ -15,6 +15,7 @@ import android.view.View;
 import ie.sheehan.smarthome.adapter.TabPagerAdapter;
 import ie.sheehan.smarthome.fragment.SettingsFragment;
 import ie.sheehan.smarthome.service.IntrusionService;
+import ie.sheehan.smarthome.service.StockService;
 
 /**
  * Main Activity.
@@ -36,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (! isServiceRunning(IntrusionService.class)) {
             startService(new Intent(this, IntrusionService.class));
+        }
+
+        if (! isServiceRunning(StockService.class)) {
+            startService(new Intent(this, StockService.class));
         }
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
