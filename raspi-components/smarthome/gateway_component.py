@@ -1,7 +1,10 @@
 import json
+import socket
+import sys
+import time
+
 import paho.mqtt.client as mqtt
 import requests
-import time
 
 from constants.mqtt import *
 from constants.webservice import *
@@ -73,7 +76,12 @@ def main():
     client.on_connect = on_connect
     client.on_message = on_message
 
-    client.connect(MQTT_BROKER, MQTT_PORT)
+    try:
+        client.connect(MQTT_BROKER, MQTT_PORT)
+    except socket.error:
+        print '{}: unable to connect to MQTT broker - is it on & available at {}?'.format(SCRIPT_LABEL, MQTT_BROKER)
+        sys.exit(1)
+
     client.subscribe(TOPIC_SMARTHOME_ROOT)
 
     client.loop_forever()

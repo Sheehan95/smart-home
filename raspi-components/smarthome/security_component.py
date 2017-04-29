@@ -1,6 +1,7 @@
 import base64
 import json
 import signal
+import socket
 import subprocess
 import sys
 import threading
@@ -157,11 +158,15 @@ def main():
     client.on_connect = on_connect
     client.on_message = on_message
 
-    client.connect(MQTT_BROKER, MQTT_PORT)
+    try:
+        client.connect(MQTT_BROKER, MQTT_PORT)
+    except socket.error:
+        print '{}: unable to connect to MQTT broker - is it on & available at {}?'.format(SCRIPT_LABEL, MQTT_BROKER)
+        sys.exit(1)
+
     client.subscribe(TOPIC_SECURITY_CAMERA_FEED)
     client.subscribe(TOPIC_SECURITY_ALARM_ARM)
     client.subscribe(TOPIC_SECURITY_ALARM_REQUEST)
-
     client.loop_forever()
 
 

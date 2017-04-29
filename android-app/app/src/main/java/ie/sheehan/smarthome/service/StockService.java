@@ -12,10 +12,14 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.activity.IntrusionViewActivity;
@@ -35,7 +39,7 @@ public class StockService extends Service {
     TimerTask task;
     SharedPreferences preferences;
 
-
+    Date lastNotification;
     Queue<StockReading> stockReadings;
 
 
@@ -82,15 +86,34 @@ public class StockService extends Service {
 
         if (! preferences.getBoolean(KEY_PREF_NOTIFICATION, true)){ return; }
 
-        Notification.Builder notification = new Notification.Builder(StockService.this);
-        notification.setSmallIcon(R.drawable.ic_tab_stock);
-        notification.setContentTitle("STOCK");
-        notification.setContentText("Your scale is empty - did you forget to put your " + stockReading.getProduct() + " back?");
-        notification.setVibrate(new long[]{1000, 1000, 1000});
-        notification.setAutoCancel(true);
+        if (lastNotification != null) {
+            Date currentDate = new Date();
+            long difference = currentDate.getTime() - lastNotification.getTime();
+
+            if (TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS) == 0) { return; }
+        }
+
+        lastNotification = new Date();
+
+        String notificationText;
+
+        if (stockReading.getWeight() == 0) {
+            notificationText = "Scale is empty!";
+        }
+        else {
+            notificationText = String.format("You are running low on %s", stockReading.getProduct());
+        }
+
+        Notification notification = new Notification.Builder(StockService.this)
+                .setSmallIcon(R.drawable.ic_tab_security)
+                .setContentTitle("STOCK")
+                .setContentText(notificationText)
+                .setVibrate(new long[]{1000, 1000, 1000})
+                .setAutoCancel(true)
+                .build();
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(0, notification.build());
+        notificationManager.notify(0, notification);
     }
 
 
@@ -107,6 +130,11 @@ public class StockService extends Service {
             Log.e("LOGGING", "WEIGHT: " + stockReading.getWeight());
             Log.e("SIZE", "" + stockReadings.size());
 
+            if (stockReading.getWeight() < 0) {
+                stockReadings.clear();
+                return;
+            }
+
             if (stockReadings.size() == 10) {
                 int totalWeight = 0;
 
@@ -114,12 +142,12 @@ public class StockService extends Service {
                     totalWeight += reading.getWeight();
                 }
 
-                if (totalWeight == 0) {
-                    Log.e("SENDING", "NOTIFICATION");
+                int percent = (int)((stockReading.getWeight() * 100.0f) / stockReading.getCapacity());
+                Log.e("PERCENTAGE", percent + "%");
+
+                if (totalWeight == 0 || percent < 10) {
                     sendNotification(stockReading);
                 }
-
-                Log.e("TOTAL WEIGHT", "" + totalWeight);
 
                 stockReadings.poll();
             }

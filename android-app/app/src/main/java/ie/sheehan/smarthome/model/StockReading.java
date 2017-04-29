@@ -51,6 +51,12 @@ public class StockReading implements Serializable {
     // ============================================================================================
     public double getWeightInOunces() { return weight * 0.035274; }
 
+    public double getCapacityInOunces() { return capacity * 0.035274; }
+
+    public int getDifferenceInWeight(StockReading reading) {
+        return this.getWeight() - reading.getWeight();
+    }
+
     @Override
     public String toString() {
         return String.format(Locale.getDefault(), "Product: %s\tWeight: %d/%d\nDate: %s",
@@ -61,16 +67,59 @@ public class StockReading implements Serializable {
     // ============================================================================================
     // STATIC METHOD DECLARATION
     // ============================================================================================
-    public static double getLargestStockReadingInRange(List<StockReading> readings) {
-        double largest = Integer.MIN_VALUE;
+    public static int getLargestStockReadingInRange(List<StockReading> readings) {
+        int largest = Integer.MIN_VALUE;
 
         for (StockReading reading : readings) {
-            if (reading.weight > largest) {
-                largest = reading.weight;
+            if (reading.getWeight() > largest) {
+                largest = reading.getWeight();
             }
         }
 
         return largest;
+    }
+
+    public static int getMostConsumedInRange(List<StockReading> readings) {
+        int most = Integer.MIN_VALUE;
+
+        for (int i = 1 ; i < readings.size() ; i++) {
+            StockReading reading = readings.get(i);
+            StockReading previous = readings.get(i - 1);
+
+            int difference = previous.getDifferenceInWeight(reading);
+
+            if (difference > most) { most = difference; }
+        }
+
+        return most;
+    }
+
+    public static int getLeastConsumedInRange(List<StockReading> readings) {
+        int least = Integer.MAX_VALUE;
+
+        for (int i = 1 ; i < readings.size() ; i++) {
+            StockReading reading = readings.get(i);
+            StockReading previous = readings.get(i - 1);
+
+            int difference = previous.getDifferenceInWeight(reading);
+
+            if (difference < least) { least = difference; }
+        }
+
+        return least;
+    }
+
+    public static int getAverageConsumedInRange(List<StockReading> readings) {
+        int average = 0;
+
+        for (int i = 1 ; i < readings.size() ; i++) {
+            StockReading reading = readings.get(i);
+            StockReading previous = readings.get(i - 1);
+
+            average += previous.getDifferenceInWeight(reading);
+        }
+
+        return average / readings.size();
     }
 
 

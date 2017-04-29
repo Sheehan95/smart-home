@@ -145,11 +145,11 @@ public class StockFragment extends Fragment {
 
             if (stockReading.getWeight() < 0) {
                 if (cover.getVisibility() == View.INVISIBLE) {
-                    cover.setVisibility(View.VISIBLE);
+                    // cover.setVisibility(View.VISIBLE);
                 }
             }
             else {
-                cover.setVisibility(View.INVISIBLE);
+                // cover.setVisibility(View.INVISIBLE);
             }
 
             textProduct.setText(stockReading.getProduct());
@@ -163,7 +163,7 @@ public class StockFragment extends Fragment {
             }
             else if (getPreferredWeightMetric() == VALUE_METRIC_WEIGHT_IMPERIAL) {
                 weightText = res.getString(R.string.text_stock_weight_oz);
-                weightText = String.format(weightText, stockReading.getWeightInOunces(), stockReading.getCapacity());
+                weightText = String.format(weightText, stockReading.getWeightInOunces(), stockReading.getCapacityInOunces());
             }
 
             textWeight.setText(weightText);

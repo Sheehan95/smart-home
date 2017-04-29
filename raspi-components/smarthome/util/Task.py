@@ -1,5 +1,5 @@
-from datetime import datetime
 import threading
+from datetime import datetime
 
 
 # defines a list of task types used to identify tasks

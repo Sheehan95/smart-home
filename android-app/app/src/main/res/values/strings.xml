@@ -68,7 +68,9 @@
     <string name="text_label_stock_product">Product</string>
     <string name="text_label_stock_weight">Weight</string>
     <string name="text_stock_weight_g">%1$d / %2$d g</string>
-    <string name="text_stock_weight_oz">%1$d / %2$d oz</string>
+    <string name="text_stock_weight_oz">%1$.2f / %2$.2f oz</string>
+
+    <string name="text_stock_display_weight">%1$d g</string>
 
     <string name="text_scale_calibrate_weight_g">%1$d g</string>
     <string name="text_scale_calibrate_weight_oz">%1$d oz</string>
@@ -80,11 +82,16 @@
 
 
     <!-- ==== CHART TEXT ====================================================== -->
-    <string name="text_env_stat_header">Temperatures for %1$s - %2$s</string>
     <string name="text_env_stat_warmest">Warmest Value:</string>
     <string name="text_env_stat_coldest">Coldest Value:</string>
     <string name="text_env_stat_warmest_date">Warmest Date:</string>
     <string name="text_env_stat_coldest_date">Coldest Date:</string>
+
+    <string name="text_stock_stat_finished">Est. Finished:</string>
+    <string name="text_stock_stat_most">Most Consumed:</string>
+    <string name="text_stock_stat_least">Least Consumed:</string>
+    <string name="text_stock_stat_most_date">Most Date:</string>
+    <string name="text_stock_stat_least_date">Least Date:</string>
     <!-- ====================================================================== -->
 
 

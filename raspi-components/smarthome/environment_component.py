@@ -1,4 +1,6 @@
 import json
+import socket
+import sys
 import threading
 import time
 from datetime import datetime
@@ -93,7 +95,12 @@ def main():
     client.on_connect = on_connect
     client.on_message = on_message
 
-    client.connect(MQTT_BROKER, MQTT_PORT)
+    try:
+        client.connect(MQTT_BROKER, MQTT_PORT)
+    except socket.error:
+        print '{}: unable to connect to MQTT broker - is it on & available at {}?'.format(SCRIPT_LABEL, MQTT_BROKER)
+        sys.exit(1)
+
     client.subscribe(TOPIC_ENVIRONMENT_READING_REQUESTS)
     client.subscribe(TOPIC_ENVIRONMENT_HEATING_REQUEST)
     client.subscribe(TOPIC_ENVIRONMENT_HEATING_ACTIVATE)

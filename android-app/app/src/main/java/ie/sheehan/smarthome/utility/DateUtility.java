@@ -1,5 +1,7 @@
 package ie.sheehan.smarthome.utility;
 
+import android.util.Log;
+
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
@@ -66,6 +68,8 @@ public class DateUtility {
         c2.set(Calendar.HOUR, 0);
         c2.set(Calendar.MINUTE, 0);
         c2.set(Calendar.SECOND, 0);
+
+        Log.e("COMPARING", c1.getTime().toString() + "\t" + c2.getTime().toString());
 
         return c1.getTime().compareTo(c2.getTime());
     }

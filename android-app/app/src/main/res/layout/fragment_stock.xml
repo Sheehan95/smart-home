@@ -86,7 +86,7 @@
 
     <RelativeLayout
         android:id="@+id/gui_cover"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:background="#FFFFFF"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

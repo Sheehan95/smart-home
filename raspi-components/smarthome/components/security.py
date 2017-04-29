@@ -1,8 +1,8 @@
-import cv2
 import datetime
-import imutils
 import time
 
+import cv2
+import imutils
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 

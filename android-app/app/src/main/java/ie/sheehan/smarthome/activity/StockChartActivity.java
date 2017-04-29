@@ -1,9 +1,12 @@
 package ie.sheehan.smarthome.activity;
 
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.YAxis;
@@ -18,12 +21,17 @@ import java.util.List;
 import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.model.StockReading;
 
+import static ie.sheehan.smarthome.model.StockReading.getAverageConsumedInRange;
 import static ie.sheehan.smarthome.model.StockReading.getLargestStockReadingInRange;
+import static ie.sheehan.smarthome.model.StockReading.getLeastConsumedInRange;
+import static ie.sheehan.smarthome.model.StockReading.getMostConsumedInRange;
 import static ie.sheehan.smarthome.utility.DateUtility.compareDateIgnoreTime;
 import static ie.sheehan.smarthome.utility.DateUtility.getShortDateFormat;
 import static ie.sheehan.smarthome.utility.DateUtility.getUniqueDateRange;
 
 public class StockChartActivity extends AppCompatActivity {
+
+    Resources resources;
 
     String product;
     List<StockReading> stockReadings;
@@ -34,6 +42,8 @@ public class StockChartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_stock_chart);
+
+        resources = getResources();
 
         Bundle arguments = getIntent().getExtras();
         stockReadings = (List<StockReading>) arguments.getSerializable("stockReadings");
@@ -47,6 +57,8 @@ public class StockChartActivity extends AppCompatActivity {
         LineChart lineChart = (LineChart) findViewById(R.id.chart);
 
         List<StockReading> chartData = generateChartData();
+
+        Log.e("AVERAGE", "CONSUMED PER DAY: " + getAverageConsumedInRange(chartData));
 
         List<Entry> entries = getChartEntries(chartData);
         List<String> labels = getChartLabels(chartData);
@@ -63,6 +75,14 @@ public class StockChartActivity extends AppCompatActivity {
         axis.setLabelCount(0, true);
         yAxis.setAxisMinValue(0);
         yAxis.setAxisMaxValue((long) (getLargestStockReadingInRange(chartData) + 4));
+
+        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+        int dpHeight = (int) (displayMetrics.heightPixels / displayMetrics.density);
+
+        lineChart.setMinimumHeight(dpHeight);
+        lineChart.invalidate();
+
+        populateStatistics(chartData);
     }
 
 
@@ -93,7 +113,7 @@ public class StockChartActivity extends AppCompatActivity {
             averageReading.setProduct(product);
             averageReading.setWeight(lowestWeight);
             averageReading.setCapacity(stockReadings.get(0).getCapacity());
-            averageReading.setDate(new Date((date.getTime() / 1000L)));
+            averageReading.setDate(date);
 
             graphData.add(averageReading);
         }
@@ -120,6 +140,34 @@ public class StockChartActivity extends AppCompatActivity {
         }
 
         return labels;
+    }
+
+    private void populateStatistics(List<StockReading> chartData) {
+        TextView estFinished = (TextView) findViewById(R.id.stat_finished);
+        TextView mostValue = (TextView) findViewById(R.id.stat_most);
+        TextView mostDate = (TextView) findViewById(R.id.stat_most_date);
+        TextView leastValue = (TextView) findViewById(R.id.stat_least);
+        TextView leastDate = (TextView) findViewById(R.id.stat_least_date);
+
+        int most = getMostConsumedInRange(chartData);
+        int least = getLeastConsumedInRange(chartData);
+
+        mostValue.setText(resources.getString(R.string.text_stock_display_weight, most));
+        leastValue.setText(resources.getString(R.string.text_stock_display_weight, least));
+
+        int average = getAverageConsumedInRange(chartData);
+        int currentWeight = chartData.get(chartData.size() - 1).getWeight();
+
+        int days = currentWeight / average;
+
+        if (days == 0) {
+            estFinished.setText("Today");
+        }
+        else {
+            estFinished.setText(String.format("%d days", days));
+        }
+
+        Log.e("AVERAGE", "" + average);
     }
 
 }

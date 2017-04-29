@@ -29,17 +29,19 @@
 
         <service
             android:name=".service.IntrusionService"
-            android:enabled="true" />
-
+            android:enabled="true"
+            android:process=":smart_home_background" />
         <service
             android:name=".service.StockService"
-            android:enabled="true" />
+            android:enabled="true"
+            android:process=":smart_home_background" />
 
         <receiver
             android:name=".receiver.OnBootReceiver"
             android:enabled="true"
             android:exported="true"
-            android:label="RestartServiceWhenStopped">
+            android:label="RestartServiceWhenStopped"
+            android:process=":smart_home_background">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

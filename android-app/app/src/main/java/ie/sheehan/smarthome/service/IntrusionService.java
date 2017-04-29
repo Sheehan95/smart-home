@@ -17,13 +17,12 @@ import android.support.v4.app.TaskStackBuilder;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import ie.sheehan.smarthome.activity.IntrusionViewActivity;
 import ie.sheehan.smarthome.R;
+import ie.sheehan.smarthome.activity.IntrusionViewActivity;
 import ie.sheehan.smarthome.model.IntrusionReading;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
 import static ie.sheehan.smarthome.fragment.SettingsFragment.KEY_PREF_NOTIFICATION;
-import static ie.sheehan.smarthome.fragment.SettingsFragment.getPreferredNotifications;
 
 /**
  * A service that runs when the phone is booted. Checks for newly reported {@link IntrusionReading}
