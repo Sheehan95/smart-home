@@ -78,6 +78,15 @@
     <!-- ====================================================================== -->
 
 
+    <!-- ==== CHART TEXT ====================================================== -->
+    <string name="text_env_stat_header">Temperatures for %1$s - %2$s</string>
+    <string name="text_env_stat_warmest">Warmest Value:</string>
+    <string name="text_env_stat_coldest">Coldest Value:</string>
+    <string name="text_env_stat_warmest_date">Warmest Date:</string>
+    <string name="text_env_stat_coldest_date">Coldest Date:</string>
+    <!-- ====================================================================== -->
+
+
     <!-- ==== PREFERENCES ===================================================== -->
     <!-- METRICS -->
     <string name="pref_category_metrics">Metrics</string>

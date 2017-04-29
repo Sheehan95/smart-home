@@ -52,9 +52,7 @@ public class StockFragment extends Fragment {
 
     View cover;
 
-    public StockFragment() {
-        // Required empty public constructor
-    }
+    public StockFragment() {}
 
 
     @Override

@@ -28,9 +28,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public static final int VALUE_CONNECTION_FREQUENCY_LONGEST = 3;
 
 
-    public SettingsFragment() {
-        // Required empty public constructor
-    }
+    public SettingsFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

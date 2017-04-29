@@ -90,16 +90,18 @@ public class EnvironmentReading implements Serializable {
      * @param readings a list of {@link EnvironmentReading} objects
      * @return the largest temperature from the list
      */
-    public static double getLargestTemperatureInRange(List<EnvironmentReading> readings) {
+    public static EnvironmentReading getLargestTemperatureInRange(List<EnvironmentReading> readings) {
+        EnvironmentReading environmentReading = null;
         double largest = Integer.MIN_VALUE;
 
         for (EnvironmentReading reading : readings) {
             if (reading.getTemperature() > largest) {
                 largest = reading.getTemperature();
+                environmentReading = reading;
             }
         }
 
-        return largest;
+        return environmentReading;
     }
 
     /**
@@ -108,16 +110,18 @@ public class EnvironmentReading implements Serializable {
      * @param readings a list of {@link EnvironmentReading} objects
      * @return the largest temperature from the list
      */
-    public static double getLowestTemperatureInRange(List<EnvironmentReading> readings) {
+    public static EnvironmentReading getSmallestTemperatureInRange(List<EnvironmentReading> readings) {
+        EnvironmentReading environmentReading = null;
         double lowest = Integer.MAX_VALUE;
 
         for (EnvironmentReading reading : readings) {
             if (reading.getTemperature() < lowest) {
                 lowest = reading.getTemperature();
+                environmentReading = reading;
             }
         }
 
-        return lowest;
+        return environmentReading;
     }
 
     /**

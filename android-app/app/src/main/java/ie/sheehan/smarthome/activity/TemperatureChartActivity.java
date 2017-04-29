@@ -1,8 +1,11 @@
 package ie.sheehan.smarthome.activity;
 
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -19,16 +22,21 @@ import java.util.List;
 import ie.sheehan.smarthome.R;
 import ie.sheehan.smarthome.model.EnvironmentReading;
 
+import static ie.sheehan.smarthome.R.string.text_temperature_display_celsius;
 import static ie.sheehan.smarthome.model.EnvironmentReading.getAverageTemperatureInRange;
 import static ie.sheehan.smarthome.model.EnvironmentReading.getLargestTemperatureInRange;
+import static ie.sheehan.smarthome.model.EnvironmentReading.getSmallestTemperatureInRange;
 import static ie.sheehan.smarthome.utility.DateUtility.compareDateIgnoreTime;
 import static ie.sheehan.smarthome.utility.DateUtility.getShortDateFormat;
 import static ie.sheehan.smarthome.utility.DateUtility.getUniqueDateRange;
 
 public class TemperatureChartActivity extends AppCompatActivity {
 
-    List<EnvironmentReading> environmentReadings;
+    Resources resources;
 
+    LineChart lineChart;
+
+    List<EnvironmentReading> environmentReadings;
 
 
     // ============================================================================================
@@ -41,6 +49,9 @@ public class TemperatureChartActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_temperature_chart);
 
+        resources = getResources();
+        lineChart = (LineChart) findViewById(R.id.chart);
+
         Bundle arguments = getIntent().getExtras();
         environmentReadings = (List<EnvironmentReading>) arguments.getSerializable("envReadings");
     }
@@ -49,27 +60,11 @@ public class TemperatureChartActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        LineChart lineChart = (LineChart) findViewById(R.id.chart);
-
         List<EnvironmentReading> chartData = generateChartData();
 
-        List<Entry> entries = getChartEntries(chartData);
-        List<String> labels = getChartLabels(chartData);
-
-        LineDataSet dataSet = new LineDataSet(entries, "Average Temperature");
-
-        LineData data = new LineData(labels, dataSet);
-        lineChart.setData(data);
-        lineChart.setDescription("");
-        lineChart.animateY(1000);
-        lineChart.getXAxis().setLabelRotationAngle(280);
-        YAxis yAxis = lineChart.getAxisLeft();
-        YAxis axis = lineChart.getAxisRight();
-        axis.setLabelCount(0, true);
-        yAxis.setAxisMinValue(0);
-        yAxis.setAxisMaxValue((long) (getLargestTemperatureInRange(chartData) + 4));
+        populateChart(chartData);
+        populateStatistics(chartData);
     }
-
 
 
     // ============================================================================================
@@ -98,7 +93,7 @@ public class TemperatureChartActivity extends AppCompatActivity {
 
             EnvironmentReading averageReading = new EnvironmentReading();
             averageReading.setTemperature(getAverageTemperatureInRange(readingsForDay));
-            averageReading.setDate(new Date((date.getTime() / 1000L)));
+            averageReading.setDate(date);
             graphData.add(averageReading);
         }
 
@@ -138,6 +133,56 @@ public class TemperatureChartActivity extends AppCompatActivity {
         }
 
         return labels;
+    }
+
+    /**
+     * Populates the chart with data from a list of {@link EnvironmentReading} objects.
+     *
+     * @param chartData to populate the chart with
+     */
+    private void populateChart(List<EnvironmentReading> chartData) {
+        List<Entry> entries = getChartEntries(chartData);
+        List<String> labels = getChartLabels(chartData);
+
+        LineDataSet dataSet = new LineDataSet(entries, "Average Temperature");
+
+        LineData data = new LineData(labels, dataSet);
+        lineChart.setData(data);
+        lineChart.setDescription("");
+        lineChart.animateY(1000);
+        lineChart.getXAxis().setLabelRotationAngle(280);
+        YAxis yAxis = lineChart.getAxisLeft();
+        YAxis axis = lineChart.getAxisRight();
+        axis.setEnabled(false);
+        yAxis.setAxisMinValue((long) (getSmallestTemperatureInRange(chartData).getTemperature() - 1));
+        yAxis.setAxisMaxValue((long) (getLargestTemperatureInRange(chartData).getTemperature() + 4));
+
+        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+        int dpHeight = (int) (displayMetrics.heightPixels / displayMetrics.density);
+
+        lineChart.setMinimumHeight(dpHeight);
+        lineChart.invalidate();
+    }
+
+    /**
+     * Uses existing chart data to populate the statistics.
+     *
+     * @param chartData used to populate the chart
+     */
+    private void populateStatistics(List<EnvironmentReading> chartData) {
+        TextView warmestValue = (TextView) findViewById(R.id.stat_warmest);
+        TextView warmestDate = (TextView) findViewById(R.id.stat_warmest_date);
+        TextView coldestValue = (TextView) findViewById(R.id.stat_coldest);
+        TextView coldestDate = (TextView) findViewById(R.id.stat_coldest_date);
+
+        EnvironmentReading warmest = getLargestTemperatureInRange(chartData);
+        EnvironmentReading coldest = getSmallestTemperatureInRange(chartData);
+
+        warmestValue.setText(resources.getString(text_temperature_display_celsius, warmest.getTemperature()));
+        warmestDate.setText(getShortDateFormat().format(warmest.getDate()));
+
+        coldestValue.setText(resources.getString(text_temperature_display_celsius, coldest.getTemperature()));
+        coldestDate.setText(getShortDateFormat().format(coldest.getDate()));
     }
 
 }

@@ -144,11 +144,6 @@ public class CameraFeedActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... params) {
             return HttpRequestHandler.getInstance().toggleCameraFeed(false);
         }
-
-        @Override
-        protected void onPostExecute(Boolean stream) {
-            super.onPostExecute(stream);
-        }
     }
 
 }
