@@ -1,0 +1,343 @@
+<Project>
+  <Name>FYP</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Android App</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>MainActivity</Name>
+        <Access>Public</Access>
+        <Location left="805" top="726" />
+        <Size width="225" height="186" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void displayFragment(Fragment f)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EnvironmentFragment</Name>
+        <Access>Public</Access>
+        <Location left="560" top="1111" />
+        <Size width="229" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">TextView temperatureView</Member>
+        <Member type="Field">TextView heatingStatusView</Member>
+        <Member type="Field">Button openChartButton</Member>
+        <Member type="Field">Button setStartDate</Member>
+        <Member type="Field">Button setEndDate</Member>
+        <Member type="Method">public void toggleHeating(boolean on)</Member>
+        <Member type="Method">public void openChart(Date start, Date end)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SecurityFragment</Name>
+        <Access>Public</Access>
+        <Location left="816" top="1111" />
+        <Size width="203" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">TextView alarmStatusView</Member>
+        <Member type="Method">public void toggleAlarm(boolean arm)</Member>
+        <Member type="Method">public void openIntrusionList()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>StockFragment</Name>
+        <Access>Public</Access>
+        <Location left="1082" top="1111" />
+        <Size width="223" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">TextView stockDisplay</Member>
+        <Member type="Field">Button startClibrationButton</Member>
+        <Member type="Field">Button openChartButton</Member>
+        <Member type="Method">public void startCalibration()</Member>
+        <Member type="Method">public void openChart(String productName)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Fragment</Name>
+        <Access>Public</Access>
+        <Location left="586" top="1402" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void onCreate()</Member>
+        <Member type="Method">public void onCreateView()</Member>
+        <Member type="Method">public void onStart()</Member>
+        <Member type="Method">public void onResume()</Member>
+        <Member type="Method">public void onPause()</Member>
+        <Member type="Method">public void onStop()</Member>
+        <Member type="Method">public void onDestroy()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Activity</Name>
+        <Access>Public</Access>
+        <Location left="816" top="432" />
+        <Size width="162" height="186" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">protected void onCreate()</Member>
+        <Member type="Method">protected void onStart()</Member>
+        <Member type="Method">protected void onResume()</Member>
+        <Member type="Method">protected void onPause()</Member>
+        <Member type="Method">protected void onStop()</Member>
+        <Member type="Method">protected void onDestroy()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>TemperatureChartActivity</Name>
+        <Access>Public</Access>
+        <Location left="433" top="726" />
+        <Size width="237" height="186" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">Chart temperatureChart</Member>
+        <Member type="Method">private void populateChart()</Member>
+        <Member type="Method">public void generateStatistics()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>TemperatureReading</Name>
+        <Access>Public</Access>
+        <Location left="215" top="976" />
+        <Size width="192" height="173" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">double temperature</Member>
+        <Member type="Field">int timestamp</Member>
+        <Member type="Method">public double getCelsius()</Member>
+        <Member type="Method">public double getFahrenheit()</Member>
+        <Member type="Method">public Date getDate()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>HeatingStatus</Name>
+        <Access>Public</Access>
+        <Location left="215" top="1173" />
+        <Size width="192" height="213" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">boolean on</Member>
+        <Member type="Field">int timestamp</Member>
+        <Member type="Field">int lastOn</Member>
+        <Member type="Field">Duration durationOn</Member>
+        <Member type="Method">public boolean isOn()</Member>
+        <Member type="Method">public Date getDate()</Member>
+        <Member type="Method">public Date getLastTimeOn()</Member>
+        <Member type="Method">public Duration getDurationOn()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>IntrusionListActivity</Name>
+        <Access>Public</Access>
+        <Location left="1123" top="726" />
+        <Size width="182" height="186" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void viewIntrusion()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Intrusion</Name>
+        <Access>Public</Access>
+        <Location left="1386" top="917" />
+        <Size width="209" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">String encodedImage</Member>
+        <Member type="Field">boolean viewed</Member>
+        <Member type="Field">int timestamp</Member>
+        <Member type="Method">public BitMap getImage()</Member>
+        <Member type="Method">public boolean isViewed()</Member>
+        <Member type="Method">public Date getDate()</Member>
+        <Member type="Method">public void view()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>IntrusionViewActivity</Name>
+        <Access>Public</Access>
+        <Location left="1386" top="640" />
+        <Size width="209" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">TextView dateView</Member>
+        <Member type="Field">ImageView intrusionImage</Member>
+        <Member type="Method">public void markIntrusionAsViewed()</Member>
+        <Member type="Method">public void removeIntrusion()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AlarmStatus</Name>
+        <Access>Public</Access>
+        <Location left="840" top="1402" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">boolean armed</Member>
+        <Member type="Field">int timestamp</Member>
+        <Member type="Field">int lastOn</Member>
+        <Member type="Field">Duration durationOn</Member>
+        <Member type="Method">public boolean isArmed()</Member>
+        <Member type="Method">public Date getDate()</Member>
+        <Member type="Method">public Date getLastTimeOn()</Member>
+        <Member type="Method">public Duration getDurationOn()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>StockChartActivity</Name>
+        <Access>Public</Access>
+        <Location left="1641" top="640" />
+        <Size width="196" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">Chart stockChart</Member>
+        <Member type="Method">public void populateChart()</Member>
+        <Member type="Method">public void generateStatistics()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>StockReading</Name>
+        <Access>Public</Access>
+        <Location left="1641" top="1111" />
+        <Size width="217" height="247" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">String product</Member>
+        <Member type="Field">int weight</Member>
+        <Member type="Field">int capacity</Member>
+        <Member type="Field">int timestamp</Member>
+        <Member type="Method">public String getProductName()</Member>
+        <Member type="Method">public int getWeightInGrams()</Member>
+        <Member type="Method">public double getWeightInPounds()</Member>
+        <Member type="Method">public int getCapacityInGrams()</Member>
+        <Member type="Method">public double getCapacityInPounds()</Member>
+        <Member type="Method">public Date getDate()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Association" first="1" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="2" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="3" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+      </Relationship>
+      <Relationship type="Generalization" first="1" second="4">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="2" second="4">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="3" second="4">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="0" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="6" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="6" second="7">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <EndMultiplicity>*</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="7" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>535</X>
+          <Y>1213</Y>
+        </BendPoint>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="0" second="6">
+        <Label>starts</Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="1" second="8">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Generalization" first="9" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="9" second="10">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <EndMultiplicity>0..*</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Generalization" first="11" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="11" second="10">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="9" second="11">
+        <Label>starts</Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="2" second="12">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Generalization" first="13" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="3" second="14">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="13" second="14">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <EndMultiplicity>*</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="0" second="9">
+        <Label>starts</Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>
