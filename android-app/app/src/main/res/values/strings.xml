@@ -6,6 +6,7 @@
     <string name="title_environment_fragment">Environment</string>
     <string name="title_security_fragment">Security</string>
     <string name="title_stock_fragment">Stock</string>
+    <string name="title_schedule_fragment">Schedule</string>
     <string name="title_settings_fragment">Settings</string>
     <!-- ====================================================================== -->
 
@@ -168,6 +169,9 @@
     <string name="desc_img_btn_intrusion_remove">Removes the selected intrusion</string>
     <string name="desc_img_btn_intrusion_view">Views the selected intrusion</string>
     <string name="desc_img_intrusion_picture">Picture captured during the intrusion</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- ====================================================================== -->
 
 </resources>

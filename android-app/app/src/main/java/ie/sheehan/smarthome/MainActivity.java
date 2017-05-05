@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_tab_temperature));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_tab_security));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_tab_stock));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_tab_schedule));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_tab_settings));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
@@ -77,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case TabPagerAdapter.TAB_STOCK:
                         toolbar.setTitle(R.string.title_stock_fragment);
+                        break;
+                    case TabPagerAdapter.TAB_SCHEDULE:
+                        toolbar.setTitle(R.string.title_schedule_fragment);
                         break;
                     case TabPagerAdapter.TAB_SETTINGS:
                         toolbar.setTitle(R.string.title_settings_fragment);

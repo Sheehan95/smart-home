@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import ie.sheehan.smarthome.fragment.ScheduleFragment;
 import ie.sheehan.smarthome.fragment.SecurityFragment;
 import ie.sheehan.smarthome.fragment.SettingsFragment;
 import ie.sheehan.smarthome.fragment.StockFragment;
@@ -20,11 +21,13 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     public static final int TAB_TEMPERATURE = 0;
     public static final int TAB_SECURITY = 1;
     public static final int TAB_STOCK = 2;
-    public static final int TAB_SETTINGS = 3;
+    public static final int TAB_SCHEDULE = 3;
+    public static final int TAB_SETTINGS = 4;
 
     public EnvironmentFragment environmentFragment = new EnvironmentFragment();
     public SecurityFragment securityFragment = new SecurityFragment();
     public StockFragment stockFragment = new StockFragment();
+    public ScheduleFragment scheduleFragment = new ScheduleFragment();
     public SettingsFragment settingsFragment = new SettingsFragment();
 
 
@@ -49,6 +52,8 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
                 return securityFragment;
             case TAB_STOCK:
                 return stockFragment;
+            case TAB_SCHEDULE:
+                return scheduleFragment;
             case TAB_SETTINGS:
                 return settingsFragment;
             default:

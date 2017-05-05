@@ -105,7 +105,7 @@ public class StockService extends Service {
         }
 
         Notification notification = new Notification.Builder(StockService.this)
-                .setSmallIcon(R.drawable.ic_tab_security)
+                .setSmallIcon(R.drawable.ic_tab_stock)
                 .setContentTitle("STOCK")
                 .setContentText(notificationText)
                 .setVibrate(new long[]{1000, 1000, 1000})
