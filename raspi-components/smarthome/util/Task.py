@@ -56,8 +56,10 @@ class TaskScheduler:
     # removes a task from the scheduler
     def remove_task(self, scheduled_task):
         if scheduled_task in self.scheduled:
-            self.scheduled.remove(scheduled_task)
-            scheduled_task.cancel()
+            index = self.scheduled.index(scheduled_task)
+            task = self.scheduled[index]
+            self.scheduled.remove(task)
+            task.cancel()
         else:
             raise TaskNotScheduledError('This task has not been scheduled to run')
 
