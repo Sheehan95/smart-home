@@ -66,6 +66,7 @@ public class ScheduleController {
 	@ResponseBody
 	@RequestMapping(value = "/cancel", method = RequestMethod.POST)
 	public boolean cancel(@RequestBody Task task) {
+		System.out.println(task.toString());
 		return cancelTask(task);
 	}
 	

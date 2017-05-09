@@ -22,6 +22,9 @@ import ie.sheehan.smarthome.model.EnvironmentReading;
 import ie.sheehan.smarthome.model.HeatingStatus;
 import ie.sheehan.smarthome.model.IntrusionReading;
 import ie.sheehan.smarthome.model.StockReading;
+import ie.sheehan.smarthome.model.Task;
+
+import static android.R.attr.id;
 
 /**
  * A Singleton class for managing connections and HTTP requests to the web services.
@@ -38,6 +41,7 @@ public class HttpRequestHandler {
     private static final String ENDPOINT_ENVIRONMENT = "/environment";
     private static final String ENDPOINT_SECURITY = "/security";
     private static final String ENDPOINT_STOCK = "/stock";
+    private static final String ENDPOINT_SCHEDULE = "/schedule";
 
 
     private static final HttpRequestHandler instance = new HttpRequestHandler();
@@ -609,6 +613,115 @@ public class HttpRequestHandler {
         }
 
         return productList;
+    }
+
+
+    // ============================================================================================
+    // SECURITY-RELATED HTTP REQUESTS
+    // ============================================================================================
+    public List<Task> getTaskList() {
+        List<Task> taskList = new ArrayList<>();
+
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SCHEDULE, "/get");
+
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("GET");
+
+            StringBuilder response = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null) {
+                response.append(nextLine);
+            }
+
+            JSONArray json = new JSONArray(response.toString());
+
+            for (int i = 0 ; i < json.length() ; i++) {
+                taskList.add(new Task(json.getJSONObject(i)));
+            }
+
+        } catch (IOException | JSONException e) {
+            Log.e(TAG, "error in getTaskList");
+            Log.e(e.getClass().getName(), e.getMessage());
+        }
+
+        return taskList;
+    }
+
+    public boolean addTask(Task task) {
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SCHEDULE, "/add");
+
+        try {
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            JSONObject output = new JSONObject();
+            output.put("type", task.getType());
+            output.put("timestamp", task.getDate().getTime() / 1000L);
+
+            OutputStream outputStream = connection.getOutputStream();
+            outputStream.write(output.toString().getBytes("UTF-8"));
+            outputStream.close();
+
+            StringBuilder response = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null){
+                response.append(nextLine);
+            }
+
+            return Boolean.parseBoolean(response.toString());
+
+        } catch (IOException | JSONException e) {
+            Log.e(TAG, "error in addTask");
+            Log.e(e.getClass().getName(), e.getMessage());
+
+            return false;
+        }
+    }
+
+    public boolean removeTask(Task task) {
+        String target = String.format("http://%s:8080%s%s", DOMAIN, ENDPOINT_SCHEDULE, "/cancel");
+
+        try {
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            JSONObject output = new JSONObject();
+            output.put("type", task.getType());
+            output.put("timestamp", task.getDate().getTime() / 1000L);
+
+            OutputStream outputStream = connection.getOutputStream();
+            outputStream.write(output.toString().getBytes("UTF-8"));
+            outputStream.close();
+
+            StringBuilder response = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String nextLine;
+
+            while ((nextLine = reader.readLine()) != null){
+                response.append(nextLine);
+            }
+
+            return Boolean.parseBoolean(response.toString());
+
+        } catch (IOException | JSONException e) {
+            Log.e(TAG, "error in removeTask");
+            Log.e(e.getClass().getName(), e.getMessage());
+
+            return false;
+        }
     }
 
 }

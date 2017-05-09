@@ -47,6 +47,7 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name=".activity.TaskListActivity"></activity>
     </application>
 
 </manifest>
