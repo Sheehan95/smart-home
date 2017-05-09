@@ -124,7 +124,6 @@ class Alarm:
 
     def arm_alarm(self):
         if not self.armed:
-            print '[SEC]: actually arming it now boiiiii'
             self.armed = True
             self.last_armed = datetime.datetime.now()
 

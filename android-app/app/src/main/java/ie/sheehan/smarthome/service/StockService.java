@@ -127,9 +127,6 @@ public class StockService extends Service {
         protected void onPostExecute(StockReading stockReading) {
             super.onPostExecute(stockReading);
 
-            Log.e("LOGGING", "WEIGHT: " + stockReading.getWeight());
-            Log.e("SIZE", "" + stockReadings.size());
-
             if (stockReading.getWeight() < 0) {
                 stockReadings.clear();
                 return;
@@ -143,11 +140,8 @@ public class StockService extends Service {
                 }
 
                 int percent = (int)((stockReading.getWeight() * 100.0f) / stockReading.getCapacity());
-                Log.e("PERCENTAGE", percent + "%");
 
-                if (totalWeight == 0 || percent < 10) {
-                    sendNotification(stockReading);
-                }
+                if (totalWeight == 0 || percent < 10) { sendNotification(stockReading); }
 
                 stockReadings.poll();
             }

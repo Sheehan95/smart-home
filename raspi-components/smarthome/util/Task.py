@@ -86,6 +86,8 @@ class Task:
     # schedules the action for the given time
     def start(self):
         # if the date has already passed
+
+        print type(self.date)
         if not self.date > datetime.now():
             raise InvalidScheduleDateError('The given date has already passed')
 

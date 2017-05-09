@@ -80,13 +80,6 @@ public class IntrusionService extends Service {
 
         if (! preferences.getBoolean(KEY_PREF_NOTIFICATION, true)){ return; }
 
-        Notification.Builder notification = new Notification.Builder(IntrusionService.this);
-        notification.setSmallIcon(R.drawable.ic_tab_security);
-        notification.setContentTitle("BREAK IN");
-        notification.setContentText("Break in has been detected");
-        notification.setVibrate(new long[]{1000, 1000, 1000});
-        notification.setAutoCancel(true);
-
         Intent intent = new Intent(IntrusionService.this, IntrusionViewActivity.class);
         Bundle arguments = new Bundle();
         arguments.putSerializable("intrusion", intrusionReading);
@@ -97,10 +90,18 @@ public class IntrusionService extends Service {
         stackBuilder.addNextIntent(intent);
 
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        notification.setContentIntent(pendingIntent);
+
+        Notification notification = new Notification.Builder(IntrusionService.this)
+                .setSmallIcon(R.drawable.ic_tab_security)
+                .setContentTitle("Intrusion Detected")
+                .setContentTitle("An intrusion has been detected on the premises")
+                .setContentIntent(pendingIntent)
+                .setVibrate(new long[]{1000, 1000, 1000})
+                .setAutoCancel(true)
+                .build();
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(0, notification.build());
+        notificationManager.notify(0, notification);
     }
 
     /**
