@@ -3,11 +3,12 @@ package ie.sheehan.smarthome.fragment;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,6 @@ import ie.sheehan.smarthome.dialog.DatePickerFragment;
 import ie.sheehan.smarthome.model.Task;
 import ie.sheehan.smarthome.utility.HttpRequestHandler;
 
-import static ie.sheehan.smarthome.utility.DateUtility.getDateFormat;
 import static ie.sheehan.smarthome.utility.DateUtility.getShortDateFormat;
 import static ie.sheehan.smarthome.utility.DateUtility.getShortTimeFormat;
 
@@ -81,7 +81,17 @@ public class ScheduleFragment extends Fragment {
         String[] taskTypes = { "Arm Alarm", "Turn On Heating" };
 
         taskTypeSpinner = (Spinner) getActivity().findViewById(R.id.spinner_tasks);
-        spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, taskTypes);
+        spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, taskTypes) {
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                v.setMinimumHeight((int) (40 * getActivity().getResources().getDisplayMetrics().density));
+                v.setBackgroundColor(Color.rgb(222, 222, 222));
+
+                return v;
+            }
+        };
+
         taskTypeSpinner.setAdapter(spinnerAdapter);
 
         taskDateView = (TextView) getActivity().findViewById(R.id.new_task_date);
@@ -110,7 +120,6 @@ public class ScheduleFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         new GetAllTasks().execute();
     }
 

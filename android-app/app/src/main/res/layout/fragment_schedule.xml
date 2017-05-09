@@ -34,7 +34,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             style="@android:style/Widget.Holo.Light.Spinner"
-            android:spinnerMode="dialog" />
+            android:spinnerMode="dropdown" />
 
     </LinearLayout>
 
